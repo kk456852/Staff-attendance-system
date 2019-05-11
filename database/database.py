@@ -18,7 +18,9 @@ class User(db.Model):  # 用户
     password = db.Column(db.String(20), nullable=False)
     position = db.Column(db.Integer, nullable=False)  # 职务 1-员工 2-主管 3-经理
     gender = db.Column(db.Boolean)  # 性别 0-男 1-女
-    age = db.Column(db.Integer)
+    birthday = db.Column(db.Date)
+    email = db.Column(db.String(30))
+    phoneNumber = db.Column(db.String(20))
     workStatus = db.Column(db.Integer)  # 工作状态 1-上班 2-正常休假 3-经理状态 4-下班 5-请假休假
     departmentId = db.Column(db.Integer, db.ForeignKey('department.id'))  # 部门标号
 
@@ -86,6 +88,7 @@ class SignSheet(db.Model):  # 签到表
     punchBeginTime = db.Column(db.Time)  # 签到上班时间
     punchEndTime = db.Column(db.Time)  # 签到下班时间
     isLate = db.Column(db.Boolean)  # 是否迟到
+    isEarly = db.Column(db.Boolean)  # 是否早退
 
     def __init__(self, staffId, type, date, punchBeginTime, punchEndTime, isLate):
         self.sheetId = staffId
@@ -105,6 +108,7 @@ class Leave(db.Model):  # 请假
     staffId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 员工标号
     leaveReason = db.Column(db.String(50))
     leaveDate = db.Column(db.Date, nullable=False)
+    submitTime = db.Column(db.Time, nullable=False)
     leaveBeginTime = db.Column(db.Time, nullable=False)
     leaveEndTime = db.Column(db.Time, nullable=False)
     isLeavePermitted = db.Column(db.Integer)  # 0-未审核 1-通过审核 2-未通过审核
@@ -125,7 +129,7 @@ class Report(db.Model):  # 销假
     __tablename__='report'
     reportId = db.Column(db.Integer, primary_key=True)
     leaveId = db.Column(db.Integer, db.ForeignKey('leave.leaveId'), nullable=False)  # 对应的请假id
-    reportTime = db.Column(db.Time)
+    reportTime = db.Column(db.Time, nullable=False)
 
     def __init__(self, leaveId, reportTime):
         self.leaveId = leaveId
@@ -140,6 +144,10 @@ class Overtime(db.Model):  # 加班
     overtimeId = db.Column(db.Integer, primary_key=True)
     overtimeThreshold = db.Column(db.Integer)  # 加班阈值 单位-分钟
     staffId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 员工标号
+    overtimeBeginTime = db.Column(db.Time, nullable=False)
+    overtimeEndTime = db.Column(db.Time, nullable=False)
+    overtimeType = db.Column(db.Integer, nullable=False)  # 0-法定假日 1-工作时间
+    submitTime = db.Column(db.Time, nullable=False)
     isOvertimePermitted = db.Column(db.Boolean)  # 是否准许加班 0-未审核 1-通过 2-不通过
 
     def __init__(self, overtimeThreshold, staffId, isOvertimePermitted):
@@ -151,4 +159,3 @@ class Overtime(db.Model):  # 加班
         return '<Overtime %i>' % self.overtimeId
 
 db.create_all()
-
