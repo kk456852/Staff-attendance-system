@@ -1,6 +1,6 @@
 from .User import User
 from .Employee import Employee
-from ..db import UserInfo
+from ..database import UserInfo
 
 
 class Manager(User):

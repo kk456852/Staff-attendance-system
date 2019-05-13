@@ -1,5 +1,5 @@
 from .User import User
-from ..db import UserInfo
+from ..database import UserInfo
 
 
 class Department:

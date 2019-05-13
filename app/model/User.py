@@ -1,10 +1,8 @@
-from ..db import UserInfo
+from ..database import UserInfo
 
 
 class User:
-    """
 
-    """
     def __init__(self, ID, password):
         self.ID = ID
         self.password = password
