@@ -7,7 +7,7 @@ bp = Blueprint('auth',__name__,url_prefix='/auth')
 def log_Index():
     return "This is auth index page!"
 
-@bp.route('/login',method = ('POST'))
+@bp.route('/login',methods = ["POST"])
 def login():
     user = User(request.Userid,request.Password)
     if user.login() is "success":
