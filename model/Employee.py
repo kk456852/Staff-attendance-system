@@ -15,7 +15,7 @@ class Employee(User):
         self.workStatus = workStatus  # workStatus：0为下班，1为上班，2为加班，-1为休假
         dIdentity = UserInfo().getIdentityByID(self.ID) #getIdentityByUserName()通过员工工号查询其身份
             # dIdentity为用户身份是否为经理，1表示经理,2表示主管，3表示普通员工
-             if(dIdentity == 2)：
+             if(dIdentity == 2):
                 isDirector = True
             else:
                 isDirector = False

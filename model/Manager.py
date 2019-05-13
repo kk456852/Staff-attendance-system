@@ -18,19 +18,19 @@ class Manager(User):
         employeeWorkStatus = UserInfo.getEmployWorkStatusByEmployeeID(employeeID)
         
         #把字典中的信息与原信息比对，若发生更改，则更新数据库相应的属性
-        if(dictEmployeeInfo['employeeName'] != employeeName)
+        if(dictEmployeeInfo['employeeName'] != employeeName):
            employeeName = dictEmployeeInfo['employeeName']
            UserInfo.update_employee(employeeID,employeeName)
 
-        if(dictEmployeeInfo['employeeDepartment'] != employeeDepartment)
+        if(dictEmployeeInfo['employeeDepartment'] != employeeDepartment):
            employeeDepartment = dictEmployeeInfo['employeeDepartment']
            UserInfo.update_employee(employeeID,employeeDepartment)
 
-        if(dictEmployeeInfo['employeeIdentity'] != employeeIdentity)
+        if(dictEmployeeInfo['employeeIdentity'] != employeeIdentity):
            employeeIdentity = dictEmployeeInfo['employeeIdentity']
            UserInfo.update_employee(employeeID,employeeIdentity)
 
-        if(dictEmployeeInfo['employeeWorkStatus'] != employeeWorkStatus)
+        if(dictEmployeeInfo['employeeWorkStatus'] != employeeWorkStatus):
            employeeWorkStatus = dictEmployeeInfo['employeeWorkStatus']
            UserInfo.update_employee(employeeID,employeeWorkStatus)
         
