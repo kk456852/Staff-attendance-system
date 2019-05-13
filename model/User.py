@@ -5,6 +5,7 @@ class User:
     def __init__(self, ID, password):
         self.ID = ID
         self.password = password
+        self.email = email
 
     def login(self):
         dPassword = UserInfo().getPasswordByID(self.ID)  # getPasswordByID() 通过员工工号查询密码 
@@ -23,5 +24,16 @@ class User:
     def logout(self):
         pass
 
-    def updateUser(self):
-        pass
+    def addEmail(self,email):
+        dEmail = UserInfo.getEmailByID(self.ID)
+        if(dEmail != None):
+          return "fail"
+        else:
+              UserInfo.insert_Email(self.ID,email)
+              return "succeed"
+              
+    def updateUser(self,newEmail):
+        UserInfo.update_Email(self.ID,newEmail)
+        return "succeed"
+
+        
