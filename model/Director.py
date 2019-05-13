@@ -3,7 +3,7 @@ from . import Employee
 
 class Director(Employee):
     def __init__(self, ID, name, password):
-        super(self, ID, name, password)
+        super().__init__(self, ID, name, password)
 
     def arrange_work(self):
         """arrange_work安排工作班次"""
