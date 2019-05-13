@@ -23,6 +23,7 @@ class Leave:
         """leave_result_to_employee请假结果通知员工"""
         pass
 
+
 class Report:
     # reportName销假人姓名 string
     # reportID销假人工号 int
@@ -36,5 +37,3 @@ class Report:
     def report_to_director(self):
         """report_to_director销假通知主管"""
         pass
-
-    

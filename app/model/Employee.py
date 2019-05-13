@@ -1,5 +1,5 @@
-from . import User
-from database.operation import UserInfo
+from .User import User
+from ..db import UserInfo
 
 
 class Department:
@@ -9,17 +9,17 @@ class Department:
 
 
 class Employee(User):
-    def __init__(self, ID, name, password, workStatus=None):
-        super().__init__(self, ID, name, password)
+    def __init__(self, ID, name, password, email, workStatus=None):
+        super().__init__(ID, password, email)
         isDirector = False  # True为主管，False为普通员工，初始化为False
         self.workStatus = workStatus  # workStatus：0为下班，1为上班，2为加班，-1为休假
-        dIdentity = UserInfo().getIdentityByID(self.ID) #getIdentityByUserName()通过员工工号查询其身份
-            # dIdentity为用户身份是否为经理，1表示经理,2表示主管，3表示普通员工
-             if(dIdentity == 2):
-                isDirector = True
-            else:
-                isDirector = False
-
+        # getIdentityByUserName()通过员工工号查询其身份
+        dIdentity = UserInfo().getIdentityByID(self.ID)
+        # dIdentity为用户身份是否为经理，1表示经理,2表示主管，3表示普通员工
+        if(dIdentity == 2):
+            isDirector = True
+        else:
+            isDirector = False
 
     def retrieve_work_arrangement(self):
         """retrieveWorkArrangement查看工作安排"""
