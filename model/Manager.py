@@ -8,20 +8,42 @@ class Manager(User):
         super().__init__(self, ID, name, password)
 
     
-    def update_employee(self,employeeID):
+    def update_employee(self,**dictEmployeeInfo):#字典的格式为员工 工号、姓名、部门、职位、工作状态，指定工号不可更改！！
         """update_employee修改员工信息"""
-        
-        
-
-    def retrieve_employee(self,employeeID):
-        """retrieve_employee查看员工信息"""
-        #数据库获取员工工号对应的姓名、职位、部门、工作状态
+        employeeID = dictEmployeeInfo['employeeID']
+        #先获取数据库中原本的该员工
         employeeName = getEmployNameByEmployeeID(employeeID)
         employeeDepartment = getEmployDepartmentByEmployeeID(employeeID)
         employeeIdentity = getEmployIdentityByEmployeeID(employeeID)
         employeeWorkStatus = getEmployWorkStatusByEmployeeID(employeeID)
-        dictEmployInfo = {'ID':employeeID，'name':employeeName，'department':employeeDepartment，'identity':employeeIdentity，'workStatus':employeeWorkStatus}
-        return dictEmployInfo
+        
+        #把字典中的信息与原信息比对，若发生更改，则更新数据库相应的属性
+        if(dictEmployeeInfo['employeeName'] != employeeName)
+           employeeName = dictEmployeeInfo['employeeName']
+           update_employee(employeeID,employeeName)
+
+        if(dictEmployeeInfo['employeeDepartment'] != employeeDepartment)
+           employeeDepartment = dictEmployeeInfo['employeeDepartment']
+           update_employee(employeeID,employeeDepartment)
+
+        if(dictEmployeeInfo['employeeIdentity'] != employeeIdentity)
+           employeeIdentity = dictEmployeeInfo['employeeIdentity']
+           update_employee(employeeID,employeeIdentity)
+
+        if(dictEmployeeInfo['employeeWorkStatus'] != employeeWorkStatus)
+           employeeWorkStatus = dictEmployeeInfo['employeeWorkStatus']
+           update_employee(employeeID,employeeWorkStatus)
+        
+
+    def retrieve_employee(self,employeeID):
+        """retrieve_employee查看员工信息"""
+        #数据库获取员工工号对应的姓名、部门、职位、工作状态
+        employeeName = getEmployNameByEmployeeID(employeeID)
+        employeeDepartment = getEmployDepartmentByEmployeeID(employeeID)
+        employeeIdentity = getEmployIdentityByEmployeeID(employeeID)
+        employeeWorkStatus = getEmployWorkStatusByEmployeeID(employeeID)
+        dictEmployeeInfo = {'ID':employeeID，'name':employeeName，'department':employeeDepartment，'identity':employeeIdentity，'workStatus':employeeWorkStatus}
+        return dictEmployeeInfo
 
 
         
