@@ -1,5 +1,5 @@
 from flask import Blueprint,request,session,json,redirect,url_for
-
+from model import User
 bp = Blueprint('auth',__name__,url_prefix='/auth')
 
 
@@ -7,22 +7,30 @@ bp = Blueprint('auth',__name__,url_prefix='/auth')
 def log_Index():
     return "This is auth index page!"
 
-@bp.route('/login',methods = ('GET','POST'))
+@bp.route('/login',method = ('POST'))
 def login():
-    #数据库验证
-    # if db.id_auth == True :
-    #     session[request.form['user_id']] = True
-    #     result_response = {'result':True,'status':200}
-    # else:
-    #     result_response = {'result':False, 'stat
-    # 验证成功与否返回JSON信息us': 500}
-    # 验证失败回转到登陆页面
-    # return result_response
-    return "login index"
+    user = User(request.Userid,request.Password)
+    if user.login() is "success":
+        try:
+            session[request.Userid] = user.isManager
+        except:
+            return {
+                'result': True,
+                'status': 201  #账户已登陆，返回到相应页面
+            }
+        return {
+            'result' :  True,
+            'status' :  200
+        }
+    else :
+        return {
+            'result': False,
+            'status': 500    #错误代码给与区分，例如账号不存在或者密码不对
+        }
 
 @bp.route('/logout',methods = ('GET','POST'))
 def logout():
-    #对应会话删除
+
     session.pop(request.form['user_id'], None)
     return redirect(url_for(log_Index))
 

@@ -14,12 +14,21 @@ class User:
             return "fail"
 
     def isManager(self):
+<<<<<<< HEAD
           dIdentity = UserInfo().getIdentityByID(self.ID) #getIdentityByUserName()通过员工工号查询其身份
             # dIdentity为用户身份是否为经理，1表示经理
              if(dIdentity == 1)：
                 return True
             else:
                 return False
+=======
+        dIdentity = UserInfo().getIdentityByUserName(self.ID)
+        # dIdentity为用户身份是否为经理，1表示经理，2表示非经理（普通员工和主管）
+        if(dIdentity == 1):
+            return True
+        else:
+            return False
+>>>>>>> 648e52faf5ec0135b898038db9ac444c788f4a17
     def logout(self):
         pass
 
