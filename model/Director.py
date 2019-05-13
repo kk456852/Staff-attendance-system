@@ -1,4 +1,4 @@
-from Employee import *
+from . import Employee
 
 
 class Director(Employee):

@@ -1,4 +1,4 @@
-from User import *
+from . import User
 
 
 class Department:
