@@ -37,3 +37,6 @@ class User:
     def updateUser(self, newEmail):
         UserInfo.update_Email(self.ID, newEmail)
         return "succeed"
+
+
+

@@ -52,3 +52,8 @@ class Employee(User):
     def punchout_overtimne(self):
         """punchout_overtimne打卡加班结束"""
         pass
+
+    @classmethod
+    def getEmployeeById(id):
+        u = UserInfo().getInfoById()
+        return Employee(u.id, u.name, u.password.,u.email, u.workStatus)

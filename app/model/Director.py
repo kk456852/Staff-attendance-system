@@ -24,3 +24,8 @@ class Director(Employee):
     def approve_overtime(self):
         """approve_overtime加班审批"""
         pass
+
+    @classmethod
+    def getDirectorById(id):
+        u = UserInfo().getInfoById()
+        return Director(u.id, u.name, u.password)

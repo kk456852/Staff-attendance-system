@@ -68,3 +68,8 @@ class Manager(User):
     def retrieve_work_situation(self):
         """retrieve_work_situation查看上班情况"""
         pass
+
+    @classmethod
+    def getManagerById(id):
+        u = UserInfo().getInfoById()
+        return Manager(u.id, u.name, u.password)
