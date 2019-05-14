@@ -16,8 +16,8 @@ def check_staff():
         }
     else:
         response_data = {
-            'status': 20000,
-            'data': ''
+            'status': 50000,
+            'data': {}
         }
     response_data = json.dumps(response_data)
     return response_data
@@ -31,12 +31,12 @@ def update_staff():
         manager.update_employee(request_data['data'])
         response_data = {
             'status': 20000,
-            'data': ''
+            'data': {}
         }
     else:
         response_data = {
             'status': 50000,
-            'data': ''
+            'data': {}
         }
     response_data = json.dumps(response_data)
     return response_data

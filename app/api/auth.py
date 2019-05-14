@@ -16,12 +16,12 @@ def login():
         session[request_data['UserId']] = user.isManager()
         response_data = {
             'status': 20000,
-            'data': ''
+            'data': {}
         }
     else:
         response_data = {
             'status': 50000,
-            'data': ''
+            'data': {}
         }
     response_data = json.dumps(response_data)
     return response_data
@@ -33,7 +33,7 @@ def logout():
     session.pop(request_data['UserId'], None)
     response_data = {
         'status': 20000,
-        'data': ''
+        'data': {}
     }
     response_data = json.dumps(response_data)
     return response_data
