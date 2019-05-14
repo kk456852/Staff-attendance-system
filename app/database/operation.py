@@ -1,49 +1,34 @@
 from . import Department, Leave, Report, SignSheet, User, WorkArrangement
 
-Base = declarative_base()
-engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
-Session = sessionmaker(bind=engine)
-
-session = Session()
-
+# ---------------------------查询方法---------------------------------
 class UserInfo():
-    """查询方法"""
     # 全表查询
-
     def findAll(self):
         return User.query.all()
 
     # 根据ID主键查询
-    def getInfoById(self, id):
-        return User.query.get(id)
+    def getInfoByID(self, ID):
+        return User.query.get(ID)
 
     # 自定义查询条件
-    def getInfoByUserName(self, userName):
-        #return User.query.filter_by(username=userName).all()
-        return session.query(User).filter(User.username==userName).all()
-
-    def getIdentityByID(self, id):
-        raise NotImplementedError
-
-    # 根据员工工号查询姓名
-    def getNameByID(self, id):
-        return User.query.filter_by(id=id)[0].username
+    def getNameByID(self, ID):
+        return User.query.filter_by(ID=ID)[0].username
 
     # 根据员工工号查询密码
-    def getPasswordByID(self, id):
-        return User.query.filter_by(id=id)[0].password
+    def getPasswordByID(self, ID):
+        return User.query.filter_by(ID=ID)[0].password
 
     # 通过员工工号查询其身份
-    def getIdentityByID(self, id):
-        return User.query.filter_by(id=id)[0].position
+    def getIdentityByID(self, ID):
+        return User.query.filter_by(ID=ID)[0].identity
 
     # 通过员工工号查询其Email
-    def getEmailByID(self, id):
-        return User.query.filter_by(id=id)[0].email
+    def getEmailByID(self, ID):
+        return User.query.filter_by(ID=ID)[0].email
 
     # 通过员工ID更新其Email为newEmail
-    def updateEmailByID(self, id, newEmail):
-        user = User.query.filter_by(id=id).first()
+    def updateEmailByID(self, ID, newEmail):
+        user = User.query.filter_by(ID=ID).first()
         user.email = newEmail
         return 1
 
@@ -52,8 +37,8 @@ class DepartmentInfo():
     def findAll(self):
         return Department.query.all()
 
-    def getInfoById(self, id):
-        return Department.query.get(id)
+    def getInfoByID(self, ID):
+        return Department.query.get(ID)
 
     def getInfoByName(self, name):
         return Department.query.filter_by(name=name).all()
@@ -63,25 +48,25 @@ class WorkArrangementInfo():
     def findAll(self):
         return WorkArrangement.query.all()
 
-    def getInfoById(self, arragementId):
-        return WorkArrangement.query.get(arragementId)
+    def getInfoByID(self, arragementID):
+        return WorkArrangement.query.get(arragementID)
 
-    def getInfoBystaffId(self, staffId):
-        return WorkArrangement.query.filter_by(staffId=staffId).all()
+    def getInfoBystaffID(self, staffID):
+        return WorkArrangement.query.filter_by(staffID=staffID).all()
 
-    def getInfoBydepId(self, departmentId):
-        return WorkArrangement.query.filter_by(departmentId=departmentId).all()
+    def getInfoBydepID(self, departmentID):
+        return WorkArrangement.query.filter_by(departmentID=departmentID).all()
 
 
 class SignSheetInfo():
     def findAll(self):
         return SignSheet.query.all()
 
-    def getInfoById(self, sheetId):
-        return SignSheet.query.get(sheetId)
+    def getInfoByID(self, sheetID):
+        return SignSheet.query.get(sheetID)
 
-    def getInfoBystaffId(self, staffId):
-        return SignSheet.query.filter_by(staffId=staffId).all()
+    def getInfoBystaffID(self, staffID):
+        return SignSheet.query.filter_by(staffID=staffID).all()
 
     def getInfoBytype(self, type):
         return SignSheet.query.filter_by(type=type).all()
@@ -94,11 +79,11 @@ class LeaveInfo():
     def findAll(self):
         return Leave.query.all()
 
-    def getInfoById(self, leaveId):
-        return Leave.query.get(leaveId)
+    def getInfoByID(self, leaveID):
+        return Leave.query.get(leaveID)
 
-    def getInfoBystaffId(self, staffId):
-        return Leave.query.filter_by(staffId=staffId).all()
+    def getInfoBystaffID(self, staffID):
+        return Leave.query.filter_by(staffID=staffID).all()
 
     def getInfoByleaveDate(self, leaveDate):
         return Leave.query.filter_by(leaveDate=leaveDate).all()
@@ -111,22 +96,22 @@ class ReportInfo():
     def findAll(self):
         return Report.query.all()
 
-    def getInfoById(self, reportId):
-        return Report.query.get(reportId)
+    def getInfoByID(self, reportID):
+        return Report.query.get(reportID)
 
-    def getInfoByleaveId(self, leaveId):
-        return Report.query.filter_by(leaveId=leaveId).all()
+    def getInfoByleaveID(self, leaveID):
+        return Report.query.filter_by(leaveID=leaveID).all()
 
 
 class Overtime():
     def findalll(self):
         return Overtime.query.all()
 
-    def getInfoById(self, overtimeId):
-        return Overtime.query.get(overtimeId)
+    def getInfoByID(self, overtimeID):
+        return Overtime.query.get(overtimeID)
 
-    def getInfoBystaffId(self, staffId):
-        return Overtime.query.filter_by(staffId=staffId).all()
+    def getInfoBystaffID(self, staffID):
+        return Overtime.query.filter_by(staffID=staffID).all()
 
     def getInfoByThreshold(self, overtimeThreshold):
         return Overtime.query.filter_by(overtimeThreshold=overtimeThreshold).all()
@@ -134,20 +119,3 @@ class Overtime():
     def getInfoBypermitted(self, permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
 
-
-# # 复杂查询以及多表关联查询DEMO展示
-# class UtilsQuery():
-#     def find(self):
-#         # 这里通过关联User和Token两张表进行关联查询
-#         return User.query.filter(User.id == Token.user_id).filter(Token.user_cname == 'XXXX').all()
-#         # return db.session.query(User).filter(User.id == Token.user_id).filter(Token.user_cname=='XXXX').all()
-#
-#     def findByPage(self, pageNum, size):
-#         # 这里展示分页查询
-#         if pageNum < 1:
-#             pageNum = 1
-#         if size < 1:
-#             size = 2
-#         start = (pageNum - 1) * size
-#         end = pageNum * size
-#         return User.query.slice(start, end).all()
