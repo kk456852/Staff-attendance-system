@@ -1,10 +1,4 @@
-from ..database import User
-
-
-class Department:
-    def __init__(self, name, employees):
-        self.name = name
-        self.employees = employees
+from .User import User
 
 
 class Employee(User):

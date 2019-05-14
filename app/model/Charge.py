@@ -1,5 +1,6 @@
 from .Employee import Employee
 
+
 class Director(Employee):
     def __init__(self, ID, name, password):
         super().__init__(self, ID, name, password)

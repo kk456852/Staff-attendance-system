@@ -1,6 +1,5 @@
 import unittest
-
-from app.database import User
+from app.model import User
 from flask import current_app
 from app import db
 from app import create_app, db

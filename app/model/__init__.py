@@ -6,3 +6,4 @@ from .Overtime import Overtime
 from .Punch import Punch
 from .TemporaryOvertime import TemporaryOvertime
 from .WorkArrangement import WorkArrangement
+from .User import User

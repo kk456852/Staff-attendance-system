@@ -1,6 +1,6 @@
-from flask import Blueprint, request, json,jsonify
-from app.api.auth import loged_Veri
-from app.model.Employee import Employee
+from flask import Blueprint, request, json, jsonify
+from .auth import loged_Veri
+from ..model import Employee
 bp = Blueprint('staff', __name__, url_prefix='/staff')
 
 

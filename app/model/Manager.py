@@ -1,4 +1,5 @@
-from ..database import User, Department
+from .User import User
+from .Department import Department
 from .Employee import Employee
 
 
@@ -40,7 +41,7 @@ class Manager(User):
         # 数据库获取员工工号对应的姓名、部门、职位、工作状态
         u = User.getInfoByID(employeeID)
         d = Department.getInfoByID(u.departmenID)
-    
+
         dictEmployeeInfo = {'ID': u.ID, 'name': u.name, 'department': d.name,
                             'identity': u.identity, 'workStatus': u.workStatus}
         return dictEmployeeInfo
@@ -67,5 +68,5 @@ class Manager(User):
 
     @classmethod
     def getManagerById(ID):
-        u = UserInfo().getInfoByID(ID)
+        u = User.getInfoByID(ID)
         return Manager(u.ID, u.name, u.password)
