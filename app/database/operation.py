@@ -1,5 +1,10 @@
 from . import Department, Leave, Report, SignSheet, User, WorkArrangement
 
+Base = declarative_base()
+engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
+Session = sessionmaker(bind=engine)
+
+session = Session()
 
 class UserInfo():
     """查询方法"""
@@ -14,7 +19,8 @@ class UserInfo():
 
     # 自定义查询条件
     def getInfoByUserName(self, userName):
-        return User.query.filter_by(username=userName).all()
+        #return User.query.filter_by(username=userName).all()
+        return session.query(User).filter(User.username==userName).all()
 
     def getIdentityByID(self, id):
         raise NotImplementedError
