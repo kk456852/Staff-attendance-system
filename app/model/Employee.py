@@ -11,15 +11,16 @@ class Department:
 class Employee(User):
     def __init__(self, ID, name, password, email, workStatus=None):
         super().__init__(ID, password, email)
-        isDirector = False  # True为主管，False为普通员工，初始化为False
+        self.isDirector = False  # True为主管，False为普通员工，初始化为False
         self.workStatus = workStatus  # workStatus：0为下班，1为上班，2为加班，-1为休假
-        # getIdentityByUserName()通过员工工号查询其身份
-        dIdentity = UserInfo().getIdentityByID(self.ID)
+        
+        u = UserInfo().getInfoByID(self.ID)
+        dIdentity = u.identity
         # dIdentity为用户身份是否为经理，1表示经理,2表示主管，3表示普通员工
         if(dIdentity == 2):
-            isDirector = True
+            self.isDirector = True
         else:
-            isDirector = False
+            self.isDirector = False
 
     def retrieve_work_arrangement(self):
         """retrieveWorkArrangement查看工作安排"""
@@ -52,3 +53,8 @@ class Employee(User):
     def punchout_overtimne(self):
         """punchout_overtimne打卡加班结束"""
         pass
+
+    @classmethod
+    def getEmployeeById(ID):
+        u = UserInfo().getInfoByID(ID)
+        return Employee(u.ID, u.name, u.password, u.email, u.workStatus)

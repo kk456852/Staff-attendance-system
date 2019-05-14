@@ -1,5 +1,5 @@
 from .Employee import Employee
-
+from ..database import UserInfo
 
 class Director(Employee):
     def __init__(self, ID, name, password):
@@ -24,3 +24,8 @@ class Director(Employee):
     def approve_overtime(self):
         """approve_overtime加班审批"""
         pass
+
+    @classmethod
+    def getDirectorById(ID):
+        u = UserInfo().getInfoByID(ID)
+        return Director(u.ID, u.name, u.password)
