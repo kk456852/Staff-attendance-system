@@ -1,4 +1,4 @@
-from flask import Blueprint, request, json
+from flask import Blueprint, request, json,jsonify
 from app.api.auth import loged_Veri
 from app.model.Employee import Employee
 bp = Blueprint('staff', __name__, url_prefix='/staff')
@@ -7,38 +7,38 @@ bp = Blueprint('staff', __name__, url_prefix='/staff')
 @bp.route('/checkinfo', methods=['GET'])
 def staff_checkinfo():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
-    if loged_Veri(request_data['StaffId']) == 0:
-        employee = Employee(request_data['StaffId'])
-        data = employee.getinfo()
+    if loged_Veri(request_data['UserId']) == 0:
+        employee = Employee(request_data['UserId'])
+        response_data = employee.getinfo()
         response_data = {
             'status': 20000,
-            'data': data
+            'data': response_data
         }
     else:
         response_data = {
             'status': 50000,
-            'data': ''
+            'data': {}
         }
-    response_data = json.dumps(response_data)
+    response_data = jsonify(response_data)
     return response_data
 
 
 @bp.route('/updateinfo', methods=['POST'])
 def staff_updateinfo():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
-    if loged_Veri(request_data['StaffId']) == 0:
-        employee = Employee(request_data['StaffId'])
+    if loged_Veri(request_data['UserId']) == 0:
+        employee = Employee(request_data['UserId'])
         employee.Updateinfo(request_data['data'])
         response_data = {
             'status': 20000,
-            'data': ''
+            'data': {}
         }
     else:
         response_data = {
             'status': 50000,
-            'data': ''
+            'data': {}
         }
-    response_data = json.dumps(response_data)
+    response_data = jsonify(response_data)
     return response_data
 
 
