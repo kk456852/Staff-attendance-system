@@ -21,12 +21,7 @@ pip install -r requirements.txt
 pip freeze > requirements.txt
 ```
 
-可以建立一个.env文件，内容为：
-```
-FLASK_APP=run.py
-FLASK_ENV=development
-```
-注意，如果正在使用mysql数据库，请在.env文件中额外加入以下行：
+注意，如果正在使用mysql数据库，请添加.env文件，并额外加入以下行：
 ```
 SQLALCHEMY_DATABASE_URI=mysql+mysqlconnector://root:1234@127.0.0.1:3306/sys_db?charset=utf8
 ```
