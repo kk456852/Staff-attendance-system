@@ -49,6 +49,6 @@ class Manager(User):
         pass
 
     @classmethod
-    def getManagerById(id):
-        u = UserInfo().getInfoById(id)
-        return Manager(u.id, u.name, u.password)
+    def getManagerById(ID):
+        u = UserInfo().getInfoByID(ID)
+        return Manager(u.ID, u.name, u.password)
