@@ -1,6 +1,6 @@
 from flask import Blueprint, json, redirect, request, session, url_for
 
-from ..database import User
+from ..model import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -12,34 +12,59 @@ def log_Index():
 
 @bp.route('/login', methods=['POST'])
 def login():
-    user = User(request.Userid, request.Password)
+    request_data = json.loads(str(request.get_data(), 'utf-8'))
+    user = User(request_data['UserId'], request_data['password'])
     if user.login() is "success":
         try:
             session[request.Userid] = user.isManager
         except:
-            return {
+            response_data = {
                 'result': True,
-                'status': 201  # 账户已登陆，返回到相应页面
+                'status': 201  # 账户之前已登陆，返回到相应页面
             }
-        return {
-            'result':  True,
-            'status':  200
+            response_data = json.dumps(response_data)
+            return response_data
+        response_data = {
+            'result': True,  # 正常登陆
+            'status': 200
         }
+        response_data = json.dumps(response_data)
+        return response_data
     else:
-        return {
-            'result': False,
-            'status': 500  # 错误代码给与区分，例如账号不存在或者密码不对
+        response_data = {
+            'result': False,  # 登陆失败
+            'status': 500
         }
+        response_data = json.dumps(response_data)
+        return response_data
 
 
 @bp.route('/logout', methods=['GET', 'POST'])
 def logout():
-    session.pop(request.form['user_id'], None)
-    return redirect(url_for(log_Index))
+    request_data = json.loads(str(request.get_data(), 'utf-8'))
+    try:
+        session.pop(request_data['UserId'], None)
+        response_data = {
+            'result': True,
+            'status': 200
+        }
+        # 退出登陆成功
+    except:
+        response_data = {
+            'result': False,
+            'status': 500  # 退出登陆失败
+        }
+    response_data = json.dumps(response_data)
+    return response_data
 
 
 def loged_Veri(id=None):
     """检查会话是否存在，不存在跳转到log_index界面
 
-    :returns 身份ID 0：普通员工 1：主管 2：经理"""
-    return id
+    :returns 身份ID 0：普通员工 1:主管 2:经理 3:未查询到
+    """
+    try :
+        result = session[id]
+    except:
+        result = 3
+    return result
