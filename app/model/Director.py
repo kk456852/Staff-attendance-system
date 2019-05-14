@@ -1,5 +1,5 @@
 from .Employee import Employee
-
+from ..database import UserInfo
 
 class Director(Employee):
     def __init__(self, ID, name, password):

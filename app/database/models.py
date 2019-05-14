@@ -8,7 +8,7 @@ from .. import db
 
 class User(db.Model):  # 用户
     __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
+    ID = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10), nullable=False)
     password = db.Column(db.String(20), nullable=False)
     identity = db.Column(db.Integer, nullable=False)  # 职务 1-经理 2-主管 3-普通员工
