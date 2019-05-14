@@ -29,16 +29,16 @@ class User:
         pass
 
     def addEmail(self, email):
-        u = UserInfo().getInfoById(self.ID)
+        u = UserInfo().getInfoByID(self.ID)
         dEmail = u.email
         if(dEmail != None):
             return "fail"
         else:
-            UserInfo().update_Email(self.ID, email)
+            UserInfo().updateEmailByID(self.ID, email)
             return "succeed"
 
     def updateUser(self, newEmail):
-        UserInfo().update_Email(self.ID, newEmail)
+        UserInfo().updateEmailByID(self.ID, newEmail)
         return "succeed"
 
 

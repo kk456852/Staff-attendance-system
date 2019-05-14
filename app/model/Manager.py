@@ -13,7 +13,7 @@ class Manager(User):
         employeeID = dictEmployeeInfo['employeeID']
         u = UserInfo().getInfoByID(employeeID)
         dictEmployeeInfo['department'] = u.departmentID
-        UserInfo().update_employee(employeeID, **dictEmployeeInfo)
+        UserInfo().updateEmployee(employeeID, **dictEmployeeInfo)
 
     
 

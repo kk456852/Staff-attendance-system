@@ -55,6 +55,6 @@ class Employee(User):
         pass
 
     @classmethod
-    def getEmployeeById(id):
-        u = UserInfo().getInfoById(id)
-        return Employee(u.id, u.name, u.password, u.email, u.workStatus)
+    def getEmployeeById(ID):
+        u = UserInfo().getInfoByID(ID)
+        return Employee(u.ID, u.name, u.password, u.email, u.workStatus)
