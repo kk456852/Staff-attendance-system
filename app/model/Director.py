@@ -27,5 +27,5 @@ class Director(Employee):
 
     @classmethod
     def getDirectorById(id):
-        u = UserInfo().getInfoById()
+        u = UserInfo().getInfoById(id)
         return Director(u.id, u.name, u.password)

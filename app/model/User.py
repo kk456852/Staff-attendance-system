@@ -8,7 +8,8 @@ class User:
         self.password = password
 
     def login(self):
-        dPassword = UserInfo().getPasswordByID(self.ID)  # getPasswordByID() 通过员工工号查询密码
+        u = UserInfo().getInfoById(self.ID)
+        dPassword = u.password  # getPasswordByID() 通过员工工号查询密码
         if(dPassword == self.password):
             return "succeed"
         else:
@@ -16,7 +17,8 @@ class User:
 
     def isManager(self):
         # getIdentityByUserName()通过员工工号查询其身份
-        dIdentity = UserInfo().getIdentityByID(self.ID)
+        u = UserInfo().getInfoById(self.ID)
+        dIdentity = u.identity
         # dIdentity为用户身份是否为经理，1表示经理
         if(dIdentity == 1):
             return True
@@ -27,7 +29,8 @@ class User:
         pass
 
     def addEmail(self, email):
-        dEmail = UserInfo.getEmailByID(self.ID)
+        u = UserInfo().getInfoById(self.ID)
+        dEmail = u.email
         if(dEmail != None):
             return "fail"
         else:
