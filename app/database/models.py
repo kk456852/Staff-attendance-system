@@ -20,14 +20,14 @@ class User(db.Model):  # 用户
     workStatus = db.Column(db.Integer)  # 工作状态 1-上班 2-正常休假 3-经理状态 4-下班 5-请假休假
     departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))  # 部门标号
 
-    def __init__(self, username, password, position, gender, age, workStatus, departmentID):
+    def __init__(self, username, password, identity, gender, age, workStatus, departmentID):
         self.username = username
         self.password = password
         self.age = age
         self.gender = gender
-        self.position = position
+        self.identity = identity
 
-        if(position == 2):
+        if(identity == 2):
             self.workStatus = 3
             self.departmentID = 0
         else:
