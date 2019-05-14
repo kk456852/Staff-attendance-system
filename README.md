@@ -2,8 +2,6 @@
 
 要求 Python 3.5 以上。
 
-修改后的实验性质项目，这个分支将在未来合并入master库。
-
 ### 构建
 
 推荐使用Python虚拟环境如果当前目录下没有虚拟环境，用以下方式创建：
@@ -60,3 +58,11 @@ flask test
 
 ### 代码规范
 应遵守 PEP 8 代码风格，推荐使用 autopep8 配合 pylint 插件。
+
+
+### 提示
+在.vscode文件夹中的`settings.json`中添加这一行：
+```json
+"python.linting.pylintArgs": ["--load-plugins", "pylint_flask"]
+```
+就可以开启数据库提示支持。

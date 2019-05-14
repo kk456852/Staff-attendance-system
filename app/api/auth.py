@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, json, redirect, url_for,jsonify
+from flask import Blueprint, request, session, json, redirect, url_for, jsonify
 from app.model import User
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -9,21 +9,23 @@ def log_Index():
 
 @bp.route('/login',methods = ('GET','POST'))
 def login():
-    request_data = json.loads(str(request.get_data(), 'utf-8'))
+    request_data = request.get_json()
     try:
-        user = User(request_data['UserId'], request_data['password'])
-        if user.login() is "success":
-            session[request_data['UserId']] = user.isManager()
-            response_data = {
-                'status': 20000,
-                'data': {}
-            }
-        else:
-            response_data = {
-                'status': 50000,
-                'data': {}
-            }
+        user = User(request_data['id'], request_data['password'])
+        user.login()
+        session[request_data['id']] = user.isManager()
+        response_data = {
+            'status': 20000,
+            'data': {}
+        }
     except Exception:
+        response_data = {
+            'result': True, #正常登陆
+            'status': 200
+        }
+        response_data = json.dumps(response_data)
+        return response_data
+    else :
         response_data = {
             'status': 50000,
             'data': {}

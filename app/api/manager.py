@@ -1,7 +1,7 @@
-from flask import Blueprint, json, request,jsonify
-from app.api.auth import loged_Veri
-from app.model import Manager
-bp = Blueprint('manager', __name__, url_prefix='/manager')
+from flask import Blueprint,json,request
+from .auth import loged_Veri
+from ..model import Manager
+bp = Blueprint('manager',__name__,url_prefix='/manager')
 
 
 @bp.route('/checkstaff', methods=['GET'])

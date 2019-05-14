@@ -1,6 +1,5 @@
 from .User import User
 from .Employee import Employee
-from ..database import UserInfo,DepartmentInfo
 
 
 class Manager(User):
@@ -11,12 +10,30 @@ class Manager(User):
     def update_employee(self, **dictEmployeeInfo):
         """update_employee修改员工信息"""
         employeeID = dictEmployeeInfo['employeeID']
-        u = UserInfo().getInfoByID(employeeID)
-        dictEmployeeInfo['department'] = u.departmentID
-        UserInfo().updateEmployee(employeeID, **dictEmployeeInfo)
+        # 先获取数据库中原本的该员工
+        employeeName = User.getEmployNameByEmployeeID(employeeID)
+        employeeDepartment = User.getEmployDepartmentByEmployeeID(
+            employeeID)
+        employeeIdentity = User.getEmployIdentityByEmployeeID(employeeID)
+        employeeWorkStatus = User.getEmployWorkStatusByEmployeeID(
+            employeeID)
 
-    
+        # 把字典中的信息与原信息比对，若发生更改，则更新数据库相应的属性
+        if(dictEmployeeInfo['employeeName'] != employeeName):
+            employeeName = dictEmployeeInfo['employeeName']
+            User.update_employee(employeeID, employeeName)
 
+        if(dictEmployeeInfo['employeeDepartment'] != employeeDepartment):
+            employeeDepartment = dictEmployeeInfo['employeeDepartment']
+            User.update_employee(employeeID, employeeDepartment)
+
+        if(dictEmployeeInfo['employeeIdentity'] != employeeIdentity):
+            employeeIdentity = dictEmployeeInfo['employeeIdentity']
+            User.update_employee(employeeID, employeeIdentity)
+
+        if(dictEmployeeInfo['employeeWorkStatus'] != employeeWorkStatus):
+            employeeWorkStatus = dictEmployeeInfo['employeeWorkStatus']
+            User.update_employee(employeeID, employeeWorkStatus)
 
     def retrieve_employee(self, employeeID):
         """retrieve_employee查看员工信息"""

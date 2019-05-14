@@ -15,3 +15,19 @@ def test():
     import unittest
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
+
+
+@app.cli.command()
+def ipy():
+    """Open IPython Debug Shell"""
+    ctx = app.app_context()
+    ctx.push()
+    from app.database import User
+    __import__('IPython').embed()
+    ctx.pop()
+
+
+@app.cli.command()
+def init_db():
+    """Init database and create basic test data."""
+    db.create_all()

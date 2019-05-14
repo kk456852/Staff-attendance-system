@@ -1,6 +1,6 @@
-from flask import Blueprint, request
-from app.api.auth import loged_Veri
-bp = Blueprint('charger', __name__, url_prefix='/charger')
+from flask import Blueprint,request
+from .auth import loged_Veri
+bp = Blueprint('charger',__name__,url_prefix='/charger')
 
 
 @bp.route('/', methods=('GET', 'POST'))
