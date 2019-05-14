@@ -1,17 +1,10 @@
-from database import *
-
-# # usertest = User(username='123', password='123', position='1', gender=1, age=1, workStatus=1, departmentId=1)
-# departmenttest = Department(1, 'test')
-#
-# db.session.add(departmenttest)
-#
-# db.session.commit()
-#
+from . import Department, Leave, Report, SignSheet, User, WorkArrangement
 
 
-# ---------------------------查询方法---------------------------------
 class UserInfo():
+    """查询方法"""
     # 全表查询
+
     def findAll(self):
         return User.query.all()
 
@@ -22,6 +15,9 @@ class UserInfo():
     # 自定义查询条件
     def getInfoByUserName(self, userName):
         return User.query.filter_by(username=userName).all()
+
+    def getIdentityByID(self, id):
+        raise NotImplementedError
 
 
 class DepartmentInfo():
@@ -109,7 +105,6 @@ class Overtime():
 
     def getInfoBypermitted(self, permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
-
 
 
 # # 复杂查询以及多表关联查询DEMO展示
