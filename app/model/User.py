@@ -15,15 +15,10 @@ class User:
         else:
             return "fail"
 
-    def isManager(self):
-        # getIdentityByUserName()通过员工工号查询其身份
+    def judgeIdentity(self):
+        # 1表示经理,2表示主管，3表示普通员工
         u = UserInfo().getInfoByID(self.ID)
-        dIdentity = u.identity
-        # dIdentity为用户身份是否为经理，1表示经理
-        if(dIdentity == 1):
-            return True
-        else:
-            return False
+        return u.identity
 
     def logout(self):
         pass
