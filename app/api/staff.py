@@ -1,10 +1,10 @@
 from flask import Blueprint, request, json
-from app.api.url.auth import
-from model.Employee import Employee
+from app.api.auth import loged_Veri
+from app.model.Employee import Employee
 bp = Blueprint('staff', __name__, url_prefix='/staff')
 
 
-@bp.route('/checkinfo', methods=('GET'))
+@bp.route('/checkinfo', methods=['GET'])
 def staff_checkinfo():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
     try:
@@ -30,7 +30,7 @@ def staff_checkinfo():
     return response_data
 
 
-@bp.route('/updateinfo', methods=('POST'))
+@bp.route('/updateinfo', methods=['POST'])
 def staff_updateinfo():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
     try:
