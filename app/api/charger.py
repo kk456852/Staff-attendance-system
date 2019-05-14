@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from url.auth import loged_Veri
+from app.api.auth import loged_Veri
 bp = Blueprint('charger', __name__, url_prefix='/charger')
 
 

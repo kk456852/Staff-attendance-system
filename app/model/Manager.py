@@ -12,12 +12,11 @@ class Manager(User):
         """update_employee修改员工信息"""
         employeeID = dictEmployeeInfo['employeeID']
         # 先获取数据库中原本的该员工
-        employeeName = UserInfo.getEmployNameByEmployeeID(employeeID)
-        employeeDepartment = UserInfo.getEmployDepartmentByEmployeeID(
-            employeeID)
-        employeeIdentity = UserInfo.getEmployIdentityByEmployeeID(employeeID)
-        employeeWorkStatus = UserInfo.getEmployWorkStatusByEmployeeID(
-            employeeID)
+        u = UserInfo().getInfoById(employeeID)
+        employeeName = u.name
+        employeeDepartment = u.department
+        employeeIdentity = u.identity
+        employeeWorkStatus = u.workStatus
 
         # 把字典中的信息与原信息比对，若发生更改，则更新数据库相应的属性
         if(dictEmployeeInfo['employeeName'] != employeeName):
@@ -71,5 +70,5 @@ class Manager(User):
 
     @classmethod
     def getManagerById(id):
-        u = UserInfo().getInfoById()
+        u = UserInfo().getInfoById(id)
         return Manager(u.id, u.name, u.password)

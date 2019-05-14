@@ -7,4 +7,7 @@ login_test_data = {
 
 def login_test():
     s = request
-    s.post('http://127.0.0.1:5501/auth/login',json.dumps(login_test_data))
+    r = s.post('http://127.0.0.1:5000/auth/login',json.dumps(login_test_data))
+    print(r.text)
+
+login_test()

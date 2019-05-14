@@ -1,10 +1,10 @@
 from flask import Blueprint, json, request
-from url.auth import loged_Veri
-from model import Manager
+from app.api.auth import loged_Veri
+from app.model import Manager
 bp = Blueprint('manager', __name__, url_prefix='/manager')
 
 
-@bp.route('/checkstaff', methods=('GET'))
+@bp.route('/checkstaff', methods=['GET'])
 def check_staff():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
     try:
@@ -30,7 +30,7 @@ def check_staff():
     return response_data
 
 
-@bp.route('/updatestaff', methods=('PUT'))
+@bp.route('/updatestaff', methods=['PUT'])
 def update_staff():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
     try:
