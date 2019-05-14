@@ -1,4 +1,9 @@
-from database import *
+from database import User
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, Numeric
+from sqlalchemy.orm import sessionmaker
+import config
 
 # # usertest = User(username='123', password='123', position='1', gender=1, age=1, workStatus=1, departmentId=1)
 # departmenttest = Department(1, 'test')
@@ -8,6 +13,11 @@ from database import *
 # db.session.commit()
 #
 
+Base = declarative_base()
+engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
+Session = sessionmaker(bind=engine)
+
+session = Session()
 
 # ---------------------------查询方法---------------------------------
 class UserInfo():
@@ -21,7 +31,8 @@ class UserInfo():
 
     # 自定义查询条件
     def getInfoByUserName(self, userName):
-        return User.query.filter_by(username=userName).all()
+        #return User.query.filter_by(username=userName).all()
+        return session.query(User).filter(User.username==userName).all()
 
 
 class DepartmentInfo():

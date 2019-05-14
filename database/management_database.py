@@ -1,12 +1,14 @@
 from flask import Flask
+from operation import *
 
-app = Flask(__name__)
+def test_print():
+    # print(UserInfo().findAll())
+    print(UserInfo().getInfoByUserName('test1'))
+    # print(WorkArrangementInfo().findAll())
+    # print(DepartmentInfo().findAll())
 
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
+def test_insert():
+    pass
 
 if __name__ == '__main__':
-    app.run()
+    test_print()
