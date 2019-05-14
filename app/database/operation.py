@@ -1,17 +1,4 @@
-from database import User
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Numeric
-from sqlalchemy.orm import sessionmaker
-import config
-
-# # usertest = User(username='123', password='123', position='1', gender=1, age=1, workStatus=1, departmentId=1)
-# departmenttest = Department(1, 'test')
-#
-# db.session.add(departmenttest)
-#
-# db.session.commit()
-#
+from . import Department, Leave, Report, SignSheet, User, WorkArrangement
 
 Base = declarative_base()
 engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
@@ -19,9 +6,10 @@ Session = sessionmaker(bind=engine)
 
 session = Session()
 
-# ---------------------------查询方法---------------------------------
 class UserInfo():
+    """查询方法"""
     # 全表查询
+
     def findAll(self):
         return User.query.all()
 
@@ -33,6 +21,9 @@ class UserInfo():
     def getInfoByUserName(self, userName):
         #return User.query.filter_by(username=userName).all()
         return session.query(User).filter(User.username==userName).all()
+
+    def getIdentityByID(self, id):
+        raise NotImplementedError
 
 
 class DepartmentInfo():
@@ -120,7 +111,6 @@ class Overtime():
 
     def getInfoBypermitted(self, permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
-
 
 
 # # 复杂查询以及多表关联查询DEMO展示

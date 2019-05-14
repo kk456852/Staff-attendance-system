@@ -1,14 +1,9 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 import os
 
-import config
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-app = Flask(__name__)
-app.config.from_object(config)
-db = SQLAlchemy(app)
+from .. import db
 
 
 class User(db.Model):  # 用户
@@ -22,7 +17,8 @@ class User(db.Model):  # 用户
     email = db.Column(db.String(30))
     phoneNumber = db.Column(db.String(20))
     workStatus = db.Column(db.Integer)  # 工作状态 1-上班 2-正常休假 3-经理状态 4-下班 5-请假休假
-    departmentId = db.Column(db.Integer, db.ForeignKey('department.id'))  # 部门标号
+    departmentId = db.Column(
+        db.Integer, db.ForeignKey('department.id'))  # 部门标号
 
     def __init__(self, username, password, position, gender, age, workStatus, departmentId):
         self.username = username
@@ -61,7 +57,8 @@ class WorkArrangement(db.Model):  # 工作安排
     __tablename__ = 'arrangement'
     arragementId = db.Column(db.Integer, primary_key=True)
     staffId = db.Column(db.Integer, db.ForeignKey('user.id'))  # 员工标号
-    departmentId = db.Column(db.Integer, db.ForeignKey('department.id'))  # 部门标号
+    departmentId = db.Column(
+        db.Integer, db.ForeignKey('department.id'))  # 部门标号
     workDate = db.Column(db.Date, nullable=False)  # 工作日期
     beginTime = db.Column(db.Time, nullable=False)  # 开始时间
     endTime = db.Column(db.Time, nullable=False)  # 结束时间
@@ -82,7 +79,8 @@ class WorkArrangement(db.Model):  # 工作安排
 class SignSheet(db.Model):  # 签到表
     __tablename__ = 'signsheet'
     sheetId = db.Column(db.Integer, primary_key=True)
-    staffId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 员工标号
+    staffId = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), nullable=False)  # 员工标号
     type = db.Column(db.Integer, nullable=False)  # 类型 0-日常签到 1-临时加班
     date = db.Column(db.Integer, nullable=False)
     punchBeginTime = db.Column(db.Time)  # 签到上班时间
@@ -105,7 +103,8 @@ class SignSheet(db.Model):  # 签到表
 class Leave(db.Model):  # 请假
     __tablename__ = 'leave'
     leaveId = db.Column(db.Integer, primary_key=True)
-    staffId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 员工标号
+    staffId = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), nullable=False)  # 员工标号
     leaveReason = db.Column(db.String(50))
     leaveDate = db.Column(db.Date, nullable=False)
     submitTime = db.Column(db.Time, nullable=False)
@@ -126,9 +125,10 @@ class Leave(db.Model):  # 请假
 
 
 class Report(db.Model):  # 销假
-    __tablename__='report'
+    __tablename__ = 'report'
     reportId = db.Column(db.Integer, primary_key=True)
-    leaveId = db.Column(db.Integer, db.ForeignKey('leave.leaveId'), nullable=False)  # 对应的请假id
+    leaveId = db.Column(db.Integer, db.ForeignKey(
+        'leave.leaveId'), nullable=False)  # 对应的请假id
     reportTime = db.Column(db.Time, nullable=False)
 
     def __init__(self, leaveId, reportTime):
@@ -143,7 +143,8 @@ class Overtime(db.Model):  # 加班
     __tablename__ = 'overtime'
     overtimeId = db.Column(db.Integer, primary_key=True)
     overtimeThreshold = db.Column(db.Integer)  # 加班阈值 单位-分钟
-    staffId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # 员工标号
+    staffId = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), nullable=False)  # 员工标号
     overtimeBeginTime = db.Column(db.Time, nullable=False)
     overtimeEndTime = db.Column(db.Time, nullable=False)
     overtimeType = db.Column(db.Integer, nullable=False)  # 0-法定假日 1-工作时间
@@ -157,5 +158,3 @@ class Overtime(db.Model):  # 加班
 
     def __repr__(self):
         return '<Overtime %i>' % self.overtimeId
-
-db.create_all()
