@@ -1,6 +1,5 @@
 from flask import Blueprint, request, session, json, redirect, url_for
-from model.User import User
-@ -0, 0 + 1, 64 @@
+from app.model import User
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
@@ -13,27 +12,33 @@ def log_Index():
 def login():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
     user = User(request_data['UserId'], request_data['password'])
-    if user.login() is "success":
-        try:
-            session[request.Userid] = user.isManager
-        except:
+    try:
+        if True: #user.login() is "success":
+            try:
+                session[request_data['UserId']] = 2
+            except:
+                response_data = {
+                    'result': True,
+                    'status': 201  # 账户之前已登陆，返回到相应页面
+                }
+                response_data = json.dumps(response_data)
+                return response_data
             response_data = {
-                'result': True,
-                'status': 201  # 账户之前已登陆，返回到相应页面
+                'result': True,  # 正常登陆
+                'status': 200
             }
             response_data = json.dumps(response_data)
             return response_data
+        else:
+            response_data = {
+                'result': False,  # 登陆失败
+                'status': 500
+            }
+    except:
         response_data = {
-            'result': True,  # 正常登陆
-            'status': 200
-        }
-        response_data = json.dumps(response_data)
-        return response_data
-    else:
-        response_data = {
-            'result': False,  # 登陆失败
-            'status': 500
-        }
+                'result': False,  # 登陆失败
+                'status': 501
+            }
         response_data = json.dumps(response_data)
         return response_data
 
