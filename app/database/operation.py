@@ -33,6 +33,19 @@ class UserInfo():
         user.email = newEmail
         return 1
 
+    # 通过字典更新员工信息
+    # 字典的格式为员工 工号、姓名、部门、职位、工作状态，指定工号不可更改！！
+    # dictEmployeeInfo = {'ID': u.ID, 'name': u.name, 'department': u.department,
+    #                         'identity': u.identity, 'workStatus': u.workStatus}
+    def updateEmployee(self, ID, dictEmployeeInfo):
+        user = User.query.filter_by(ID=ID).first()
+        user.name = dictEmployeeInfo['name']
+        user.identity = dictEmployeeInfo['identity']
+        user.departmentID = dictEmployeeInfo['department']
+        user.workStatus = dictEmployeeInfo['workStatus']
+        db.session.commit()
+        return 1
+
 
 class DepartmentInfo():
     def findAll(self):
