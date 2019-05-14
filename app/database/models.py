@@ -8,16 +8,16 @@ from .. import db
 
 class User(db.Model):  # 用户
     __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(10), nullable=False)
+    ID = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(10), nullable=False)
     password = db.Column(db.String(20), nullable=False)
-    position = db.Column(db.Integer, nullable=False)  # 职务 1-员工 2-主管 3-经理
+    identity = db.Column(db.Integer, nullable=False)  # 职务 1-经理 2-主管 3-普通员工
     gender = db.Column(db.Boolean)  # 性别 0-男 1-女
     birthday = db.Column(db.Date)
     email = db.Column(db.String(30))
     phoneNumber = db.Column(db.String(20))
     workStatus = db.Column(db.Integer)  # 工作状态 1-上班 2-正常休假 3-经理状态 4-下班 5-请假休假
-    departmentId = db.Column(
+    department = db.Column(
         db.Integer, db.ForeignKey('department.id'))  # 部门标号
 
     def __init__(self, username, password, position, gender, age, workStatus, departmentId):

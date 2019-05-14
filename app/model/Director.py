@@ -1,5 +1,5 @@
 from .Employee import Employee
-
+from ..database import UserInfo
 
 class Director(Employee):
     def __init__(self, ID, name, password):
@@ -27,5 +27,5 @@ class Director(Employee):
 
     @classmethod
     def getDirectorById(id):
-        u = UserInfo().getInfoById()
+        u = UserInfo().getInfoById(id)
         return Director(u.id, u.name, u.password)

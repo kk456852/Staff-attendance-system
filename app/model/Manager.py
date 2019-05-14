@@ -11,42 +11,17 @@ class Manager(User):
     def update_employee(self, **dictEmployeeInfo):
         """update_employee修改员工信息"""
         employeeID = dictEmployeeInfo['employeeID']
-        # 先获取数据库中原本的该员工
-        employeeName = UserInfo.getEmployNameByEmployeeID(employeeID)
-        employeeDepartment = UserInfo.getEmployDepartmentByEmployeeID(
-            employeeID)
-        employeeIdentity = UserInfo.getEmployIdentityByEmployeeID(employeeID)
-        employeeWorkStatus = UserInfo.getEmployWorkStatusByEmployeeID(
-            employeeID)
+        UserInfo().update_employee(employeeID, **dictEmployeeInfo)
 
-        # 把字典中的信息与原信息比对，若发生更改，则更新数据库相应的属性
-        if(dictEmployeeInfo['employeeName'] != employeeName):
-            employeeName = dictEmployeeInfo['employeeName']
-            UserInfo.update_employee(employeeID, employeeName)
+    
 
-        if(dictEmployeeInfo['employeeDepartment'] != employeeDepartment):
-            employeeDepartment = dictEmployeeInfo['employeeDepartment']
-            UserInfo.update_employee(employeeID, employeeDepartment)
-
-        if(dictEmployeeInfo['employeeIdentity'] != employeeIdentity):
-            employeeIdentity = dictEmployeeInfo['employeeIdentity']
-            UserInfo.update_employee(employeeID, employeeIdentity)
-
-        if(dictEmployeeInfo['employeeWorkStatus'] != employeeWorkStatus):
-            employeeWorkStatus = dictEmployeeInfo['employeeWorkStatus']
-            UserInfo.update_employee(employeeID, employeeWorkStatus)
 
     def retrieve_employee(self, employeeID):
         """retrieve_employee查看员工信息"""
         # 数据库获取员工工号对应的姓名、部门、职位、工作状态
-        employeeName = UserInfo.getEmployNameByEmployeeID(employeeID)
-        employeeDepartment = UserInfo.getEmployDepartmentByEmployeeID(
-            employeeID)
-        employeeIdentity = UserInfo.getEmployIdentityByEmployeeID(employeeID)
-        employeeWorkStatus = UserInfo.getEmployWorkStatusByEmployeeID(
-            employeeID)
-        dictEmployeeInfo = {'ID': employeeID, 'name': employeeName, 'department': employeeDepartment,
-                            'identity': employeeIdentity, 'workStatus': employeeWorkStatus}
+        u = UserInfo().getInfoById(employeeID)
+        dictEmployeeInfo = {'ID': u.ID, 'name': u.name, 'department': u.department,
+                            'identity': u.identity, 'workStatus': u.workStatus}
         return dictEmployeeInfo
 
     def delete_employee(self):
@@ -71,5 +46,5 @@ class Manager(User):
 
     @classmethod
     def getManagerById(id):
-        u = UserInfo().getInfoById()
+        u = UserInfo().getInfoById(id)
         return Manager(u.id, u.name, u.password)
