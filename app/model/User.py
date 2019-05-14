@@ -34,11 +34,11 @@ class User:
         if(dEmail != None):
             return "fail"
         else:
-            UserInfo.insert_Email(self.ID, email)
+            UserInfo().update_Email(self.ID, email)
             return "succeed"
 
     def updateUser(self, newEmail):
-        UserInfo.update_Email(self.ID, newEmail)
+        UserInfo().update_Email(self.ID, newEmail)
         return "succeed"
 
 

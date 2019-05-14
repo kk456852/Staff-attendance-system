@@ -7,24 +7,17 @@ bp = Blueprint('staff', __name__, url_prefix='/staff')
 @bp.route('/checkinfo', methods=['GET'])
 def staff_checkinfo():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
-    try:
-        if loged_Veri(request_data['StaffId']) == 0:
-            employee = Employee(request_data['StaffId'])
-            data = employee.getinfo()
-            response_data = {
-                'result': True,
-                'status': 220,
-                'data': data
-            }
-        else:
-            response_data = {
-                'result': False,
-                'status': 520
-            }
-    except:
+    if loged_Veri(request_data['StaffId']) == 0:
+        employee = Employee(request_data['StaffId'])
+        data = employee.getinfo()
         response_data = {
-            'result': False,
-            'status': 521
+            'status': 20000,
+            'data': data
+        }
+    else:
+        response_data = {
+            'status': 50000,
+            'data': ''
         }
     response_data = json.dumps(response_data)
     return response_data
@@ -33,23 +26,17 @@ def staff_checkinfo():
 @bp.route('/updateinfo', methods=['POST'])
 def staff_updateinfo():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
-    try:
-        if loged_Veri(request_data['StaffId']) == 0:
-            employee = Employee(request_data['StaffId'])
-            employee.Updateinfo(request_data['data'])
-            response_data = {
-                'result': True,
-                'status': 221
-            }
-        else:
-            response_data = {
-                'result': False,
-                'status': 520
-            }
-    except:
+    if loged_Veri(request_data['StaffId']) == 0:
+        employee = Employee(request_data['StaffId'])
+        employee.Updateinfo(request_data['data'])
         response_data = {
-            'result': False,
-            'status': 522
+            'status': 20000,
+            'data': ''
+        }
+    else:
+        response_data = {
+            'status': 50000,
+            'data': ''
         }
     response_data = json.dumps(response_data)
     return response_data

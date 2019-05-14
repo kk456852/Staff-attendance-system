@@ -8,65 +8,42 @@ def log_Index():
     return "This is auth index page!"
 
 
-@bp.route('/login', methods=('GET', 'POST'))
+@bp.route('/login', methods=['POST'])
 def login():
     request_data = json.loads(str(request.get_data(), 'utf-8'))
     user = User(request_data['UserId'], request_data['password'])
-    try:
-        if True: #user.login() is "success":
-            try:
-                session[request_data['UserId']] = 2
-            except:
-                response_data = {
-                    'result': True,
-                    'status': 201  # 账户之前已登陆，返回到相应页面
-                }
-                response_data = json.dumps(response_data)
-                return response_data
-            response_data = {
-                'result': True,  # 正常登陆
-                'status': 200
-            }
-            response_data = json.dumps(response_data)
-            return response_data
-        else:
-            response_data = {
-                'result': False,  # 登陆失败
-                'status': 500
-            }
-    except:
+    if user.login() is "success":
+        session[request_data['UserId']] = user.isManager()
         response_data = {
-                'result': False,  # 登陆失败
-                'status': 501
-            }
-        response_data = json.dumps(response_data)
-        return response_data
-
-
-@bp.route('/logout', methods=('GET', 'POST'))
-def logout():
-    request_data = json.loads(str(request.get_data(), 'utf-8'))
-    try:
-        session.pop(request_data['UserId'], None)
-        response_data = {
-            'result': True,
-            'status': 202
+            'status': 20000,
+            'data': ''
         }
-        #退出登陆成功
-    except:
+    else:
         response_data = {
-            'result': False,
-            'status': 501  # 退出登陆失败
+            'status': 50000,
+            'data': ''
         }
     response_data = json.dumps(response_data)
     return response_data
 
 
+@bp.route('/logout', methods=['GET'])
+def logout():
+    request_data = json.loads(str(request.get_data(), 'utf-8'))
+    session.pop(request_data['UserId'], None)
+    response_data = {
+        'status': 20000,
+        'data': ''
+    }
+    response_data = json.dumps(response_data)
+    return response_data
+
+
 def loged_Veri(id=None):
-    #检查会话是否存在，不存在跳转到log_index界面
-    #返回身份ID  0：普通员工， 1：主管   2：经理 3:未查询到
+    # 检查会话是否存在，不存在跳转到log_index界面
+    # 返回身份ID  0：普通员工， 1：主管   2：经理 3:未查询到
     try:
-        result = session[id]
-    except:
+        result = session[str(id)]
+    except BaseException:
         result = 3
     return result

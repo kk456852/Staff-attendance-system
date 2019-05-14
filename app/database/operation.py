@@ -1,6 +1,7 @@
 from . import Department, Leave, Report, SignSheet, User, WorkArrangement
 
-# ---------------------------查询方法---------------------------------
+
+
 class UserInfo():
     # 全表查询
     def findAll(self):
