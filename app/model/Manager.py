@@ -11,7 +11,7 @@ class Manager(User):
     def update_employee(self, **dictEmployeeInfo):
         """update_employee修改员工信息"""
         employeeID = dictEmployeeInfo['employeeID']
-        UserInfo.update_employee(employeeID, **dictEmployeeInfo)
+        UserInfo().update_employee(employeeID, **dictEmployeeInfo)
 
     
 
