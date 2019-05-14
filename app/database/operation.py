@@ -2,6 +2,7 @@ from . import Department, Leave, Report, SignSheet, User, WorkArrangement
 
 
 
+# ---------------------------查询方法---------------------------------
 class UserInfo():
     # 全表查询
     def findAll(self):
@@ -11,9 +12,9 @@ class UserInfo():
     def getInfoByID(self, ID):
         return User.query.get(ID)
 
-    # 自定义查询条件
+    # 根据工号查询姓名
     def getNameByID(self, ID):
-        return User.query.filter_by(ID=ID)[0].username
+        return User.query.filter_by(ID=ID)[0].name
 
     # 根据员工工号查询密码
     def getPasswordByID(self, ID):
@@ -26,25 +27,6 @@ class UserInfo():
     # 通过员工工号查询其Email
     def getEmailByID(self, ID):
         return User.query.filter_by(ID=ID)[0].email
-
-    # 通过员工ID更新其Email为newEmail
-    def updateEmailByID(self, ID, newEmail):
-        user = User.query.filter_by(ID=ID).first()
-        user.email = newEmail
-        return 1
-
-    # 通过字典更新员工信息
-    # 字典的格式为员工 工号、姓名、部门、职位、工作状态，指定工号不可更改！！
-    # dictEmployeeInfo = {'ID': u.ID, 'name': u.name, 'department': u.department,
-    #                         'identity': u.identity, 'workStatus': u.workStatus}
-    def updateEmployee(self, ID, dictEmployeeInfo):
-        user = User.query.filter_by(ID=ID).first()
-        user.name = dictEmployeeInfo['name']
-        user.identity = dictEmployeeInfo['identity']
-        user.departmentID = dictEmployeeInfo['department']
-        user.workStatus = dictEmployeeInfo['workStatus']
-        db.session.commit()
-        return 1
 
 
 class DepartmentInfo():
@@ -117,7 +99,7 @@ class ReportInfo():
         return Report.query.filter_by(leaveID=leaveID).all()
 
 
-class Overtime():
+class OvertimeInfo():
     def findalll(self):
         return Overtime.query.all()
 
@@ -133,3 +115,47 @@ class Overtime():
     def getInfoBypermitted(self, permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
 
+
+# # 复杂查询以及多表关联查询DEMO展示
+# class UtilsQuery():
+#     def find(self):
+#         # 这里通过关联User和Token两张表进行关联查询
+#         return User.query.filter(User.id == Token.user_id).filter(Token.user_cname == 'XXXX').all()
+#         # return db.session.query(User).filter(User.id == Token.user_id).filter(Token.user_cname=='XXXX').all()
+#
+#     def findByPage(self, pageNum, size):
+#         # 这里展示分页查询
+#         if pageNum < 1:
+#             pageNum = 1
+#         if size < 1:
+#             size = 2
+#         start = (pageNum - 1) * size
+#         end = pageNum * size
+#         return User.query.slice(start, end).all()
+
+
+# ---------------------------更新方法---------------------------------
+class UserUpdate():
+    # 通过员工ID更新其Email为newEmail
+    def updateEmailByID(self, ID, newEmail):
+        user = User.query.filter_by(ID=ID).first()
+        user.email = newEmail
+        db.session.commit()
+        return 1
+
+    # 通过字典更新员工信息
+    # 字典的格式为员工 工号、姓名、部门、职位、工作状态，指定工号不可更改！！
+    # dictEmployeeInfo = {'ID': u.ID, 'name': u.name, 'department': u.department,
+    #                         'identity': u.identity, 'workStatus': u.workStatus}
+    def updateEmployee(self, ID, dictEmployeeInfo):
+        user = User.query.filter_by(ID=ID).first()
+        user.name = dictEmployeeInfo['name']
+        user.identity = dictEmployeeInfo['identity']
+        user.departmentID = dictEmployeeInfo['department']
+        user.workStatus = dictEmployeeInfo['workStatus']
+        db.session.commit()
+        return 1
+
+
+# ---------------------------插入方法---------------------------------
+# ---------------------------删除方法---------------------------------
