@@ -1,4 +1,4 @@
-from flask import Blueprint, request, json
+from flask import Blueprint, request, json,jsonify
 from app.api.auth import loged_Veri
 from app.model.Employee import Employee
 bp = Blueprint('staff', __name__, url_prefix='/staff')
@@ -19,7 +19,7 @@ def staff_checkinfo():
             'status': 50000,
             'data': {}
         }
-    response_data = json.dumps(response_data)
+    response_data = jsonify(response_data)
     return response_data
 
 
@@ -38,7 +38,7 @@ def staff_updateinfo():
             'status': 50000,
             'data': {}
         }
-    response_data = json.dumps(response_data)
+    response_data = jsonify(response_data)
     return response_data
 
 

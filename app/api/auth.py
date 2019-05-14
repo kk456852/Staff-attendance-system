@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, json, redirect, url_for
+from flask import Blueprint, request, session, json, redirect, url_for,jsonify
 from app.model import User
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -23,7 +23,7 @@ def login():
             'status': 50000,
             'data': {}
         }
-    response_data = json.dumps(response_data)
+    response_data = jsonify(response_data)
     return response_data
 
 
@@ -35,7 +35,7 @@ def logout():
         'status': 20000,
         'data': {}
     }
-    response_data = json.dumps(response_data)
+    response_data = jsonify(response_data)
     return response_data
 
 
