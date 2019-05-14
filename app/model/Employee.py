@@ -1,4 +1,4 @@
-from .User import User
+from ..database import User
 
 
 class Department:

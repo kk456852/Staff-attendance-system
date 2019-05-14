@@ -5,5 +5,4 @@ from .Manager import Manager
 from .Overtime import Overtime
 from .Punch import Punch
 from .TemporaryOvertime import TemporaryOvertime
-from .User import User
 from .WorkArrangement import WorkArrangement

@@ -30,4 +30,5 @@ def ipy():
 @app.cli.command()
 def init_db():
     """Init database and create basic test data."""
+    db.drop_all()
     db.create_all()

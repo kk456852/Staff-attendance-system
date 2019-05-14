@@ -1,56 +1,66 @@
-from flask import Blueprint, request, session, json, redirect, url_for, jsonify
-from app.model import User
+from functools import wraps
+
+from flask import (Blueprint, current_app, json, jsonify, redirect, request,
+                   session, url_for)
+
+from app.database import User
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-@bp.route('/', methods=('GET', 'POST'))
-def log_Index():
-    return "This is auth index page!"
+def success(**args):
+    return jsonify({
+        "status": 20000,
+        "data": args
+    })
 
-@bp.route('/login',methods = ('GET','POST'))
+
+def failed(reason=50000):
+    return jsonify({
+        "status": reason,
+        "data": {}
+    })
+
+
+def login_required(method):
+    @wraps(method)
+    def check_and_do(*args, **kwargs):
+        try:
+            if session['id'] is 1: # TODO: 修改这里，符合实际权限层次模型
+                return method(*args, **kwargs)
+            else:
+                raise Exception
+        except Exception as e:
+            current_app.logger.debug(e)
+            return failed()
+
+    return check_and_do
+
+
+@bp.route('/test', methods=['GET'])
+@login_required
+def log_Index():
+    return success()
+
+
+@bp.route('/login', methods=['POST'])
 def login():
     request_data = request.get_json()
     try:
-        user = User(request_data['id'], request_data['password'])
-        user.login()
-        session[request_data['id']] = user.isManager()
-        response_data = {
-            'status': 20000,
-            'data': {}
-        }
-    except Exception:
-        response_data = {
-            'result': True, #正常登陆
-            'status': 200
-        }
-        response_data = json.dumps(response_data)
-        return response_data
-    else :
-        response_data = {
-            'status': 50000,
-            'data': {}
-        }
-    response_data = jsonify(response_data)
-    return response_data
+        u = User.ByID(request_data['id'])
+        u.login(request_data['password'])
+        session['id'] = u.identity
+        return success()
+    except Exception as e:
+        current_app.logger.debug(e)
+        return failed(50001)
 
 
-@bp.route('/logout', methods=['GET'])
+@bp.route('/logout', methods=['POST'])
 def logout():
-    request_data = json.loads(str(request.get_data(), 'utf-8'))
-    session.pop(request_data['UserId'], None)
-    response_data = {
-        'status': 20000,
-        'data': {}
-    }
-    response_data = jsonify(response_data)
-    return response_data
+    session['id'] = None
+    return success()
 
 
-def loged_Veri(id=None):
-    # 检查会话是否存在，不存在跳转到log_index界面
-    # 返回身份ID  0：普通员工， 1：主管   2：经理 3:未查询到
-    try:
-        result = session[str(id)]
-    except BaseException:
-        result = 3
-    return result
+def loged_Veri():
+    pass

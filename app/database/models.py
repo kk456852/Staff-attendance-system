@@ -10,7 +10,6 @@ from .. import db
 class User(db.Model):  # 用户
     __tablename__ = 'user'
     ID = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128), nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     identity = db.Column(db.Integer, nullable=False)  # 职务 1-员工 2-主管 3-经理
     name = db.Column(db.String(10), nullable=False)
@@ -23,15 +22,15 @@ class User(db.Model):  # 用户
         db.Integer, db.ForeignKey('department.ID'))  # 部门标号
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs) # （可选地）初始化数据库内容
+        super().__init__(**kwargs)  # （可选地）初始化数据库内容
 
     # 这个方法作为对象的打印方法，类似于java类中 自己重写的 toString()方法，实现这个方法后，print(类) 将会执行这个方法进行打印
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User {}, ID={}>'.format(self.name, self.ID)
 
     @property
     def password(self):
-        raise AttributeError('password is not a readable attribute')
+        raise AttributeError('密码不能被明文读取！')
 
     @password.setter
     def password(self, password):
@@ -44,8 +43,8 @@ class User(db.Model):  # 用户
     # 数据库查询方法
     #
 
-    @classmethod
-    def findAll() :
+    @staticmethod
+    def All():
         """返回数据库中所有的User对象
 
         returns: List[User]
@@ -53,19 +52,30 @@ class User(db.Model):  # 用户
         return User.query.all()
 
     @classmethod
-    def getInfoByID(self, ID):
-        """根据ID主键查询用户信息"""
+    def ByID(self, ID):
+        """根据ID构造对象
+
+        returns: User
+        """
         return User.query.get(ID)
 
     #
     # 自修改方法
-    # 
+    #
 
-    def login(self):
-        verify_password(self.password)
+    def login(self, password):
+        """登录操作，失败后会抛出异常
 
+        raise: Exception
+        """
+        if not self.verify_password(password):
+            raise Exception
 
     def update_self(self):
+        """将修改后的对象，或者新增的对象添加/修改到数据库中。
+
+        raise: 
+        """
         db.session.add(self)
         db.session.commit()
 
@@ -76,9 +86,8 @@ class Department(db.Model):  # 部门
     name = db.Column(db.String(10))
     users = db.relationship('User', backref='department')  # ?
 
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Department %i %r>' % (self.id, self.name)
@@ -107,13 +116,8 @@ class WorkArrangement(db.Model):  # 工作安排
     endTime = db.Column(db.Time, nullable=False)  # 结束时间
     assignment = db.Column(db.String(50))  # 工作安排
 
-    def __init__(self, staffID, departmentID, workDate, beginTime, endTime, assignment):
-        self.staffID = staffID
-        self.departmentID = departmentID
-        self.workDate = workDate
-        self.beginTime = beginTime
-        self.endTime = endTime
-        self.assignment = assignment
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return '<WorkArrangement %i %i>' % (self.staffID, self.departmentID)
@@ -147,13 +151,8 @@ class SignSheet(db.Model):  # 签到表
     isLate = db.Column(db.Boolean)  # 是否迟到
     isEarly = db.Column(db.Boolean)  # 是否早退
 
-    def __init__(self, staffID, type, date, punchBeginTime, punchEndTime, isLate):
-        self.sheetID = staffID
-        self.type = type
-        self.date = date
-        self.punchBeginTime = punchBeginTime
-        self.punchEndTime = punchEndTime
-        self.isLate = isLate
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return '<SignSheet %i %i>' % (self.sheetIdID, self.type)
@@ -191,13 +190,8 @@ class Leave(db.Model):  # 请假
     leaveEndTime = db.Column(db.Time, nullable=False)
     isLeavePermitted = db.Column(db.Integer)  # 0-未审核 1-通过审核 2-未通过审核
 
-    def __init__(self, staffID, leaveReason, leaveDate, leaveBeginTime, leaveEndTime, isLeavePermitted):
-        self.staffID = staffID
-        self.leaveReason = leaveReason
-        self.leaveDate = leaveDate
-        self.leaveBeginTime = leaveBeginTime
-        self.leaveEndTime = leaveEndTime
-        self.isLeavePermitted = isLeavePermitted
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Leave %i %r>' % (self.staffID, self.leaveReason)
@@ -223,7 +217,6 @@ class Leave(db.Model):  # 请假
         return Leave.query.filter_by(isLeavePermitted=permitted).all()
 
 
-
 class Report(db.Model):  # 销假
     __tablename__ = 'report'
     reportID = db.Column(db.Integer, primary_key=True)
@@ -231,9 +224,8 @@ class Report(db.Model):  # 销假
         'leave.leaveID'), nullable=False)  # 对应的请假id
     reportTime = db.Column(db.Time, nullable=False)
 
-    def __init__(self, leaveID, reportTime):
-        self.leaveID = leaveID
-        self.reportTime = reportTime
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Report %i %i>' % (self.reportID, self.leaveID)
@@ -251,7 +243,6 @@ class Report(db.Model):  # 销假
         return Report.query.filter_by(leaveId=leaveId).all()
 
 
-
 class Overtime(db.Model):  # 加班
     __tablename__ = 'overtime'
     overtimeID = db.Column(db.Integer, primary_key=True)
@@ -264,10 +255,8 @@ class Overtime(db.Model):  # 加班
     submitTime = db.Column(db.Time, nullable=False)
     isOvertimePermitted = db.Column(db.Boolean)  # 是否准许加班 0-未审核 1-通过 2-不通过
 
-    def __init__(self, overtimeThreshold, staffID, isOvertimePermitted):
-        self.overtimeThreshold = overtimeThreshold
-        self.staffID = staffID
-        self.isOvertimePermitted = isOvertimePermitted
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Overtime %i>' % self.overtimeId
