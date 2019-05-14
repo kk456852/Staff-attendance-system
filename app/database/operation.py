@@ -25,6 +25,28 @@ class UserInfo():
     def getIdentityByID(self, id):
         raise NotImplementedError
 
+    # 根据员工工号查询姓名
+    def getNameByID(self, id):
+        return User.query.filter_by(id=id)[0].username
+
+    # 根据员工工号查询密码
+    def getPasswordByID(self, id):
+        return User.query.filter_by(id=id)[0].password
+
+    # 通过员工工号查询其身份
+    def getIdentityByID(self, id):
+        return User.query.filter_by(id=id)[0].position
+
+    # 通过员工工号查询其Email
+    def getEmailByID(self, id):
+        return User.query.filter_by(id=id)[0].email
+
+    # 通过员工ID更新其Email为newEmail
+    def updateEmailByID(self, id, newEmail):
+        user = User.query.filter_by(id=id).first()
+        user.email = newEmail
+        return 1
+
 
 class DepartmentInfo():
     def findAll(self):
