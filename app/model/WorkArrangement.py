@@ -1,3 +1,5 @@
+from .. import db
+
 class WorkArrangement(db.Model):  # 工作安排
     __tablename__ = 'arrangement'
     arragementID = db.Column(db.Integer, primary_key=True)

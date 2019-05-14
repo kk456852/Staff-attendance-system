@@ -1,7 +1,9 @@
+from .. import db
+
 from .Employee import Employee
 
 
-class Director(Employee):
+class Charge(Employee):
     def __init__(self, ID, name, password):
         super().__init__(self, ID, name, password)
 

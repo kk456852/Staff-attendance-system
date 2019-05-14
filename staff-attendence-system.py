@@ -22,7 +22,7 @@ def ipy():
     """Open IPython Debug Shell"""
     ctx = app.app_context()
     ctx.push()
-    from app.database import User
+    from app.model import User # TODO: 添加所有模型！
     __import__('IPython').embed()
     ctx.pop()
 
