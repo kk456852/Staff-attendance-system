@@ -44,7 +44,14 @@ class User(db.Model):
     email = db.Column(db.String(30))
     phoneNumber = db.Column(db.String(20))
     workStatus = db.Column(db.Integer)
+
+    # 伪属性，被下面的 @property department 代理
     _departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
+
+    # 反向引用，包含所有引用User.ID的项
+    leaves = db.relationship('Leave', backref='user')
+    signsheets = db.relationship('SignSheet', backref='user')
+    overtimes = db.relationship('Overtime', backref='user')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)  # （可选地）初始化数据库内容
@@ -66,6 +73,11 @@ class User(db.Model):
 
     @property
     def role(self):
+        """返回用户的角色
+        可以使用.name方法获取角色的名字 (MANAGER/CHARGE/STAFF)
+
+        :return Role
+        """
         return Role(self.identity)
 
     @role.setter

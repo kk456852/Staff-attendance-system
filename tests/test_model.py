@@ -26,5 +26,5 @@ class Test_DB(unittest.TestCase):
         u3 = User.ByID(10).login('123456')
 
     def tearDown(self):
-        User.ByID(10).delete_self()
+        User.ByID(10).delete_db()
         self.app_context.pop()

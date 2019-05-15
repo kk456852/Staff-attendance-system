@@ -19,7 +19,7 @@ class Test_api(unittest.TestCase):
     def test_api(self):
         client = self.app.test_client()
         data = {
-            'id': '123456',
+            'id': 123456,
             'password': '123'
         }
         r = client.post('/auth/login', json=data)
@@ -37,5 +37,5 @@ class Test_api(unittest.TestCase):
         self.assertEqual(client.post('/auth/logout').json['status'], 20000)
 
     def tearDown(self):
-        User.ByID(10).delete_self()
+        User.ByID(10).delete_db()
         self.app_context.pop()

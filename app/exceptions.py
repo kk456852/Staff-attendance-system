@@ -8,7 +8,7 @@ class UserNotFoundException(Exception):
 
 
 class RequestError(Exception):
-    def err_num():
+    def err_num(self):
         return self.eno
 
 
