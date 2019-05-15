@@ -1,5 +1,5 @@
 from flask import Blueprint, request, json, jsonify
-from .auth import loged_Veri
+from .auth import login_required
 from ..model import Employee
 bp = Blueprint('staff', __name__, url_prefix='/staff')
 

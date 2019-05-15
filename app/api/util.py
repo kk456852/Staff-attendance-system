@@ -2,6 +2,8 @@ from functools import wraps
 
 from flask import jsonify, session, current_app
 
+from ..model import Role
+
 
 def success(**args):
     return jsonify({
@@ -17,16 +19,19 @@ def failed(reason=50000):
     })
 
 
-def login_required(method):
-    @wraps(method)
-    def check_and_do(*args, **kwargs):
-        try:
-            if session['id'] is 1:  # TODO: 修改这里，符合实际权限层次模型
-                return method(*args, **kwargs)
-            else:
-                raise Exception
-        except Exception as e:
-            current_app.logger.debug(e)
-            return failed()
+def login_required(role=Role.STAFF):
 
-    return check_and_do
+    def check_role(method):
+        @wraps(method)
+        def check_and_do(*args, **kwargs):
+            try:
+                if session['role'] >= role:  # 高权限的可以访问低权限的
+                    return method(*args, **kwargs)
+                else:
+                    raise Exception
+            except Exception as e:
+                current_app.logger.debug(e)
+                return failed()
+
+        return check_and_do
+    return check_role

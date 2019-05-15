@@ -22,7 +22,7 @@ def ipy():
     """Open IPython Debug Shell"""
     ctx = app.app_context()
     ctx.push()
-    from app.model import (User, Charge, Department, Employee, Leave, Manager,
+    from app.model import (Department, Leave,
                            Overtime, OvertimeSituation, TemporaryOvertime, Report,
                            Punch, SignSheet, WorkSituation, User, WorkArrangement)
     __import__('IPython').embed()

@@ -9,7 +9,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @bp.route('/test', methods=['GET'])
-@login_required
+@login_required()
 def log_Index():
     return success()
 
@@ -20,7 +20,8 @@ def login():
     try:
         u = User.ByID(request_data['id'])
         u.login(request_data['password'])
-        session['id'] = u.identity
+        session['id'] = u.ID
+        session['role'] = u.role
         return success()
     except Exception as e:
         current_app.logger.debug(e)
@@ -28,10 +29,8 @@ def login():
 
 
 @bp.route('/logout', methods=['POST'])
+@login_required()
 def logout():
     session['id'] = None
+    session['role'] = None
     return success()
-
-
-def loged_Veri():
-    pass
