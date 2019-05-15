@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .. import db
 from .Department import Department
+from ..exceptions import UserNotFoundException
 
 
 class Role(IntEnum):
@@ -26,7 +27,7 @@ class User(db.Model):
     :param password* 只可写，不可读
     :param role* 角色，枚举Role类型
     :param name*
-    :param gender 性别 0-男 1-女
+    :param gender 性别 False-男 True-女
     :param birthday
     :param email
     :param phoneNumber
@@ -43,7 +44,7 @@ class User(db.Model):
     email = db.Column(db.String(30))
     phoneNumber = db.Column(db.String(20))
     workStatus = db.Column(db.Integer)
-    departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
+    _departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)  # （可选地）初始化数据库内容
@@ -71,8 +72,16 @@ class User(db.Model):
     def role(self, r):
         self.identity = r
 
+    @property
+    def departmentID(self):
+        return self.department.ID
+
+    @departmentID.setter
+    def departmentID(self, ID):
+        self.department = Department.ByID(ID)
+
     #
-    # 数据库查询方法
+    # 数据库方法
     #
 
     @staticmethod
@@ -86,10 +95,33 @@ class User(db.Model):
     @staticmethod
     def ByID(ID):
         """根据ID构造对象
+        数据库中没有此ID时抛出异常
 
         :returns User
+        :raise UserNotFoundException
         """
-        return User.query.get(ID)
+        u = User.query.get(ID)
+        if not u:
+            raise UserNotFoundException()
+        return u
+
+    def update_db(self):
+        """将修改后的对象，或者新增的对象添加/修改到数据库中。
+        失败时抛出异常。
+
+        :raise InvalidRequestError
+        """
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_db(self):
+        """删除数据库中该对象对应的用户。
+        失败时抛出异常。
+
+        :raise InvalidRequestError
+        """
+        db.session.delete(self)
+        db.session.commit()
 
     #
     # 公共方法
@@ -98,26 +130,23 @@ class User(db.Model):
     def login(self, password):
         """登录操作，失败后会抛出异常
 
+        :param str
         :raise Exception
         """
         if not self.verify_password(password):
             raise Exception
 
-    def update_self(self):
-        """将修改后的对象，或者新增的对象添加/修改到数据库中。
+    def update(self, data):
+        """修改自身属性。
 
-        :raise InvalidRequestError
+        :data 属性字典
+        :param 具名参数
         """
-        db.session.add(self)
-        db.session.commit()
+        for x in self.dict().keys():
+            if x in data.keys():
+                self.__setattr__(x, data[x])
 
-    def delete_self(self):
-        """删除数据库中该对象对应的用户。
-
-        :raise InvalidRequestError
-        """
-        db.session.delete(self)
-        db.session.commit()
+        self.update_db()
 
     #
     # 主管方法
@@ -147,27 +176,13 @@ class User(db.Model):
     # 经理方法
     #
 
-    def update_employee(self, u):
-        """修改员工信息
-
-        :param u : User
-        """
-        employee.user.update_self()
-
     def retrieve_employee(self, employeeID):
         """查看员工信息"""
         return
 
-    def get_employees(self):
-        """查看全部员工的信息
-
-        :return List[Employee]
-        """
-        return
-
     def delete_employee(self, employee):
         """人员删除"""
-        employee.delete_self()
+        pass
 
     def update_position(self):
         """身份修改"""

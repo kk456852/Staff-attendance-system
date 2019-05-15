@@ -4,11 +4,15 @@ import json
 
 
 class JsonModel(Model):
-    __exclude__ = ['password', 'password_hash']  # to_dict 排除字段
+    __exclude__ = ['password', 'password_hash']  # to_dict 排除敏感字段
     __include__ = []  # 包含字段
     __exclude_foreign__ = False  # 排除外键
 
     def dict(self):
+        """返回一个数据库模型所有的属性组成的字典
+        
+        :return dict
+        """
         data = {}
         for field in self.__fields__():
             value = getattr(self, field)  # value
@@ -50,7 +54,9 @@ class JsonModel(Model):
         return data
 
     def __fields__(self):
-        fields = set(x.name for x in self.__table__.columns)
+        # 选择数据库中的每一列
+        # 去掉前置下划线，得到真正的@property属性名
+        fields = set(x.name.lstrip("_") for x in self.__table__.columns)
         if self.__exclude_foreign__:
             fields = fields - set(self.__foreign_column__())
         fields = fields - set(self.__exclude__)

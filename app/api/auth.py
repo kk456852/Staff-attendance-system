@@ -24,7 +24,7 @@ def login():
         session['role'] = u.role
         return success()
     except Exception as e:
-        current_app.logger.debug(e)
+        current_app.logger.exception(e)
         return failed(50001)
 
 

@@ -3,14 +3,23 @@
 """
 
 
-class NoLoginError(Exception):
+class UserNotFoundException(Exception):
+    pass
+
+
+class RequestError(Exception):
+    def err_num():
+        return self.eno
+
+
+class NoLoginError(RequestError):
     """用户没有登录"""
 
     def __init__(self):
         self.eno = 50000
 
 
-class NoPermissionError(Exception):
+class NoPermissionError(RequestError):
     """用户没有足够的权限"""
 
     def __init__(self):

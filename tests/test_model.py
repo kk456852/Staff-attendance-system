@@ -11,7 +11,7 @@ class Test_DB(unittest.TestCase):
         self.app_context.push()
         u = User(ID=10, name="小明", password="123456", identity=1,
                  gender=1)
-        u.update_self()
+        u.update_db()
 
     def test_user(self):
         u1 = User.ByID(10)

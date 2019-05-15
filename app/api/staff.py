@@ -14,7 +14,7 @@ def all_staffs():
             "staffs": [x.dict() for x in User.All() if x.role is not Role.MANAGER]
         })
     except Exception as e:
-        current_app.logger.debug(e)
+        current_app.logger.exception(e)
         return failed()
 
 
@@ -24,50 +24,46 @@ def staff_info(ID):
     try:
         return success(User.ByID(ID).dict())
     except Exception as e:
-        current_app.logger.debug(e)
+        current_app.logger.exception(e)
         return failed()
 
 
 @bp.route('/<int:ID>', methods=['POST'])
 # @login_required(Role.Manager)
-def staff_updateinfo():
+def staff_updateinfo(ID):
     try:
-        request_data = request.get_json()
+        u = User.ByID(ID).update(request.get_json())
+        return success()
     except Exception as e:
-        pass
+        current_app.logger.exception(e)
+        return failed()
 
 
 @bp.route('/', methods=('GET', 'POST'))
 def staff_index():
-    if loged_Veri(request.id) == 0:
-        return "This is staff index page"
+    pass
 
 
 @bp.route('/checkschedule', methods=('GET', 'POST'))
 def staff_check_schedule():
-    if loged_Veri(request.id) == 0:
-        return "This page will show the schedule of staff"
+    pass
 
 
 @bp.route('/leave', methods=('GET', 'POST'))
 def staff_leave():
-    if loged_Veri(request.id) == 0:
-        return "This page will show the form of leave request!"
+    pass
 
 
 @bp.route('/leaveabense', methods=('GET', 'POST'))
 def staff_leave_abense():
-    if loged_Veri(request.id) == 0:
-        return "This functiom will getting hhe leave absense of some staff down"
+    pass
 
 
 @bp.route('/checkrecord', methods=('GET', 'POST'))
 def staff_check_record():
-    if loged_Veri(request.id) == 0:
-        return "This function will return the result of the staff_check_record"
+    pass
 
 
 @bp.route('/overtimeapply', methods=('GET', 'POST'))
 def staff_overtime_apply():
-    if loged_Veri(request.id) == 0:
-        return "staff apply for the overtime"
+    pass
