@@ -5,6 +5,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from .. import db
+from .Department import Department
 
 
 class User(db.Model):
@@ -46,10 +47,21 @@ class User(db.Model):
 
     @password.setter
     def password(self, password):
+        print("Setting Password...")
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    @property
+    def dep(self):
+        Department.ByID(self.departmentID)
+        return 0
+
+    @dep.setter
+    def department(self, department):
+        print("Setting departmentID...")
+        self.departmentID = department.ID
 
     #
     # 数据库查询方法
@@ -59,15 +71,15 @@ class User(db.Model):
     def All():
         """返回数据库中所有的User对象
 
-        returns: List[User]
+        :returns List[User]
         """
         return User.query.all()
 
-    @classmethod
-    def ByID(self, ID):
+    @staticmethod
+    def ByID(ID):
         """根据ID构造对象
 
-        returns: User
+        :returns User
         """
         return User.query.get(ID)
 
@@ -86,15 +98,15 @@ class User(db.Model):
     def update_self(self):
         """将修改后的对象，或者新增的对象添加/修改到数据库中。
 
-        :raise 
+        :raise InvalidRequestError
         """
         db.session.add(self)
         db.session.commit()
 
     def delete_self(self):
-        """删除数据库中的该对象。
+        """删除数据库中该对象对应的用户。
 
-        :raise 
+        :raise InvalidRequestError
         """
         db.session.delete(self)
         db.session.commit()

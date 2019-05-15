@@ -22,7 +22,9 @@ def ipy():
     """Open IPython Debug Shell"""
     ctx = app.app_context()
     ctx.push()
-    from app.model import User # TODO: 添加所有模型！
+    from app.model import (User, Charge, Department, Employee, Leave, Manager,
+                           Overtime, OvertimeSituation, TemporaryOvertime, Report,
+                           Punch, SignSheet, WorkSituation, User, WorkArrangement)
     __import__('IPython').embed()
     ctx.pop()
 

@@ -1,19 +1,14 @@
 from .User import User
 
 
-class Employee(User):
-    def __init__(self, ID, name, password, email, workStatus=None):
-        super().__init__(ID, password, email)
-        self.isDirector = False  # True为主管，False为普通员工，初始化为False
-        self.workStatus = workStatus  # workStatus：0为下班，1为上班，2为加班，-1为休假
-        # getIdentityByUserName()通过员工工号查询其身份
-        dIdentity = User.getIdentityByID(self.ID)
-        # dIdentity为用户身份是否为经理，1表示经理,2表示主管，3表示普通员工
-        if(dIdentity == 2):
-            self.isDirector = True
-        else:
-            self.isDirector = False
+class Employee:
 
+    def __init__(self, user):
+        self.user = user
+
+    def update(self):
+        pass
+        
     def retrieve_work_arrangement(self):
         """retrieveWorkArrangement查看工作安排"""
         pass
@@ -49,4 +44,6 @@ class Employee(User):
     @classmethod
     def getEmployeeById(ID):
         u = User.getInfoByID(ID)
-        return Employee(u.ID, u.name, u.password, u.email, u.workStatus)
+        if u.identity == 3:
+            raise Exception("Not a Manager")
+        return Employee(u)
