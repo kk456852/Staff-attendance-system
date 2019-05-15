@@ -2,7 +2,7 @@ from .. import db
 
 
 class Leave(db.Model):  # 请假
-    __tablename__ = 'leave'
+
     leaveID = db.Column(db.Integer, primary_key=True)
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工标号

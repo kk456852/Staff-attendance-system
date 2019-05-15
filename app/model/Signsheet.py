@@ -2,7 +2,7 @@ from .. import db
 
 
 class SignSheet(db.Model):  # 签到表
-    __tablename__ = 'signsheet'
+
     sheetID = db.Column(db.Integer, primary_key=True)
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工标号

@@ -2,7 +2,7 @@ from .. import db
 
 
 class Overtime(db.Model):  # 加班
-    __tablename__ = 'overtime'
+
     overtimeID = db.Column(db.Integer, primary_key=True)
     overtimeThreshold = db.Column(db.Integer)  # 加班阈值 单位-分钟
     staffID = db.Column(db.Integer, db.ForeignKey(

@@ -8,7 +8,7 @@ class Employee:
 
     def update(self):
         pass
-        
+
     def retrieve_work_arrangement(self):
         """retrieveWorkArrangement查看工作安排"""
         pass
@@ -41,9 +41,13 @@ class Employee:
         """punchout_overtimne打卡加班结束"""
         pass
 
-    @classmethod
+    @staticmethod
     def getEmployeeById(ID):
         u = User.getInfoByID(ID)
         if u.identity == 3:
             raise Exception("Not a Manager")
         return Employee(u)
+
+    @staticmethod
+    def All():
+        return [Employee(x) for x in User.query.filter(User.identity != 3).all()]

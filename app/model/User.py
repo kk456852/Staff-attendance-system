@@ -22,7 +22,7 @@ class User(db.Model):
     :param workStatus 工作状态 1-上班 2-正常休假 3-经理状态 4-下班 5-请假休假
     :param departmentID 部门标号 为department表的外键
     """
-    __tablename__ = 'user'
+
     ID = db.Column(db.Integer, primary_key=True)
     password_hash = db.Column(db.String(128), nullable=False)
     identity = db.Column(db.Integer, nullable=False)
@@ -47,21 +47,10 @@ class User(db.Model):
 
     @password.setter
     def password(self, password):
-        print("Setting Password...")
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    @property
-    def dep(self):
-        Department.ByID(self.departmentID)
-        return 0
-
-    @dep.setter
-    def department(self, department):
-        print("Setting departmentID...")
-        self.departmentID = department.ID
 
     #
     # 数据库查询方法
@@ -74,6 +63,7 @@ class User(db.Model):
         :returns List[User]
         """
         return User.query.all()
+
 
     @staticmethod
     def ByID(ID):

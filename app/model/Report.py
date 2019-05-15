@@ -2,7 +2,7 @@ from .. import db
 
 
 class Report(db.Model):  # 销假
-    __tablename__ = 'report'
+
     reportID = db.Column(db.Integer, primary_key=True)
     leaveID = db.Column(db.Integer, db.ForeignKey(
         'leave.leaveID'), nullable=False)  # 对应的请假id

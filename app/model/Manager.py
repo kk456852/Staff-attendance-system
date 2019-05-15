@@ -18,6 +18,13 @@ class Manager:
         """查看员工信息"""
         return Employee.ByID(employeeID)
 
+    def get_employees(self):
+        """查看全部员工的信息
+        
+        :return List[Employee]
+        """
+        return Employee.findAll()
+
     def delete_employee(self, employee):
         """人员删除"""
         User.ByID(employee.id).delete_self()
