@@ -1,45 +1,40 @@
-from flask import Blueprint, request, json, jsonify
-from .auth import login_required
-from ..model import Employee
+from flask import Blueprint, json, jsonify, request, current_app
+
+from ..model import User
+from .util import failed, login_required, success, Role
+
 bp = Blueprint('staff', __name__, url_prefix='/staff')
 
 
-@bp.route('/checkinfo', methods=['GET'])
-def staff_checkinfo():
-    request_data = json.loads(str(request.get_data(), 'utf-8'))
-    if loged_Veri(request_data['UserId']) == 0:
-        employee = Employee(request_data['UserId'])
-        response_data = employee.getinfo()
-        response_data = {
-            'status': 20000,
-            'data': response_data
-        }
-    else:
-        response_data = {
-            'status': 50000,
-            'data': {}
-        }
-    response_data = jsonify(response_data)
-    return response_data
+@bp.route('/all', methods=['GET'])
+# @login_required(Role.Manager)
+def all_staffs():
+    try:
+        return success({
+            "staffs": [x.dict() for x in User.All() if x.role is not Role.MANAGER]
+        })
+    except Exception as e:
+        current_app.logger.debug(e)
+        return failed()
 
 
-@bp.route('/updateinfo', methods=['POST'])
+@bp.route('/<int:ID>', methods=['GET'])
+# @login_required(Role.Manager)
+def staff_info(ID):
+    try:
+        return success(User.ByID(ID).dict())
+    except Exception as e:
+        current_app.logger.debug(e)
+        return failed()
+
+
+@bp.route('/<int:ID>', methods=['POST'])
+# @login_required(Role.Manager)
 def staff_updateinfo():
-    request_data = json.loads(str(request.get_data(), 'utf-8'))
-    if loged_Veri(request_data['UserId']) == 0:
-        employee = Employee(request_data['UserId'])
-        employee.Updateinfo(request_data['data'])
-        response_data = {
-            'status': 20000,
-            'data': {}
-        }
-    else:
-        response_data = {
-            'status': 50000,
-            'data': {}
-        }
-    response_data = jsonify(response_data)
-    return response_data
+    try:
+        request_data = request.get_json()
+    except Exception as e:
+        pass
 
 
 @bp.route('/', methods=('GET', 'POST'))

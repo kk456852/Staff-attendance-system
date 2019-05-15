@@ -5,7 +5,7 @@ from flask import jsonify, session, current_app
 from ..model import Role
 
 
-def success(**args):
+def success(args={}):
     return jsonify({
         "status": 20000,
         "data": args

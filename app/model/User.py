@@ -20,11 +20,11 @@ class Role(IntEnum):
 
 
 class User(db.Model):
-    """用户类，必须使用具名参数新建对象
+    """用户类，必须使用具名参数新建对象。带有*的是必须项。
 
     :param ID* 主键
     :param password* 只可写，不可读
-    :param identity* 职务 1-员工 2-主管 3-经理
+    :param role* 角色，枚举Role类型
     :param name*
     :param gender 性别 0-男 1-女
     :param birthday
