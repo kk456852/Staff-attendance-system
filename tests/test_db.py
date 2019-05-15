@@ -12,14 +12,14 @@ class TestDb(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
 
-    def test_User(self):
-        u = User(username="小明", password="123456", position=1,
-                 gender=1, age=22, workStatus=1, departmentId=1)
-        db.session.add(u)
-        db.session.commit()
-
-        u1 = User.query.filter_by(username="小明").first()
-        self.assertEqual(u1.position, 1)
+    # def test_User(self):
+    #     u = User(username="小明", password="123456", position=1,
+    #              gender=1, age=22, workStatus=1, departmentId=1)
+    #     db.session.add(u)
+    #     db.session.commit()
+    #
+    #     u1 = User.query.filter_by(username="小明").first()
+    #     self.assertEqual(u1.position, 1)
 
     def tearDown(self):
         u1 = User.query.filter_by(username="小明").first()

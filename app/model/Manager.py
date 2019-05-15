@@ -1,6 +1,6 @@
 from .User import User
 from .Employee import Employee
-from ..database import UserInfo
+from ..database import UserInfo,DepartmentInfo
 
 
 class Manager(User):
@@ -11,7 +11,9 @@ class Manager(User):
     def update_employee(self, **dictEmployeeInfo):
         """update_employee修改员工信息"""
         employeeID = dictEmployeeInfo['employeeID']
-        UserInfo().update_employee(employeeID, **dictEmployeeInfo)
+        u = UserInfo().getInfoByID(employeeID)
+        dictEmployeeInfo['department'] = u.departmentID
+        UserInfo().updateEmployee(employeeID, **dictEmployeeInfo)
 
     
 
@@ -19,8 +21,10 @@ class Manager(User):
     def retrieve_employee(self, employeeID):
         """retrieve_employee查看员工信息"""
         # 数据库获取员工工号对应的姓名、部门、职位、工作状态
-        u = UserInfo().getInfoById(employeeID)
-        dictEmployeeInfo = {'ID': u.ID, 'name': u.name, 'department': u.department,
+        u = UserInfo().getInfoByID(employeeID)
+        d = DepartmentInfo().getInfoByID(u.departmenID)
+    
+        dictEmployeeInfo = {'ID': u.ID, 'name': u.name, 'department': d.name,
                             'identity': u.identity, 'workStatus': u.workStatus}
         return dictEmployeeInfo
 
@@ -45,6 +49,6 @@ class Manager(User):
         pass
 
     @classmethod
-    def getManagerById(id):
-        u = UserInfo().getInfoById(id)
-        return Manager(u.id, u.name, u.password)
+    def getManagerById(ID):
+        u = UserInfo().getInfoByID(ID)
+        return Manager(u.ID, u.name, u.password)

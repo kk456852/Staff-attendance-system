@@ -14,7 +14,7 @@ class Employee(User):
         self.isDirector = False  # True为主管，False为普通员工，初始化为False
         self.workStatus = workStatus  # workStatus：0为下班，1为上班，2为加班，-1为休假
         
-        u = UserInfo().getInfoById(self.ID)
+        u = UserInfo().getInfoByID(self.ID)
         dIdentity = u.identity
         # dIdentity为用户身份是否为经理，1表示经理,2表示主管，3表示普通员工
         if(dIdentity == 2):
@@ -55,6 +55,6 @@ class Employee(User):
         pass
 
     @classmethod
-    def getEmployeeById(id):
-        u = UserInfo().getInfoById(id)
-        return Employee(u.id, u.name, u.password, u.email, u.workStatus)
+    def getEmployeeById(ID):
+        u = UserInfo().getInfoByID(ID)
+        return Employee(u.ID, u.name, u.password, u.email, u.workStatus)
