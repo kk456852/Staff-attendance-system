@@ -3,6 +3,9 @@ from .. import db
 from .User import User
 from .Department import Department
 from ..exceptions import DepartmentError
+from .sendEmail1 import SendEmail
+
+
 
 
 
@@ -51,24 +54,34 @@ class Leave(db.Model):  # 请假
         u = User.ByID(self.staffID)
         d = Department.ByID(u.departmentID)
 
-        users = [] 
-        users = d.users #???
-
-        for i in range(len(users)):
-            if(users[i].identity == 2  ):
-                director = users[i]
+        for i in range(len(d.users)):
+            if(d.users[i].identity == 2):
+                director = d.users[i]
                 break
-            else:
-                raise DepartmentError
+                
+        if(d.users[i].identity != 2 ):
+            return DepartmentError
         
-        return (director.email)
+        else:
+            dictLeave = {'email':director.email, 'leaveInfo':self.json(), 'result':"请假审批中"}
+            #SendEmail()
+            SendEmail(dictLeave['email'], dictLeave['leaveInfo'], dictLeave['result'])
+            return dictLeave
 
             
 
-        
-
     def leave_result_to_employee(self):
         """leave_result_to_employee请假结果通知员工"""
-        pass
+        if(self.isLeavePermitted == 1):#主管批准
+            dictLeave = {'email':User.ByID(self.staffID).email,'leaveInfo':Leave,'result':'你的请假获得批准'}
+            return dictLeave
+
+        if(self.isLeavePermitted == 2):#主管未批准
+            dictLeave = {'email':User.ByID(self.staffID).email,'leaveInfo':Leave,'result':'你的请假未获批准'}
+            return dictLeave
+
+
+
+
 
 
