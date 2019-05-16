@@ -7,15 +7,15 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 
-def SendEmail(emailAddress, info, result):
-    str=info+info
+def SendEmail(emailAddress, emailSubject, info):
+    #str=info+info
 
     # 设置邮箱的域名
     HOST = 'smtp.qq.com'#此行代码作废，因在ssl.py中将第845行的 self.server_hostname指定为'smtp.qq.com'
     message = MIMEMultipart('related')
 
     # 设置邮件标题
-    SUBJECT = '有人请假啦'
+    SUBJECT = emailSubject
     # 设置发件人邮箱
     FROM = '390400239@qq.com'
     # 设置收件人邮箱
@@ -23,7 +23,7 @@ def SendEmail(emailAddress, info, result):
 
     # --------------------------------------发送文本-----------------
     # 发送邮件主体到对方的邮箱中
-    message_html = MIMEText('<h2 style="color:red;font-size:100px">'+str+'</h2><img src="cid:big">', 'html', 'utf-8')
+    message_html = MIMEText('<h2 style="color:red;font-size:100px">'+info+'</h2><img src="cid:big">', 'html', 'utf-8')
     message.attach(message_html)
 
     # 设置邮件发件人

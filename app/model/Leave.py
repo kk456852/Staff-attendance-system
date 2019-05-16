@@ -65,7 +65,9 @@ class Leave(db.Model):  # 请假
         else:
             dictLeave = {'email':director.email, 'leaveInfo':self.json(), 'result':"请假审批中"}
             #SendEmail()
-            SendEmail(dictLeave['email'], dictLeave['leaveInfo'], dictLeave['result'])
+            subjuect = '有人请假啦'
+            str = dictLeave['leaveInfo']+dictLeave['result']
+            SendEmail(dictLeave['email'], subjuect , str)
             return dictLeave
 
             
