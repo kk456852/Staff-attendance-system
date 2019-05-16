@@ -19,23 +19,23 @@ class Leave(db.Model):  # 请假
     def __repr__(self):
         return '<Leave %i %r>' % (self.staffID, self.leaveReason)
 
-    @classmethod
+    @staticmethod
     def findAll():
         return Leave.query.all()
 
-    @classmethod
+    @staticmethod
     def getInfoById(leaveId):
         return Leave.query.get(leaveId)
 
-    @classmethod
+    @staticmethod
     def getInfoBystaffId(staffId):
         return Leave.query.filter_by(staffId=staffId).all()
 
-    @classmethod
+    @staticmethod
     def getInfoByleaveDate(leaveDate):
         return Leave.query.filter_by(leaveDate=leaveDate).all()
 
-    @classmethod
+    @staticmethod
     def getInfoByPermitted(permitted):
         return Leave.query.filter_by(isLeavePermitted=permitted).all()
 
