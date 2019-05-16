@@ -1,13 +1,5 @@
 import os
 
-DIALECT = 'mysql'
-DRIVER = 'mysqlconnector'
-USERNAME = 'root'
-PASSWORD = '1234'
-HOST = '127.0.0.1'
-PORT = '3306'
-DATABASE = 'sys_db'
-
 base_dir = os.path.abspath(os.path.dirname(__name__))
 
 # 以下是 Flask 配置项，内容将从环境变量中导入

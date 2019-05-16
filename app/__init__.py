@@ -2,10 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 
+from .dbBase import JsonModel
 import config
 
-db = SQLAlchemy()
-
+db = SQLAlchemy(model_class=JsonModel)
+# db = SQLAlchemy()
 
 def create_app():
     """
