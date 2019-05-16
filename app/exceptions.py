@@ -12,6 +12,12 @@ class RequestError(Exception):
         return self.eno
 
 
+class DepartmentError(Exception):
+    """部门缺少主管"""
+    def __init__(self):
+        print("部门缺少主管")
+        
+
 class NoLoginError(RequestError):
     """用户没有登录"""
 
@@ -24,3 +30,4 @@ class NoPermissionError(RequestError):
 
     def __init__(self):
         self.eno = 50001
+

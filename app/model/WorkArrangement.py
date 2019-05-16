@@ -1,4 +1,5 @@
 from .. import db
+from .User import User
 
 class WorkArrangement(db.Model):  # 工作安排
 
@@ -15,24 +16,27 @@ class WorkArrangement(db.Model):  # 工作安排
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return '<WorkArrangement %i %i>' % (self.staffID, self.departmentID)
+        return self.dict()
 
-    @classmethod
+
+    #
+    # 数据库方法
+    #
+    
+    @staticmethod
     def findAll():
         return WorkArrangement.query.all()
 
-    @classmethod
-    def getInfoByID(self, arragementID):
+    @staticmethod
+    def getInfoByID(arragementID):
         return WorkArrangement.query.get(arragementID)
 
-    @classmethod
-    def getInfoBystaffID(self, staffID):
+    @staticmethod
+    def getInfoBystaffID(staffID):
         return WorkArrangement.query.filter_by(staffID=staffID).all()
 
-    @classmethod
-    def getInfoBydepID(self, departmentID):
+    @staticmethod
+    def getInfoBydepID(departmentID):
         return WorkArrangement.query.filter_by(departmentID=departmentID).all()
 
-    def show_work_arrangement(self):
-        """展示工作安排"""
-        pass
+

@@ -1,5 +1,10 @@
 from .. import db
 
+from .User import User
+from .Department import Department
+from ..exceptions import DepartmentError
+
+
 
 class Leave(db.Model):  # 请假
 
@@ -41,8 +46,29 @@ class Leave(db.Model):  # 请假
 
     def leave_application_to_director(self):
         """leave_application_to_director请假申请通知主管"""
-        pass
+        """返回该员工的主管的邮箱"""
+
+        u = User.ByID(self.staffID)
+        d = Department.ByID(u.departmentID)
+
+        users = [] 
+        users = d.users #???
+
+        for i in range(len(users)):
+            if(users[i].identity == 2  ):
+                director = users[i]
+                break
+            else:
+                raise DepartmentError
+        
+        return (director.email)
+
+            
+
+        
 
     def leave_result_to_employee(self):
         """leave_result_to_employee请假结果通知员工"""
         pass
+
+
