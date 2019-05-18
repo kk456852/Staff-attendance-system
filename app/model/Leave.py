@@ -27,6 +27,11 @@ class Leave(db.Model):  # 请假
     def __repr__(self):
         return '<Leave %i %r>' % (self.staffID, self.leaveReason)
 
+
+
+    #
+    # 数据库方法
+    #
     @staticmethod
     def findAll():
         return Leave.query.all()
@@ -47,12 +52,15 @@ class Leave(db.Model):  # 请假
     def getInfoByPermitted(permitted):
         return Leave.query.filter_by(isLeavePermitted=permitted).all()
 
+
+
     def leave_application_to_director(self):
         """leave_application_to_director请假申请通知主管"""
         """返回该员工的主管的邮箱"""
 
         u = User.ByID(self.staffID)
         d = Department.ByID(u.departmentID)
+        self.isLeavePermitted = 0    # 请假未审核
 
         for i in range(len(d.users)):
             if(d.users[i].identity == 2):
@@ -65,21 +73,27 @@ class Leave(db.Model):  # 请假
         else:
             dictLeave = {'email':director.email, 'leaveInfo':self.json(), 'result':"请假审批中"}
             #SendEmail()
-            subjuect = '有人请假啦'
+            subject = '有人请假啦'
             str = dictLeave['leaveInfo']+dictLeave['result']
-            SendEmail(dictLeave['email'], subjuect , str)
+            SendEmail(dictLeave['email'], subject, str)
             return dictLeave
 
-            
-
+        
     def leave_result_to_employee(self):
         """leave_result_to_employee请假结果通知员工"""
-        if(self.isLeavePermitted == 1):#主管批准
-            dictLeave = {'email':User.ByID(self.staffID).email,'leaveInfo':Leave,'result':'你的请假获得批准'}
+        staff = User.ByID(self.staffID)
+        if(self.isLeavePermitted == 1):   #主管批准
+            dictLeave = {'email':staff.email, 'leaveInfo':Leave, 'result':'你的请假获得批准'}
+            subject = '请假成功！'
+            str = dictLeave['leaveInfo']+dictLeave['result']
+            SendEmail(dictLeave['email'], subject, str)
             return dictLeave
 
-        if(self.isLeavePermitted == 2):#主管未批准
-            dictLeave = {'email':User.ByID(self.staffID).email,'leaveInfo':Leave,'result':'你的请假未获批准'}
+        if(self.isLeavePermitted == 2):   #主管未批准
+            dictLeave = {'email':staff.email, 'leaveInfo':Leave, 'result':'你的请假未获批准'}
+            subject = '请假失败。。。！'
+            str = dictLeave['leaveInfo']+dictLeave['result']
+            SendEmail(dictLeave['email'], subject, str)
             return dictLeave
 
 

@@ -1,5 +1,7 @@
 from .. import db
 from .User import User
+import datetime
+import time
 
 class WorkArrangement(db.Model):  # 工作安排
 
@@ -12,6 +14,10 @@ class WorkArrangement(db.Model):  # 工作安排
     endTime = db.Column(db.Time, nullable=False)  # 结束时间
     assignment = db.Column(db.String(50))  # 工作安排
 
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d')
+    now_time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

@@ -1,5 +1,6 @@
 from .. import db
 
+import time
 
 class Overtime(db.Model):  # 加班
 
@@ -13,12 +14,31 @@ class Overtime(db.Model):  # 加班
     submitTime = db.Column(db.Time, nullable=False)
     isOvertimePermitted = db.Column(db.Boolean)  # 是否准许加班 0-未审核 1-通过 2-不通过
 
+    now_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+    now_time_year = time.strftime('%Y', time.localtime(time.time()))
+    now_time_month = time.strftime('%M', time.localtime(time.time()))
+    now_time_day = time.strftime('%d', time.localtime(time.time()))
+    now_time_hour = time.strftime('%H', time.localtime(time.time()))
+    now_time_minute = time.strftime('%M', time.localtime(time.time()))
+    now_time_second = time.strftime('%S', time.localtime(time.time()))
+    dictNowTime = {'year':now_time_year,
+        'month':now_time_month,
+        'day':now_time_day,
+        'hour':now_time_hour,
+        'minute':now_time_minute,
+        'second':now_time_second}
+
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Overtime %i>' % self.overtimeId
-
+    
+    
+    #
+    # 数据库方法
+    #
     @classmethod
     def findall():
         return Overtime.query.all()
@@ -39,6 +59,9 @@ class Overtime(db.Model):  # 加班
     def getInfoBypermitted(permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
 
+
+
+
     def inform_overtime(self):
         """inform_overtime提醒员工加班"""
         pass
@@ -52,6 +75,11 @@ class Overtime(db.Model):  # 加班
         pass
 
 
+
+
+#
+# 全单位临时性加班活动类
+#
 class TemporaryOvertime:
     # overtimeStartTime加班开始时间 string
     # overtimeEndTime加班结束时间 string
@@ -64,6 +92,9 @@ class TemporaryOvertime:
         """inform_temporary_overtime全员加班通知员工"""
         pass
 
+#
+# 全单位临时性加班活动情况类
+#
 
 class OvertimeSituation:
     # temporaryOvertimeName加班人姓名 string
