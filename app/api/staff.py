@@ -6,7 +6,7 @@ from .util import failed, login_required, success, Role
 bp = Blueprint('staff', __name__, url_prefix='/staff')
 
 
-@bp.route('/all', methods=['GET'])
+@bp.route('/s', methods=['GET'])
 # @login_required(Role.Manager)
 def all_staffs():
     try:
@@ -32,6 +32,16 @@ def staff_info(ID):
 # @login_required(Role.Manager)
 def staff_updateinfo(ID):
     try:
+        U = User.ByID(ID).update(request.get_json())
+        return success()
+    except Exception as e:
+        current_app.logger.exception(e)
+        return failed()
+
+
+@bp.route('/<int:ID>', methods=['PATCH'])
+def staff_index(ID):
+    try:
         u = User.ByID(ID).update(request.get_json())
         return success()
     except Exception as e:
@@ -39,15 +49,14 @@ def staff_updateinfo(ID):
         return failed()
 
 
-@bp.route('/', methods=('GET', 'POST'))
-def staff_index():
-    pass
-
-
-@bp.route('/checkschedule', methods=('GET', 'POST'))
-def staff_check_schedule():
-    pass
-
+@bp.route('/<int:ID>', methods=['DELETE'])
+def staff_index(ID):
+    try:
+        User.delete_db(User.ByID(ID))
+        return success()
+    except Exception as e:
+        current_app.logger.exception(e)
+        return failed()
 
 @bp.route('/leave', methods=('GET', 'POST'))
 def staff_leave():
