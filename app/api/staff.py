@@ -18,45 +18,41 @@ def all_staffs():
         return failed()
 
 
-@bp.route('/<int:ID>', methods=['GET'])
+@bp.route('/<int:ID>', methods=['GET','POST','DELETE','PATCH'])
 # @login_required(Role.Manager)
 def staff_info(ID):
-    try:
-        return success(User.ByID(ID).dict())
-    except Exception as e:
-        current_app.logger.exception(e)
-        return failed()
+    if request.method == 'GET':
+        try:
+            return success(User.ByID(ID).dict())
+        except Exception as e:
+            current_app.logger.exception(e)
+            return failed()
+    elif request.method == 'POST':
+        try:
+            U = User.ByID(ID).update(request.get_json())
+            return success()
+        except Exception as e:
+            current_app.logger.exception(e)
+            return failed()
+    elif request.method == 'PATCH':
+        try:
+            u = User.ByID(ID).update(request.get_json())
+            return success()
+        except Exception as e:
+            current_app.logger.exception(e)
+            return failed()
+    elif request.method == 'DELETE':
+        try:
+            User.delete_db(User.ByID(ID))
+            return success()
+        except Exception as e:
+            current_app.logger.exception(e)
+            return failed()
+    else:
+        return failed('unknow method!')
 
 
-@bp.route('/<int:ID>', methods=['POST'])
-# @login_required(Role.Manager)
-def staff_updateinfo(ID):
-    try:
-        U = User.ByID(ID).update(request.get_json())
-        return success()
-    except Exception as e:
-        current_app.logger.exception(e)
-        return failed()
 
-
-@bp.route('/<int:ID>', methods=['PATCH'])
-def staff_index(ID):
-    try:
-        u = User.ByID(ID).update(request.get_json())
-        return success()
-    except Exception as e:
-        current_app.logger.exception(e)
-        return failed()
-
-
-@bp.route('/<int:ID>', methods=['DELETE'])
-def staff_index(ID):
-    try:
-        User.delete_db(User.ByID(ID))
-        return success()
-    except Exception as e:
-        current_app.logger.exception(e)
-        return failed()
 
 @bp.route('/leave', methods=('GET', 'POST'))
 def staff_leave():
