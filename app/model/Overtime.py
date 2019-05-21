@@ -1,18 +1,24 @@
 from .. import db
 
 import time
+from datetime import datetime
 
 class Overtime(db.Model):  # 加班
+    # DateTime类对象，使用overtimeBeginTime.year;overtimeBeginTime.month;
+    # overtimeBeginTime.day;overtimeBeginTime.hour;
+    # overtimeBeginTime.minute;overtimeBeginTime.second
+    #也可  overtimeBeginTime = datetime(2019,6,6,10,0)
 
     overtimeID = db.Column(db.Integer, primary_key=True)
     overtimeThreshold = db.Column(db.Integer)  # 加班阈值 单位-分钟
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工标号
-    overtimeBeginTime = db.Column(db.Time, nullable=False)
-    overtimeEndTime = db.Column(db.Time, nullable=False)
+    overtimeBeginTime = db.Column(db.DateTime, nullable=False)
+    overtimeEndTime = db.Column(db.DateTime, nullable=False)
     overtimeType = db.Column(db.Integer, nullable=False)  # 0-法定假日 1-工作时间
-    submitTime = db.Column(db.Time, nullable=False)
+    submitTime = db.Column(db.DateTime, nullable=False)
     isOvertimePermitted = db.Column(db.Boolean)  # 是否准许加班 0-未审核 1-通过 2-不通过
+
 
     now_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     now_time_year = time.strftime('%Y', time.localtime(time.time()))
@@ -33,29 +39,29 @@ class Overtime(db.Model):  # 加班
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return '<Overtime %i>' % self.overtimeId
+        return '<Overtime %i>' % self.overtimeID
     
     
     #
     # 数据库方法
     #
-    @classmethod
+    @staticmethod
     def findall():
         return Overtime.query.all()
 
-    @classmethod
+    @staticmethod
     def getInfoById(overtimeId):
         return Overtime.query.get(overtimeId)
 
-    @classmethod
+    @staticmethod
     def getInfoBystaffId(staffId):
         return Overtime.query.filter_by(staffId=staffId).all()
 
-    @classmethod
+    @staticmethod
     def getInfoByThreshold(overtimeThreshold):
         return Overtime.query.filter_by(overtimeThreshold=overtimeThreshold).all()
 
-    @classmethod
+    @staticmethod
     def getInfoBypermitted(permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
 
