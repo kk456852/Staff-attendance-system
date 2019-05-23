@@ -21,35 +21,21 @@ def all_staffs():
 @bp.route('/<int:ID>', methods=['GET','POST','DELETE','PATCH'])
 # @login_required(Role.Manager)
 def staff_info(ID):
-    if request.method == 'GET':
-        try:
+    try:
+        if request.method == 'GET':
             return success(User.ByID(ID).dict())
-        except Exception as e:
-            current_app.logger.exception(e)
-            return failed()
-    elif request.method == 'POST':
-        try:
+        elif request.method == 'POST':
             U = User.ByID(ID).update(request.get_json())
             return success()
-        except Exception as e:
-            current_app.logger.exception(e)
-            return failed()
-    elif request.method == 'PATCH':
-        try:
+        elif request.method == 'PATCH':
             u = User.ByID(ID).update(request.get_json())
             return success()
-        except Exception as e:
-            current_app.logger.exception(e)
-            return failed()
-    elif request.method == 'DELETE':
-        try:
+        elif request.method == 'DELETE':
             User.delete_db(User.ByID(ID))
             return success()
-        except Exception as e:
-            current_app.logger.exception(e)
-            return failed()
-    else:
-        return failed('unknow method!')
+    except Exception as e:
+        current_app.logger.exception(e)
+        return failed()
 
 
 
