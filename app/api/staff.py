@@ -53,22 +53,3 @@ def staff_info(ID):
 
 
 
-
-@bp.route('/leave', methods=('GET', 'POST'))
-def staff_leave():
-    pass
-
-
-@bp.route('/leaveabense', methods=('GET', 'POST'))
-def staff_leave_abense():
-    pass
-
-
-@bp.route('/checkrecord', methods=('GET', 'POST'))
-def staff_check_record():
-    pass
-
-
-@bp.route('/overtimeapply', methods=('GET', 'POST'))
-def staff_overtime_apply():
-    pass
