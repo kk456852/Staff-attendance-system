@@ -18,13 +18,23 @@ def all_staffs():
         return failed()
 
 
-@bp.route('/<int:ID>', methods=['GET','POST','DELETE','PATCH'])
+@bp.route('/<int:ID>', methods=['GET'])
 # @login_required(Role.Manager)
 def staff_info(ID):
     try:
         if request.method == 'GET':
             return success(User.ByID(ID).dict())
-        elif request.method == 'POST':
+
+    except Exception as e:
+        current_app.logger.exception(e)
+        return failed()
+
+
+@bp.route('/<int:ID>', methods=['POST','PATCH','DELETE'])
+# @login_required(Role.Manager)
+def staff_info_delete(ID):
+    try:
+        if request.method == 'POST':
             U = User.ByID(ID).update(request.get_json())
             return success()
         elif request.method == 'PATCH':
@@ -36,6 +46,5 @@ def staff_info(ID):
     except Exception as e:
         current_app.logger.exception(e)
         return failed()
-
 
 
