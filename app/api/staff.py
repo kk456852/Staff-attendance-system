@@ -36,8 +36,8 @@ def staff_info(ID):
         return failed()
 
 @bp.route('/<int:ID>', methods= ['GET'])
-def staff_info_all(ID):
+def staff_info_(ID):
     try:
-        return User.ByID(ID).
+        return success(User.ByID(ID).dict())
     except Exception as e:
-        
+        return failed()
