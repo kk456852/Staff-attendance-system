@@ -1,5 +1,7 @@
 import os
 from enum import IntEnum
+from typing import List
+from datetime import datetime
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask
@@ -159,6 +161,13 @@ class User(db.Model):
                 self.__setattr__(x, data[x])
 
         self.update_db()
+
+    def in_leave(self, time):
+        for l in self.leaves:
+            if l.leaveBeginTime < time and l.leaveEndTime > time and l.isLeavePermitted:
+                return True
+
+        return False
 
     #
     # 主管方法

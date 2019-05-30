@@ -37,12 +37,12 @@ class Leave(db.Model):  # 请假
         return Leave.query.all()
 
     @staticmethod
-    def getInfoById(leaveId):
-        return Leave.query.get(leaveId)
+    def getInfoByID(leaveID):
+        return Leave.query.get(leaveID)
 
     @staticmethod
-    def getInfoBystaffId(staffId):
-        return Leave.query.filter_by(staffId=staffId).all()
+    def getInfoBystaffID(staffID):
+        return Leave.query.filter_by(staffID=staffID).all()
 
     @staticmethod
     def getInfoByleaveDate(leaveDate):
@@ -51,12 +51,12 @@ class Leave(db.Model):  # 请假
     @staticmethod
     def getInfoByPermitted(permitted):
         return Leave.query.filter_by(isLeavePermitted=permitted).all()
-
+    
+ 
 
 
     def leave_application_to_director(self):
         """leave_application_to_director请假申请通知主管"""
-        """返回该员工的主管的邮箱"""
 
         u = User.ByID(self.staffID)
         d = Department.ByID(u.departmentID)

@@ -2,12 +2,16 @@ from .. import db
 
 import time
 from datetime import datetime
+from .User import User
+from .Leave import Leave
+from .sendEmail1 import SendEmail
+
 
 class Overtime(db.Model):  # 加班
     # DateTime类对象，使用overtimeBeginTime.year;overtimeBeginTime.month;
     # overtimeBeginTime.day;overtimeBeginTime.hour;
     # overtimeBeginTime.minute;overtimeBeginTime.second
-    #也可  overtimeBeginTime = datetime(2019,6,6,10,0)
+    # 也可  overtimeBeginTime = datetime(2019,6,6,10,0)
 
     overtimeID = db.Column(db.Integer, primary_key=True)
     overtimeThreshold = db.Column(db.Integer)  # 加班阈值 单位-分钟
@@ -19,7 +23,6 @@ class Overtime(db.Model):  # 加班
     submitTime = db.Column(db.DateTime, nullable=False)
     isOvertimePermitted = db.Column(db.Boolean)  # 是否准许加班 0-未审核 1-通过 2-不通过
 
-
     now_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     now_time_year = time.strftime('%Y', time.localtime(time.time()))
     now_time_month = time.strftime('%M', time.localtime(time.time()))
@@ -27,21 +30,19 @@ class Overtime(db.Model):  # 加班
     now_time_hour = time.strftime('%H', time.localtime(time.time()))
     now_time_minute = time.strftime('%M', time.localtime(time.time()))
     now_time_second = time.strftime('%S', time.localtime(time.time()))
-    dictNowTime = {'year':now_time_year,
-        'month':now_time_month,
-        'day':now_time_day,
-        'hour':now_time_hour,
-        'minute':now_time_minute,
-        'second':now_time_second}
-
+    dictNowTime = {'year': now_time_year,
+                   'month': now_time_month,
+                   'day': now_time_day,
+                   'hour': now_time_hour,
+                   'minute': now_time_minute,
+                   'second': now_time_second}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Overtime %i>' % self.overtimeID
-    
-    
+
     #
     # 数据库方法
     #
@@ -65,9 +66,6 @@ class Overtime(db.Model):  # 加班
     def getInfoBypermitted(permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
 
-
-
-
     def inform_overtime(self):
         """inform_overtime提醒员工加班"""
         pass
@@ -81,33 +79,30 @@ class Overtime(db.Model):  # 加班
         pass
 
 
-
-
 #
 # 全单位临时性加班活动类
 #
 class TemporaryOvertime:
-    # overtimeStartTime加班开始时间 string
-    # overtimeEndTime加班结束时间 string
 
-    def __init__(self, overtimeStartTime, overtimeEndTime):
-        self.overtimeStartTime = overtimeStartTime
-        self.overtimeEndTime = overtimeEndTime
+    startTime = db.Column(db.DateTime)
+    endTime = db.Column(db.DateTime)
+    name = db.Column(db.String(20))
+    userID = db.Column(db.Integer, db.ForeignKey('User.ID'))
+    isPermitted = db.Column(db.Integer)
 
-    def inform_temporary_overtime(self):
-        """inform_temporary_overtime全员加班通知员工"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def inform_temporary_overtime(self, startTime, endTime):
+        """inform_temporary_overtime全员加班通知员工(非请假状态)"""
+        self.startTime = startTime
+        self.endTime = endTime
+        listUser = User.All()
+        for user in listUser:
+            if not user.in_leave(startTime) and not user.in_leave(endTime):
+                str1 = startTime.strftime('%Y-%m-%d-%h-%m')
+                str2 = startTime.strftime('%Y-%m-%d-%h-%m')
+                SendEmail(user.email, "临时加班", str1+str2)
+
+    def start(self):
         pass
-
-#
-# 全单位临时性加班活动情况类
-#
-
-class OvertimeSituation:
-    # temporaryOvertimeName加班人姓名 string
-    # emporaryOvertimeID加班人工号 int
-    # isEmporaryOvertime是否参与加班 bool
-
-    def __init__(self, temporaryOvertimeName, emporaryOvertimeID):
-        self.temporaryOvertimeName = temporaryOvertimeName
-        self.emporaryOvertimeID = emporaryOvertimeID
-        isEmporaryOvertime = False
