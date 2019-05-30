@@ -3,10 +3,10 @@ from flask import Blueprint, json, jsonify, request, current_app
 from ..model import User
 from .util import failed, login_required, success, Role
 
-bp = Blueprint('staff', __name__, url_prefix='/staff')
+bp = Blueprint('staffs', __name__, url_prefix='/staffs')
 
 
-@bp.route('/all', methods=['GET'])
+@bp.route('/', methods=['GET'])
 # @login_required(Role.Manager)
 def all_staffs():
     try:
