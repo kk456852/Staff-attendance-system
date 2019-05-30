@@ -86,7 +86,8 @@ class User(db.Model):
 
     @property
     def departmentID(self):
-        return self.department.ID
+        if self.department:
+            return self.department.ID
 
     @departmentID.setter
     def departmentID(self, ID):
@@ -162,7 +163,6 @@ class User(db.Model):
 
     #
     # 主管方法
-    #
 
     def arrange_work(self):
         """安排工作班次"""
