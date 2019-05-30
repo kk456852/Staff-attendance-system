@@ -20,7 +20,7 @@ def create_app():
     db.init_app(app)
 
     # 此处必须函数内部导入路由，在之前导入可能因为没有构建好所有的组件而出现错误。
-    from .api import auth, charger, manager, staff,leaves,sign,tempovertime,workstatus,department,arranges,overtimes
+    from .api import auth, staff,leaves,sign,tempovertime,workstatus,department,arranges,overtimes
     app.register_blueprint(auth.bp)
     app.register_blueprint(staff.bp)
     app.register_blueprint(workstatus.bp)
