@@ -3,7 +3,7 @@ from .util import failed, login_required, success, Role
 from ..model import Overtime
 
 
-bp = Blueprint('temp', __name__, url_prefix='/temp')
+bp = Blueprint('tempovertimes', __name__, url_prefix='/tempovertimes')
 
 
 @bp.route('/', methods= ['GET','POST'])
