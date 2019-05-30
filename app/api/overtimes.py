@@ -27,6 +27,7 @@ def ovetimeByStaffId_(ID):
             return success("主管批准加班")
         elif Role == 1:
             return success("员工取消申请")
+        return success()
     except Exception as e:
         current_app.logger.exception(e)
         return failed()

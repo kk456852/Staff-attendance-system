@@ -17,7 +17,7 @@ def all_leaves():
 
 
 @bp.route('/<int:ID>',methods = ['PUT'])
-def leave_apply():
+def leave_apply(ID):
     try:
         return success("请假申请")
     except Exception as e:
