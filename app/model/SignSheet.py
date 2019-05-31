@@ -20,7 +20,7 @@ class SignSheet(db.Model):  # 签到表
         return '<SignSheet %i %i>' % (self.sheetIdID, self.type)
 
     @classmethod
-    def findAll():
+    def All():
         return SignSheet.query.all()
 
     @classmethod

@@ -16,11 +16,10 @@ def all_leaves():
         return failed()
 
 
-@bp.route('/<int:ID>',methods = ['PUT'])
+@bp.route('/<int:ID>', methods=['PUT'])
 def leave_apply(ID):
     try:
         return success("请假申请")
     except Exception as e:
         current_app.logger.exception(e)
         return failed()
-

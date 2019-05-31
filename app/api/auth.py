@@ -22,7 +22,7 @@ def login():
         u.login(request_data['password'])
         session['id'] = u.ID
         session['role'] = u.role
-        return success()
+        return success({"role": u.role.name.lower()})
     except Exception as e:
         current_app.logger.exception(e)
         return failed(50001)

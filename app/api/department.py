@@ -7,12 +7,6 @@ bp = Blueprint('departments', __name__, url_prefix='/departments')
 
 
 @bp.route('/', methods=['GET'])
-# @login_required(Role.Manager)
+# @login_required()
 def all_department():
-    try:
-        return success('所有的部门信息')
-    except Exception as e:
-        current_app.logger.exception(e)
-        return failed()
-
-
+    return success({"departments": [d.dict() for d in Department.All()]})

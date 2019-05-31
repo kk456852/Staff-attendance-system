@@ -1,5 +1,6 @@
 from .. import db
 
+
 class WorkArrangement(db.Model):  # 工作安排
 
     arragementID = db.Column(db.Integer, primary_key=True)
@@ -18,7 +19,7 @@ class WorkArrangement(db.Model):  # 工作安排
         return '<WorkArrangement %i %i>' % (self.staffID, self.departmentID)
 
     @classmethod
-    def findAll():
+    def All():
         return WorkArrangement.query.all()
 
     @classmethod

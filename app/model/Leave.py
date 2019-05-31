@@ -20,7 +20,7 @@ class Leave(db.Model):  # 请假
         return '<Leave %i %r>' % (self.staffID, self.leaveReason)
 
     @staticmethod
-    def findAll():
+    def All():
         return Leave.query.all()
 
     @staticmethod

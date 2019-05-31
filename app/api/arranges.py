@@ -6,7 +6,7 @@ from .util import failed, login_required, success, Role
 bp = Blueprint('arranges', __name__, url_prefix='/arranges')
 
 
-@bp.route('/', methods=['GET','POST','PUT'])
+@bp.route('/', methods=['GET', 'POST', 'PUT'])
 # @login_required(Role.Manager)
 def arranges():
     try:

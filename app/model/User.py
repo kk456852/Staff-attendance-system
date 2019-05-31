@@ -91,7 +91,7 @@ class User(db.Model):
 
     @departmentID.setter
     def departmentID(self, ID):
-        self.department = Department.ByID(ID)
+        self.department = Department.ByID(ID) if self.department else None
 
     #
     # 数据库方法
