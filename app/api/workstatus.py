@@ -1,27 +1,21 @@
 from flask import Blueprint, json, jsonify, request, current_app
 
 from ..model import User
-from .util import failed, login_required, success, Role
+from .util import failed, login_required, success, Role, url
 
 bp = Blueprint('workstatus', __name__, url_prefix='/workstatus')
 
 
 @bp.route('/', methods=['GET'])
-# @login_required(Role.Manager)
+@url
 def all_staffs_worktatus():
-    try:
-        from_ = request.args.get('from')
-        to_ = request.args.get('to')
-        return success(request.method)
-    except Exception as e:
-        current_app.logger.exception(e)
-        return failed()
+    # login_required(Role.Manager)
+    from_ = request.args.get('from')
+    to_ = request.args.get('to')
+    return success(request.method)
 
-
-
-@bp.route('/<int:ID>', methods= ['GET'])
+@bp.route('/<int:ID>', methods=['GET'])
+@url
 def staff_info_(ID):
-    try:
-        return success(request.method)
-    except Exception as e:
-        return failed()
+    return success(request.method)
+    
