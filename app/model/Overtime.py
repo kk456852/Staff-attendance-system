@@ -20,7 +20,7 @@ class Overtime(db.Model):  # 加班
         return '<Overtime %i>' % self.overtimeId
 
     @classmethod
-    def findall():
+    def All():
         return Overtime.query.all()
 
     @classmethod

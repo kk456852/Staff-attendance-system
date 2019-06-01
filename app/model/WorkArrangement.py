@@ -1,5 +1,6 @@
 from .. import db
 
+
 class WorkArrangement(db.Model):  # 工作安排
 
     arragementID = db.Column(db.Integer, primary_key=True)

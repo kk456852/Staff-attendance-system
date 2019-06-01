@@ -1,7 +1,7 @@
 from flask import (Blueprint, current_app, jsonify, redirect, request,
                    session, url_for)
 
-from .util import login_required, success, failed
+from .util import url, success, failed, login_required
 
 from ..model import User
 
@@ -9,12 +9,14 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @bp.route('/test', methods=['GET'])
-@login_required()
+@url
 def log_Index():
+    login_required()
     return success()
 
 
 @bp.route('/login', methods=['POST'])
+@url
 def login():
     request_data = request.get_json()
     try:
@@ -29,7 +31,7 @@ def login():
 
 
 @bp.route('/logout', methods=['POST'])
-@login_required()
+@url
 def logout():
     try:
         session['id'] = None

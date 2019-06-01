@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .. import db
 from .Department import Department
-from ..exceptions import UserNotFoundException
+from ..exceptions import UserNotFoundError
 
 
 class Role(IntEnum):
@@ -91,7 +91,7 @@ class User(db.Model):
 
     @departmentID.setter
     def departmentID(self, ID):
-        self.department = Department.ByID(ID)
+        self.department = Department.ByID(ID) if self.department else None
 
     #
     # 数据库方法
@@ -111,11 +111,11 @@ class User(db.Model):
         数据库中没有此ID时抛出异常
 
         :returns User
-        :raise UserNotFoundException
+        :raise UserNotFoundError
         """
         u = User.query.get(ID)
         if not u:
-            raise UserNotFoundException()
+            raise UserNotFoundError()
         return u
 
     def update_db(self):

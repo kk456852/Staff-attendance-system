@@ -1,13 +1,13 @@
 from flask import Blueprint, json, jsonify, request, current_app
 
 from ..model import Leave
-from .util import failed, login_required, success, Role
+from .util import failed, login_required, success, Role, url
 
 bp = Blueprint('leaves', __name__, url_prefix='/leaves')
 
 
 @bp.route('/', methods=['GET'])
-# @login_required(Role.Manager)
+@url
 def all_leaves():
     try:
         return success("经理查看所有请假信息")

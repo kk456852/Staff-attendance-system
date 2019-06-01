@@ -15,7 +15,7 @@ class Report(db.Model):  # 销假
         return '<Report %i %i>' % (self.reportID, self.leaveID)
 
     @classmethod
-    def findAll():
+    def All():
         return Report.query.all()
 
     @classmethod

@@ -1,25 +1,22 @@
 from flask import Blueprint, json, jsonify, request, current_app
 
 from ..model import User
-from .util import failed, login_required, success, Role
+from .util import failed, login_required, success, Role, url
 
 bp = Blueprint('staffs', __name__, url_prefix='/staffs')
 
 
 @bp.route('/', methods=['GET'])
-# @login_required(Role.Manager)
+@url
 def all_staffs():
-    try:
-        return success({
-            "staffs": [x.dict() for x in User.All() if x.role is not Role.MANAGER]
-        })
-    except Exception as e:
-        current_app.logger.exception(e)
-        return failed()
+    # login_required(role=Role.MANAGER)
+    return success({
+        "staffs": [x.dict() for x in User.All() if x.role is not Role.MANAGER]
+    })
 
 
-@bp.route('/<int:ID>', methods= ['POST','DELETE','PATCH'])
-# @login_required(Role.Manager)
+@bp.route('/<int:ID>', methods=['POST', 'DELETE', 'PUT'])
+@url
 def staff_info(ID):
     try:
         if request.method == 'POST':
@@ -37,7 +34,4 @@ def staff_info(ID):
 
 @bp.route('/<int:ID>', methods= ['GET'])
 def staff_info_(ID):
-    try:
-        return success(User.ByID(ID).dict())
-    except Exception as e:
-        return failed()
+    return success(User.ByID(ID).dict())

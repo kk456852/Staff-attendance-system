@@ -1,13 +1,13 @@
 from flask import Blueprint, json, jsonify, request, current_app
 
 from ..model import WorkArrangement
-from .util import failed, login_required, success, Role
+from .util import failed, url, success, Role
 
 bp = Blueprint('arranges', __name__, url_prefix='/arranges')
 
 
-@bp.route('/', methods=['GET','POST','PUT'])
-# @login_required(Role.Manager)
+@bp.route('/', methods=['GET', 'POST', 'PUT'])
+@url
 def arranges():
     try:
         if request.method == 'GET':

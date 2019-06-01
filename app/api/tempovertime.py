@@ -1,12 +1,13 @@
-from flask import Blueprint, json, jsonify, request, current_app
-from .util import failed, login_required, success, Role
-from ..model import Overtime
+from flask import Blueprint, current_app, json, jsonify, request
 
+from ..model import Overtime
+from .util import Role, failed, login_required, success, url, current_role
 
 bp = Blueprint('tempovertimes', __name__, url_prefix='/tempovertimes')
 
 
-@bp.route('/', methods= ['GET','POST'])
+@bp.route('/', methods=['GET', 'POST'])
+@url
 def tempovertimes_():
     try:
         if request.method == 'POST':
