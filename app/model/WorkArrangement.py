@@ -18,7 +18,7 @@ class WorkArrangement(db.Model):  # 工作安排
         return '<WorkArrangement %i %i>' % (self.staffID, self.departmentID)
 
     @classmethod
-    def findAll():
+    def findAll(self):
         return WorkArrangement.query.all()
 
     @classmethod

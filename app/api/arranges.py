@@ -15,7 +15,7 @@ def arranges():
             return success("根据部门ID查询部门工作安排")
         elif request.method == 'POST':
             return success("主管更改部门工作安排")
-        elif request.method == 'PUT':
+        elif request.method == 'PUTq':
             staff_id = request.args.get('staffID')
             date = request.args.get('date')
             return success("根据员工ID和日期查询工作安排")

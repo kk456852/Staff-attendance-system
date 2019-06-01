@@ -12,7 +12,7 @@ def all_staffs_worktatus():
     try:
         from_ = request.args.get('from')
         to_ = request.args.get('to')
-        return success(request.method)
+        return success("获得从from到to的员工工作状态数据")
     except Exception as e:
         current_app.logger.exception(e)
         return failed()
@@ -22,6 +22,6 @@ def all_staffs_worktatus():
 @bp.route('/<int:ID>', methods= ['GET'])
 def staff_info_(ID):
     try:
-        return success(request.method)
+        return success("获得员工的工作状态")
     except Exception as e:
         return failed()

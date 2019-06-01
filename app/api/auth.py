@@ -18,10 +18,10 @@ def log_Index():
 def login():
     request_data = request.get_json()
     try:
-        u = User.ByID(request_data['id'])
-        u.login(request_data['password'])
-        session['id'] = u.ID
-        session['role'] = u.role
+        """
+           实例化User对象调用登陆验证方法进行验证
+           返回成功或者失败
+        """
         return success()
     except Exception as e:
         current_app.logger.exception(e)
@@ -31,6 +31,9 @@ def login():
 @bp.route('/logout', methods=['POST'])
 @login_required()
 def logout():
-    session['id'] = None
-    session['role'] = None
-    return success()
+    try:
+        session['id'] = None
+        session['role'] = None
+        return success()
+    except Exception as e:
+        return failed()

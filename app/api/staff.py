@@ -23,7 +23,7 @@ def all_staffs():
 def staff_info(ID):
     try:
         if request.method == 'POST':
-            U = User.ByID(ID).update(request.get_json())
+            U = User.ByID(ID).add(request.get_json())
             return success()
         elif request.method == 'PATCH':
             u = User.ByID(ID).update(request.get_json())

@@ -1,4 +1,3 @@
-
 from .Department import Department
 
 from .Leave import Leave

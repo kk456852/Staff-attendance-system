@@ -10,17 +10,23 @@ bp = Blueprint('leaves', __name__, url_prefix='/leaves')
 # @login_required(Role.Manager)
 def all_leaves():
     try:
-        return success("请假查看")
+        return success("经理查看所有请假信息")
     except Exception as e:
         current_app.logger.exception(e)
         return failed()
 
 
-@bp.route('/<int:ID>',methods = ['PUT'])
+@bp.route('/<int:ID>',methods = ['PUT','GET'])
 def leave_apply(ID):
     try:
-        return success("请假申请")
+        if request.method == 'PUT':
+            return success("员工申请请假")
+        elif request.method == 'GET':
+            return success("员工查看请假申请状态")
     except Exception as e:
         current_app.logger.exception(e)
         return failed()
+
+
+
 
