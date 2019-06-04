@@ -26,3 +26,8 @@ class NoLoginError(RequestError):
 class NoPermissionError(RequestError):
     """用户没有足够的权限"""
     eno = 50002
+
+
+class PasswordNotCorrectError(RequestError):
+    """用户名或密码错误"""
+    eno = 50003

@@ -3,14 +3,14 @@ from .. import db
 
 class Leave(db.Model):  # 请假
 
-    leaveID = db.Column(db.Integer, primary_key=True)
+    ID = db.Column(db.Integer, primary_key=True)
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工标号
-    leaveReason = db.Column(db.String(50))
-    leaveDate = db.Column(db.Date, nullable=False)
+    reason = db.Column(db.String(50))
+    date = db.Column(db.Date, nullable=False)
     submitTime = db.Column(db.Time, nullable=False)
-    leaveBeginTime = db.Column(db.Time, nullable=False)
-    leaveEndTime = db.Column(db.Time, nullable=False)
+    beginTime = db.Column(db.Time, nullable=False)
+    endTime = db.Column(db.Time, nullable=False)
     isLeavePermitted = db.Column(db.Integer)  # 0-未审核 1-通过审核 2-未通过审核
 
     def __init__(self, **kwargs):

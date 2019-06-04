@@ -19,11 +19,11 @@ class Report(db.Model):  # 销假
         return Report.query.all()
 
     @classmethod
-    def getInfoById(reportId):
+    def ById(reportId):
         return Report.query.get(reportId)
 
     @classmethod
-    def getInfoByleaveId(leaveId):
+    def ByleaveId(leaveId):
         return Report.query.filter_by(leaveId=leaveId).all()
 
     def report_to_director(self):

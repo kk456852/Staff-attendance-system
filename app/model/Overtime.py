@@ -3,15 +3,16 @@ from .. import db
 
 class Overtime(db.Model):  # 加班
 
-    overtimeID = db.Column(db.Integer, primary_key=True)
-    overtimeThreshold = db.Column(db.Integer)  # 加班阈值 单位-分钟
+    ID = db.Column(db.Integer, primary_key=True)
+    threshold = db.Column(db.Integer)  # 加班阈值 单位-分钟
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工标号
-    overtimeBeginTime = db.Column(db.Time, nullable=False)
-    overtimeEndTime = db.Column(db.Time, nullable=False)
-    overtimeType = db.Column(db.Integer, nullable=False)  # 0-法定假日 1-工作时间
-    submitTime = db.Column(db.Time, nullable=False)
+    beginTime = db.Column(db.Time, nullable=False)
+    endTime = db.Column(db.Time, nullable=False)
+    type = db.Column(db.Integer, nullable=False)  # 0-法定假日 1-工作时间
+    submitTime = db.Column(db.Integer, nullable=False)
     isOvertimePermitted = db.Column(db.Boolean)  # 是否准许加班 0-未审核 1-通过 2-不通过
+    submitTime = db.Column(db.Integer, nullable=False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -24,19 +25,15 @@ class Overtime(db.Model):  # 加班
         return Overtime.query.all()
 
     @classmethod
-    def getInfoById(overtimeId):
+    def ById(overtimeId):
         return Overtime.query.get(overtimeId)
 
     @classmethod
-    def getInfoBystaffId(staffId):
+    def BystaffId(staffId):
         return Overtime.query.filter_by(staffId=staffId).all()
 
     @classmethod
-    def getInfoByThreshold(overtimeThreshold):
-        return Overtime.query.filter_by(overtimeThreshold=overtimeThreshold).all()
-
-    @classmethod
-    def getInfoBypermitted(permitted):
+    def Bypermitted(permitted):
         return Overtime.query.filter_by(isOvertimePermitted=permitted).all()
 
     def inform_overtime(self):

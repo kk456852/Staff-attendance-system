@@ -3,15 +3,13 @@ from .. import db
 
 class SignSheet(db.Model):  # 签到表
 
-    sheetID = db.Column(db.Integer, primary_key=True)
+    ID = db.Column(db.Integer, primary_key=True)
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工标号
     type = db.Column(db.Integer, nullable=False)  # 类型 0-日常签到 1-临时加班
     date = db.Column(db.Integer, nullable=False)
-    punchBeginTime = db.Column(db.Time)  # 签到上班时间
-    punchEndTime = db.Column(db.Time)  # 签到下班时间
-    isLate = db.Column(db.Boolean)  # 是否迟到
-    isEarly = db.Column(db.Boolean)  # 是否早退
+    beginTime = db.Column(db.Time)  # 签到上班时间
+    endTime = db.Column(db.Time)  # 签到下班时间
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -24,19 +22,19 @@ class SignSheet(db.Model):  # 签到表
         return SignSheet.query.all()
 
     @classmethod
-    def getInfoById(sheetId):
+    def ById(sheetId):
         return SignSheet.query.get(sheetId)
 
     @classmethod
-    def getInfoBystaffId(staffId):
+    def BystaffId(staffId):
         return SignSheet.query.filter_by(staffId=staffId).all()
 
     @classmethod
-    def getInfoBytype(type):
+    def Bytype(type):
         return SignSheet.query.filter_by(type=type).all()
 
     @classmethod
-    def getInfoBydate(date):
+    def Bydate(date):
         return SignSheet.query.filter_by(date=date).all()
 
 

@@ -28,12 +28,12 @@ def url(method):
         try:
             return method(*args, **kwargs)
         except RequestError as r:
-            current_app.logger.debug(r)
+            current_app.logger.exception(r)
 
             # 返回对应异常类的字符串文档
             return failed(reason=r.err_num(), message=r.err_msg())
         except Exception as e:
-            current_app.logger.debug(e)
+            current_app.logger.exception(e)
             return failed()
 
     return error_handler
@@ -53,18 +53,21 @@ def current_role():
     return role
 
 
-def login_required(role=None, ID=None):
+def login_required(ID=None, role=Role.STAFF):
     """要求当前登录用户有对应的权限，否则抛出异常
 
-    需要用关键字参数调用。
+    需要用关键字参数调用。如果多个关键词参数都被调用时
+    只有同时不满足两者时才会抛出异常。
 
     :param role : Role
     :param ID : int
     :raise NoPermissionError
     """
 
-    if role and current_role() < role:
-        raise NoPermissionError
+    if current_role() >= role:
+        return
 
-    if ID and session['id'] != ID:
-        raise NoPermissionError
+    if ID and session['id'] == ID:
+        return
+
+    raise NoPermissionError

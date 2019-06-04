@@ -1,13 +1,14 @@
 import os
+from datetime import date, datetime
 from enum import IntEnum
 
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import db
+from ..exceptions import UserNotFoundError, PasswordNotCorrectError
 from .Department import Department
-from ..exceptions import UserNotFoundError
 
 
 class Role(IntEnum):
@@ -72,16 +73,15 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     @property
-    def role(self):
+    def role(self) -> Role:
         """返回用户的角色
-        可以使用.name方法获取角色的名字 (MANAGER/CHARGE/STAFF)
 
-        :return Role
+        可以使用u.role.name方法获取角色的名字 (MANAGER/CHARGE/STAFF)
         """
         return Role(self.identity)
 
     @role.setter
-    def role(self, r):
+    def role(self, r: Role):
         self.identity = r
 
     @property
@@ -104,6 +104,13 @@ class User(db.Model):
         :returns List[User]
         """
         return User.query.all()
+
+    @staticmethod
+    def new(profile: dict):
+        """
+        根据一个个人信息字典，新建一个User对象并保存。
+        """
+        User(**profile).update_db()
 
     @staticmethod
     def ByID(ID):
@@ -144,10 +151,10 @@ class User(db.Model):
         """登录操作，失败后会抛出异常
 
         :param str
-        :raise Exception
+        :raise PasswordNotCorrectError
         """
         if not self.verify_password(password):
-            raise Exception
+            raise PasswordNotCorrectError
 
     def update(self, data):
         """修改自身属性。

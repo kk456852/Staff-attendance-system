@@ -2,15 +2,37 @@ from flask_sqlalchemy import SQLAlchemy, Model, BaseQuery
 from sqlalchemy.ext.declarative import DeclarativeMeta
 import json
 
+from flask.json import JSONEncoder
+import datetime
+
 
 class JsonModel(Model):
     __exclude__ = ['password', 'password_hash']  # to_dict 排除敏感字段
     __include__ = []  # 包含字段
     __exclude_foreign__ = False  # 排除外键
 
+    @classmethod
+    def format_str(cls, strs: dict):
+        """
+        将该对象对应字典中的字符串参数解析为正确的值。
+
+        >>> User.format_str({"birthday" : "2018-08-08"})
+        {"birthday" : datetime(2018, 8, 8)}
+
+        返回解析后的表。
+        """
+        type_mapping = {
+            c.name: c.type.python_type for c in cls.__table__.columns}
+
+        for k, v in strs.items():
+            if k in type_mapping.keys() and v is not None:
+                if type_mapping[k] is datetime.date:
+                    strs[k] = datetime.date.fromisoformat(v)
+        return strs
+
     def dict(self):
         """返回一个数据库模型所有的属性组成的字典
-        
+
         :return dict
         """
         data = {}
