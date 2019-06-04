@@ -13,8 +13,8 @@ class RequestError(Exception):
         return self.eno
 
 
-class UserNotFoundError(RequestError):
-    """没有找到该用户"""
+class NotFoundError(RequestError):
+    """没有找到"""
     eno = 50000
 
 

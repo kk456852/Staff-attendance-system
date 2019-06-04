@@ -14,29 +14,5 @@ class Department(db.Model):  # 部门
         return '<Department %i %r>' % (self.ID, self.name)
 
     @staticmethod
-    def All():
-        return Department.query.all()
-
-    @staticmethod
-    def ByID(ID):
-        return Department.query.get(ID)
-
-    @staticmethod
     def ByName(name):
         return Department.query.get(name=name)
-
-    def update_db(self):
-        """将修改后的对象，或者新增的对象添加/修改到数据库中。
-
-        :raise InvalidRequestError
-        """
-        db.session.add(self)
-        db.session.commit()
-
-    def delete_db(self):
-        """删除数据库中的该对象。
-
-        :raise InvalidRequestError
-        """
-        db.session.delete(self)
-        db.session.commit()

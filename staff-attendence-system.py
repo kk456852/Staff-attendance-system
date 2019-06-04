@@ -23,8 +23,8 @@ def ipy():
     ctx = app.app_context()
     ctx.push()
     from app.model import (Department, Leave, Role,
-                           Overtime, OvertimeSituation, TemporaryOvertime, Report,
-                           Punch, SignSheet, WorkSituation, User, WorkArrangement)
+                           Overtime, TemporaryOvertime,
+                           SignSheet, User)
     __import__('IPython').embed()
     ctx.pop()
 
@@ -32,6 +32,10 @@ def ipy():
 @app.cli.command()
 def init_db():
     """Init database and create basic test data."""
+    file = 'db.sqlite3'
+    if os.path.exists(file):
+        os.remove(file)
+
     db.drop_all()
     db.create_all()
     create_test_data()
@@ -40,8 +44,8 @@ def init_db():
 def create_test_data():
     """新建测试数据"""
     from app.model import (Department, Leave, Role,
-                           Overtime, OvertimeSituation, TemporaryOvertime, Report,
-                           Punch, SignSheet, WorkSituation, User, WorkArrangement)
+                           Overtime, TemporaryOvertime,
+                           SignSheet, User, WorkArrangement)
     departments = [Department(ID=1, name="销售"),
                    Department(ID=2, name="财务"),
                    Department(ID=3, name="技术")]

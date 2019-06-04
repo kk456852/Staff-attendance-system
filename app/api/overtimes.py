@@ -1,25 +1,34 @@
 from flask import Blueprint, json, jsonify, request, current_app
 
-from ..model import Overtime
+from ..model import Overtime, User, Department
 from .util import failed, login_required, success, Role, url, current_role
 
-bp = Blueprint('overtimes', __name__, url_prefix='/overtimes')
+bp = Blueprint('overtimes', __name__)
 
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/overtimes', methods=['GET'])
 @url
-def ovetimeByStaffId():
+def get_overtime():
     # login_required(Role.Manager)
-    if request.method == 'GET':
-        staff_id = request.args.get('staffID')
-        return success('按照员工ID获取加班信息成功')
-    elif request.method == 'POST':
-        return success("员工申请加班")
+    staff_id = request.args.get('staffID')
+    department_id = request.args.get('departmentID')
+    if staff_id:
+        return success([o.dict for o in User.ByID(staff_id).overtimes])
+    elif department_id:
+        return success([o.dict for o in u.overtimes for u in Department.ByID(department_id).users])
+    else:
+        return success([o.dict for o in Overtime.All()])
 
 
-@bp.route('/<int:ID>', methods=['PUT'])
+@bp.route('/overtimes', methods=['POST'])
 @url
-def ovetimeByStaffId_(ID):
+def new_overtime():
+    pass
+
+
+@bp.route('/overtimes/<int:ID>', methods=['PUT'])
+@url
+def ovetimeByStaffId(ID):
 
     role = current_role()
     if role == Role.MANAGER:

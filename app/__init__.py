@@ -3,10 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask.json import JSONEncoder
 from datetime import date
 
-from .dbBase import JsonModel
+from .dbBase import BaseModel
 import config
 
-db = SQLAlchemy(model_class=JsonModel)
+db = SQLAlchemy(model_class=BaseModel)
 # db = SQLAlchemy()
 
 

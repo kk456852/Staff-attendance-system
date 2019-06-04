@@ -32,7 +32,7 @@ def change_staff(ID):
 
     elif request.method == 'DELETE':
         # login_required(role=Role.MANAGER)
-        User.delete_db(User.ByID(ID))
+        User.delete(User.ByID(ID))
         return success()
 
 

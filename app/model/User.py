@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import db
-from ..exceptions import UserNotFoundError, PasswordNotCorrectError
+from ..exceptions import PasswordNotCorrectError
 from .Department import Department
 
 
@@ -44,10 +44,9 @@ class User(db.Model):
     birthday = db.Column(db.Date)
     email = db.Column(db.String(30))
     phoneNumber = db.Column(db.String(20))
-    workStatus = db.Column(db.Integer)
 
     # 伪属性，被下面的 @property department 代理
-    _departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
+    departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
 
     # 反向引用，包含所有引用User.ID的项
     leaves = db.relationship('Leave', backref='user')
@@ -78,70 +77,12 @@ class User(db.Model):
 
         可以使用u.role.name方法获取角色的名字 (MANAGER/CHARGE/STAFF)
         """
-        return Role(self.identity)
+        if self.identity:
+            return Role(self.identity)
 
     @role.setter
     def role(self, r: Role):
         self.identity = r
-
-    @property
-    def departmentID(self):
-        if self.department:
-            return self.department.ID
-
-    @departmentID.setter
-    def departmentID(self, ID):
-        self.department = Department.ByID(ID) if self.department else None
-
-    #
-    # 数据库方法
-    #
-
-    @staticmethod
-    def All():
-        """返回数据库中所有的User对象
-
-        :returns List[User]
-        """
-        return User.query.all()
-
-    @staticmethod
-    def new(profile: dict):
-        """
-        根据一个个人信息字典，新建一个User对象并保存。
-        """
-        User(**profile).update_db()
-
-    @staticmethod
-    def ByID(ID):
-        """根据ID构造对象
-        数据库中没有此ID时抛出异常
-
-        :returns User
-        :raise UserNotFoundError
-        """
-        u = User.query.get(ID)
-        if not u:
-            raise UserNotFoundError()
-        return u
-
-    def update_db(self):
-        """将修改后的对象，或者新增的对象添加/修改到数据库中。
-        失败时抛出异常。
-
-        :raise InvalidRequestError
-        """
-        db.session.add(self)
-        db.session.commit()
-
-    def delete_db(self):
-        """删除数据库中该对象对应的用户。
-        失败时抛出异常。
-
-        :raise InvalidRequestError
-        """
-        db.session.delete(self)
-        db.session.commit()
 
     #
     # 公共方法
@@ -156,19 +97,7 @@ class User(db.Model):
         if not self.verify_password(password):
             raise PasswordNotCorrectError
 
-    def update(self, data):
-        """修改自身属性。
 
-        :data 属性字典
-        :param 具名参数
-        """
-        for x in self.dict().keys():
-            if x in data.keys():
-                self.__setattr__(x, data[x])
-
-        self.update_db()
-
-    #
     # 主管方法
 
     def arrange_work(self):
