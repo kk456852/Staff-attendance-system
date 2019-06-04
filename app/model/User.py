@@ -49,9 +49,9 @@ class User(db.Model):
     departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
 
     # 反向引用，包含所有引用User.ID的项
-    leaves = db.relationship('Leave', backref='user')
+    leaves = db.relationship('Leave', foreign_keys='[Leave.staffID]')
+    overtimes = db.relationship('Overtime', foreign_keys='[Overtime.staffID]')
     signsheets = db.relationship('SignSheet', backref='user')
-    overtimes = db.relationship('Overtime', backref='user')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)  # （可选地）初始化数据库内容
@@ -96,7 +96,6 @@ class User(db.Model):
         """
         if not self.verify_password(password):
             raise PasswordNotCorrectError
-
 
     # 主管方法
 

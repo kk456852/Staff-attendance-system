@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from .. import db
 
 
@@ -5,36 +7,46 @@ class Leave(db.Model):
     """
     请假
 
-    开始时间和结束时间是可选的。默认为从开始时间到结束时间内的整天。
-
-    :param status 表示请假的状态。0-未审核 1-主管已审核 2-主管拒绝 3-已取消 4-已销假
+    :param staffID 请假人ID
+    :param reviewerID 审核人ID
+    :param type 请假类型。0:病假 1:事假
+    :param status 请假的状态。0:未审核 1:主管已审核 2:主管未批准 3:已取消 4:已销假
+    :param reason 请假原因
+    :param submitStamp 提交申请时间戳
+    :param reviewStamp 审核时间戳
+    :param reportStamp 销假时间戳
     """
     ID = db.Column(db.Integer, primary_key=True)
     staffID = db.Column(db.Integer, db.ForeignKey(
-        'user.ID'), nullable=False)  # 员工标号
-    reason = db.Column(db.String(50))
+        'user.ID'), nullable=False)
+    reviewerID = db.Column(db.Integer, db.ForeignKey(
+        'user.ID'))
 
-    beginDate = db.Column(db.Date, nullable=False)
-    endDate = db.Column(db.Date)
-    beginTime = db.Column(db.Time)
-    endTime = db.Column(db.Time)
+    beginDateTime = db.Column(db.DateTime, nullable=False)
+    endDateTime = db.Column(db.DateTime, nullable=False)
 
+    type = db.Column(db.Integer)
     status = db.Column(db.Integer)
+    reason = db.Column(db.String(200))
 
-    submitTime = db.Column(db.DateTime)
-    chargeTime = db.Column(db.DateTime)
-    reportTime = db.Column(db.DateTime)
+    submitStamp = db.Column(db.DateTime)
+    reviewStamp = db.Column(db.DateTime)
+    reportStamp = db.Column(db.DateTime)
+
+    staff = db.relationship("User", foreign_keys="Leave.staffID")
+    reviewer = db.relationship("User", foreign_keys="Leave.reviewerID")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.submitTime = datetime.now()
 
     def __repr__(self):
-        return '<Leave %i %r>' % (self.staffID, self.leaveReason)
+        return '<Leave {}:{}>'.format(self.staffID, self.reason)
 
-    def leave_application_to_director(self):
-        """leave_application_to_director请假申请通知主管"""
+    def inform_director(self):
+        """请假申请通知主管"""
         pass
 
-    def leave_result_to_employee(self):
-        """leave_result_to_employee请假结果通知员工"""
+    def inform_employee(self):
+        """请假结果通知员工"""
         pass

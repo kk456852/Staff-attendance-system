@@ -13,11 +13,11 @@ def get_overtime():
     staff_id = request.args.get('staffID')
     department_id = request.args.get('departmentID')
     if staff_id:
-        return success([o.dict for o in User.ByID(staff_id).overtimes])
+        return success([o.dict() for o in User.ByID(staff_id).overtimes])
     elif department_id:
-        return success([o.dict for o in u.overtimes for u in Department.ByID(department_id).users])
+        return success([o.dict() for u in Department.ByID(department_id).users for o in u.overtimes])
     else:
-        return success([o.dict for o in Overtime.All()])
+        return success([o.dict() for o in Overtime.All()])
 
 
 @bp.route('/overtimes', methods=['POST'])
@@ -29,7 +29,6 @@ def new_overtime():
 @bp.route('/overtimes/<int:ID>', methods=['PUT'])
 @url
 def ovetimeByStaffId(ID):
-
     role = current_role()
     if role == Role.MANAGER:
         return success("主管批准加班")

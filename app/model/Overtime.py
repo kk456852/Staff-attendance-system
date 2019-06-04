@@ -1,40 +1,46 @@
 from .. import db
 from .User import User
 
+from datetime import date, time
+
 
 class Overtime(db.Model):  # 加班
     """
-    ## 加班类
-    表示员工的一次加班申请
+    表示员工的一次加班申请。
 
-    员工加班需要指定一个起始时间和一个结束时间。
+    员工加班需要指定起始日期时间和一个结束时间。
+    如果结束时间小于起始时间，说明加班跨越零点，在第二天结束。
 
-    :param staffID/user 员工的
-    :param status 表示该申请的状态
-    :param isTemporary 表示是否是
+    :param staffID 申请人ID
+    :param status 表示该申请的状态。0:未审核 1:通过 2:不通过 3:已取消 4:已过期
+    :param reason 加班申请原因
+
+    :param submitStamp 提交申请时间戳
+    :param reviewStamp 审批时间戳
     """
     ID = db.Column(db.Integer, primary_key=True)
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工
+    reviewerID = db.Column(db.Integer, db.ForeignKey(
+        'user.ID'))
 
-    beginTime = db.Column(db.DateTime, nullable=False)
-    endTime = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.Boolean)  # 是否准许加班 0-未审核 1-通过 2-不通过
+    beginDateTime = db.Column(db.DateTime, nullable=False)
+    endTime = db.Column(db.Time, nullable=False)
 
-    isTemporary = db.Column(db.Boolean)
+    status = db.Column(db.Integer)
+    reason = db.Column(db.String(200))
 
-    submitTime = db.Column(db.DateTime)
-    permitTime = db.Column(db.DateTime)
+    submitStamp = db.Column(db.DateTime)
+    reviewStamp = db.Column(db.DateTime)
+
+    staff = db.relationship("User", foreign_keys="Overtime.staffID")
+    reviewer = db.relationship("User", foreign_keys="Overtime.reviewerID")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Overtime {}:{}>'.format(self.staffID, self.beginTime)
-
-    @staticmethod
-    def ByDepartmentID(department_id):
-        return Overtime.query.join(User).filter(User.departmentID == 1).all()
 
     def inform_overtime(self):
         pass
@@ -52,12 +58,14 @@ class TemporaryOvertime(db.Model):
 
     表示由经理创建的一项临时加班类。
 
-
+    :param submitStamp 提交时间戳
     """
     ID = db.Column(db.Integer, primary_key=True)
-    beginTime = db.Column(db.DateTime, nullable=False)
-    endTime = db.Column(db.DateTime, nullable=False)
-    submitTime = db.Column(db.DateTime)
+    beginDateTime = db.Column(db.DateTime, nullable=False)
+    endTime = db.Column(db.Time, nullable=False)
+
+    reason = db.Column(db.String(200))
+    submitStamp = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
