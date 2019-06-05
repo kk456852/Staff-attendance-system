@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import jsonify, session, current_app
 
-from ..model import Role
+from ..model import Role, User
 from ..exceptions import NoPermissionError, RequestError, NoLoginError
 
 
@@ -51,6 +51,13 @@ def current_role():
     if not role:
         raise NoLoginError
     return role
+
+
+def current_user() -> User:
+    if session['id']:
+        return User.ByID(session['id'])
+    else:
+        raise NoLoginError
 
 
 def login_required(ID=None, role=Role.STAFF):

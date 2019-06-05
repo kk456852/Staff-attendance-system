@@ -9,6 +9,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from .. import db
 from ..exceptions import PasswordNotCorrectError
 from .Department import Department
+from .Overtime import Overtime
+from .Leave import Leave
 
 
 class Role(IntEnum):
@@ -84,10 +86,7 @@ class User(db.Model):
     def role(self, r: Role):
         self.identity = r
 
-    #
     # 公共方法
-    #
-
     def login(self, password):
         """登录操作，失败后会抛出异常
 
@@ -97,7 +96,28 @@ class User(db.Model):
         if not self.verify_password(password):
             raise PasswordNotCorrectError
 
+    # 普通员工方法
+    def new_overtime(self, info: dict):
+        """申请新的加班"""
+        o = Overtime(**info)
+        o.staff = self
+        o.update_db()
+
+    def new_leave(self, info: dict):
+        """新请假"""
+        l = Leave(**info)
+        l.staff = self
+        l.update_db()
+
     # 主管方法
+
+    def review_leave(self):
+        """请假审批"""
+        pass
+
+    def review_overtime(self):
+        """加班审批"""
+        pass
 
     def arrange_work(self):
         """安排工作班次"""
@@ -107,42 +127,10 @@ class User(db.Model):
         """修改本部门员工工作安排"""
         pass
 
-    def approve_leave(self):
-        """请假审批"""
-        pass
-
-    def approve_report(self):
-        """销假处理"""
-        pass
-
-    def approve_overtime(self):
-        """加班审批"""
-        pass
-
     #
     # 经理方法
     #
 
-    def retrieve_employee(self, employeeID):
-        """查看员工信息"""
-        return
-
-    def delete_employee(self, employee):
-        """人员删除"""
-        pass
-
-    def update_position(self):
-        """身份修改"""
-        pass
-
-    def create_employee(self):
-        """人员添加"""
-        pass
-
     def release_temporary_overtime(self):
         """发布全单位加班"""
-        pass
-
-    def retrieve_work_situation(self):
-        """查看上班情况"""
         pass

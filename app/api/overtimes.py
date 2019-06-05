@@ -1,12 +1,12 @@
 from flask import Blueprint, json, jsonify, request, current_app
 
 from ..model import Overtime, User, Department
-from .util import failed, login_required, success, Role, url, current_role
+from .util import failed, login_required, success, Role, url, current_role, current_user
 
-bp = Blueprint('overtimes', __name__)
+bp = Blueprint('overtimes', __name__, url_prefix='/overtimes')
 
 
-@bp.route('/overtimes', methods=['GET'])
+@bp.route('/', methods=['GET'])
 @url
 def get_overtime():
     # login_required(Role.Manager)
@@ -20,13 +20,14 @@ def get_overtime():
         return success([o.dict() for o in Overtime.All()])
 
 
-@bp.route('/overtimes', methods=['POST'])
+@bp.route('/', methods=['POST'])
 @url
 def new_overtime():
-    pass
+    info = Overtime.format_str(request.get_json())
+    current_user().new_overtime(info=info)
+    return success()
 
-
-@bp.route('/overtimes/<int:ID>', methods=['PUT'])
+@bp.route('/<int:ID>', methods=['PUT'])
 @url
 def ovetimeByStaffId(ID):
     role = current_role()

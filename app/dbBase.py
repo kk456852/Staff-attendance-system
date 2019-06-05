@@ -80,7 +80,7 @@ class BaseModel(Model):
                 elif type_mapping[k] is datetime.time:
                     strs[k] = datetime.time.fromisoformat(v)
                 elif type_mapping[k] is datetime.datetime:
-                    strs[k] = datetime.date.fromtimestamp(v)
+                    strs[k] = datetime.datetime.fromtimestamp(v)
 
         return strs
 

@@ -43,6 +43,16 @@ class Leave(db.Model):
     def __repr__(self):
         return '<Leave {}:{}>'.format(self.staffID, self.reason)
 
+    def review(self, info, reviewer):
+        """审核"""
+        self.reviewer = reviewer
+        self.reviewStamp = datetime.now()
+        self.update(info)
+
+    def report(self):
+        """销假"""
+        pass
+
     def inform_director(self):
         """请假申请通知主管"""
         pass

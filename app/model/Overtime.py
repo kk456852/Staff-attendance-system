@@ -1,7 +1,6 @@
 from .. import db
-from .User import User
 
-from datetime import date, time
+from datetime import date, time, datetime
 
 
 class Overtime(db.Model):  # 加班
@@ -40,7 +39,7 @@ class Overtime(db.Model):  # 加班
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return '<Overtime {}:{}>'.format(self.staffID, self.beginTime)
+        return '<Overtime {}:{}>'.format(self.staff.name, self.beginDateTime)
 
     def inform_overtime(self):
         pass
@@ -69,6 +68,7 @@ class TemporaryOvertime(db.Model):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.submitStamp = datetime.now()
 
     def inform_all(self):
         pass
