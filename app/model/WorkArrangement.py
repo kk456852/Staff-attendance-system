@@ -1,5 +1,5 @@
 from .. import db
-
+from .. import BaseModel
 
 class WorkArrangement(db.Model):
     """
@@ -22,6 +22,12 @@ class WorkArrangement(db.Model):
     def __repr__(self):
         return '<WorkArrangement %i %i>' % (self.staffID, self.departmentID)
 
-    def show_work_arrangement(self):
+    @staticmethod
+    def show_work_arrangement(staffID):
         """展示工作安排"""
-        pass
+        staffArrengement = BaseModel.ByID(staffID);
+        return staffArrengement.dict()
+        
+   
+    
+  
