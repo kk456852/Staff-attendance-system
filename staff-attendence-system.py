@@ -43,6 +43,8 @@ def init_db():
 
 def create_test_data():
     """新建测试数据"""
+    from itertools import chain
+    from datetime import date, time, datetime
     from app.model import (Department, Leave, Role,
                            Overtime, TemporaryOvertime,
                            SignSheet, User, WorkArrangement)
@@ -54,7 +56,7 @@ def create_test_data():
              User(ID=2, password="123456", name="李主任",
                   role=Role.CHARGE, gender=True, department=departments[0]),
              User(ID=3, password="123456", name="刘主任",
-                  role=Role.CHARGE, gender=False, department=departments[1]),
+                  role=Role.CHARGE, email="wang@zhu.ren", gender=False, department=departments[1]),
              User(ID=4, password="123456", name="小明",
                   role=Role.STAFF, gender=False, department=departments[0]),
              User(ID=5, password="123456", name="小刚",
@@ -64,8 +66,26 @@ def create_test_data():
              User(ID=7, password="123456", name="小芳",
                   role=Role.STAFF, gender=True, department=departments[1])]
 
-    for d in departments:
+    for d in chain(departments, users):
         d.update_db()
 
-    for u in users:
-        u.update_db()
+    def overtime(b, e, r):
+        return {
+            "beginDateTime": b,
+            "endTime": e,
+            "reason": r
+        }
+
+    def leave(b, e, r):
+        return {
+            "beginDateTime": b,
+            "endDateTime": e,
+            "reason": r,
+            "type" : 0
+        }
+
+    users[3].new_overtime(
+        overtime(datetime(2019, 6, 14, 22, 0, 0), time(23, 0, 0), "没弄完"))
+
+    users[3].new_leave(
+        leave(datetime(2019, 6, 10), datetime(2019, 6, 11), "回家种地"))

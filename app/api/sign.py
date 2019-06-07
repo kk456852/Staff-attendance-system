@@ -1,7 +1,10 @@
-from flask import Blueprint, json, jsonify, request, current_app
-from .util import failed, success, Role, url, login_required
-from ..model import SignSheet
+import base64
+from io import BytesIO
 
+from flask import Blueprint, current_app, json, jsonify, request
+
+from ..model import SignSheet
+from .util import Role, failed, login_required, success, url
 
 bp = Blueprint('sign', __name__, url_prefix='/sign')
 
@@ -13,13 +16,18 @@ def face_recognition(photo):
     """
     pass
 
+
 @bp.route('/', methods=['POST'])
 @url
 def sign():
     """签到操作，此处接受一张图片。将返回人脸识别后的结果"""
     # login_required()
-    photo = request.files['photo']
-    ID = face_recognition(photo)
+    data = request.get_json()
+    x: bytes = data['img'][22:]  # remove 'data:image/png;base64,'
+    b = base64.b64decode(x)
+    image = None  # Image.open(BytesIO(b))  # 需要PIL库
+
+    ID = face_recognition(image)
     SignSheet.sign(ID)
     return success()
 

@@ -26,7 +26,7 @@ class Overtime(db.Model):  # 加班
     beginDateTime = db.Column(db.DateTime, nullable=False)
     endTime = db.Column(db.Time, nullable=False)
 
-    status = db.Column(db.Integer)
+    status = db.Column(db.Integer, nullable=False)
     reason = db.Column(db.String(200))
 
     submitStamp = db.Column(db.DateTime)

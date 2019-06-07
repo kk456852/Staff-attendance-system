@@ -25,8 +25,8 @@ class Leave(db.Model):
     beginDateTime = db.Column(db.DateTime, nullable=False)
     endDateTime = db.Column(db.DateTime, nullable=False)
 
-    type = db.Column(db.Integer)
-    status = db.Column(db.Integer)
+    type = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Integer, nullable=False)
     reason = db.Column(db.String(200))
 
     submitStamp = db.Column(db.DateTime)

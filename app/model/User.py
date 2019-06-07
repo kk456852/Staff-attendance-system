@@ -98,15 +98,29 @@ class User(db.Model):
 
     # 普通员工方法
     def new_overtime(self, info: dict):
-        """申请新的加班"""
+        """申请新的加班
+
+        :param info {}
+            beginDateTime 
+            endTime
+            reason
+        """
         o = Overtime(**info)
         o.staff = self
+        o.status = 0
         o.update_db()
 
     def new_leave(self, info: dict):
-        """新请假"""
+        """新请假
+
+        :param info {}
+            beginDateTime 
+            endDateTime
+            reason
+        """
         l = Leave(**info)
         l.staff = self
+        l.status = 0
         l.update_db()
 
     # 主管方法
