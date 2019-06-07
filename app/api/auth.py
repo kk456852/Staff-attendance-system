@@ -12,7 +12,6 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @url
 def log_Index():
     login_required()
-    return success()
 
 
 @bp.route('/login', methods=['POST'])
@@ -23,7 +22,7 @@ def login():
     u.login(request_data['password'])
     session['id'] = u.ID
     session['role'] = u.role
-    return success({"role": u.role.name.lower()})
+    return {"role": u.role.name.lower()}
 
 
 @bp.route('/logout', methods=['POST'])
@@ -31,4 +30,3 @@ def login():
 def logout():
     session['id'] = None
     session['role'] = None
-    return success()

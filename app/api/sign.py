@@ -29,7 +29,6 @@ def sign():
 
     ID = face_recognition(image)
     SignSheet.sign(ID)
-    return success()
 
 
 @bp.route('/<int:ID>', methods=['POST'])
@@ -37,4 +36,3 @@ def sign():
 def sign_test(ID):
     """测试用的签到操作，可以为某个用户ID的人签到"""
     SignSheet.sign(ID)
-    return success()

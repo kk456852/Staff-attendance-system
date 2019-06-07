@@ -13,11 +13,11 @@ def get_overtime():
     staff_id = request.args.get('staffID')
     department_id = request.args.get('departmentID')
     if staff_id:
-        return success([o.dict() for o in User.ByID(staff_id).overtimes])
+        return [o.dict() for o in User.ByID(staff_id).overtimes]
     elif department_id:
-        return success([o.dict() for u in Department.ByID(department_id).users for o in u.overtimes])
+        return [o.dict() for u in Department.ByID(department_id).users for o in u.overtimes]
     else:
-        return success([o.dict() for o in Overtime.All()])
+        return [o.dict() for o in Overtime.All()]
 
 
 @bp.route('/', methods=['POST'])
@@ -25,14 +25,22 @@ def get_overtime():
 def new_overtime():
     info = Overtime.format_str(request.get_json())
     current_user().new_overtime(info=info)
-    return success()
+
 
 @bp.route('/<int:ID>', methods=['PUT'])
 @url
 def ovetimeByStaffId(ID):
-    role = current_role()
-    if role == Role.MANAGER:
-        return success("主管批准加班")
+    login_required(role=Role.CHARGE)
+
+
+def delete_overtime(ID):
+    """
+    删除一个加班请求。
+
+    只有当该加班请求没有被审批时才能由员工本人取消。
+    """
+    o = Overtime.ByID(ID)
+    if o.status == 0 and o.staff.ID == current_user().ID:
+        o.delete()
     else:
-        return success("员工取消申请")
-    return success()
+        raise Exception

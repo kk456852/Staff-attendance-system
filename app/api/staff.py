@@ -10,7 +10,7 @@ bp = Blueprint('staffs', __name__, url_prefix='/staffs')
 @url
 def all_staffs():
     # login_required(role=Role.MANAGER)
-    return success([x.dict() for x in User.All() if x.role is not Role.MANAGER])
+    return [x.dict() for x in User.All() if x.role is not Role.MANAGER]
 
 
 @bp.route('/', methods=['POST'])
@@ -18,7 +18,6 @@ def all_staffs():
 def new_staff():
     # login_required(role=Role.MANAGER)
     User.new(User.format_str(request.get_json()))
-    return success()
 
 
 @bp.route('/<int:ID>', methods=['DELETE', 'PUT'])
@@ -28,15 +27,13 @@ def change_staff(ID):
         # login_required(ID=ID, role=Role.MANAGER)
         current_app.logger.debug(request.get_json())
         User.ByID(ID).update(User.format_str(request.get_json()))
-        return success()
 
     elif request.method == 'DELETE':
         # login_required(role=Role.MANAGER)
         User.ByID(ID).delete()
-        return success()
 
 
 @bp.route('/<int:ID>', methods=['GET'])
 @url
 def get_staff(ID):
-    return success(User.ByID(ID).dict())
+    return User.ByID(ID).dict()

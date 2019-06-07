@@ -26,7 +26,7 @@ def url(method):
     @wraps(method)
     def error_handler(*args, **kwargs):
         try:
-            return method(*args, **kwargs)
+            return success(method(*args, **kwargs))
         except RequestError as r:
             current_app.logger.exception(r)
 

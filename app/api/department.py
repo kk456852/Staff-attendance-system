@@ -9,4 +9,4 @@ bp = Blueprint('departments', __name__, url_prefix='/departments')
 @bp.route('/', methods=['GET'])
 @url
 def all_department():
-    return success([d.dict() for d in Department.All()])
+    return [d.dict() for d in Department.All()]
