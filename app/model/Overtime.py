@@ -68,6 +68,7 @@ class Overtime(db.Model):  # 加班
         self.reviewer = charge
         self.reviewStamp = datetime.now()
         self.update_db()
+        # TODO:此处应通知被审批人
 
     def overtime_application_to_director(self):
         pass

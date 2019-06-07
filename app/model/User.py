@@ -129,11 +129,6 @@ class User(db.Model):
 
     # 主管方法
 
-    def review_leave(self):
-        """请假审批"""
-        pass
-        # TODO:此处应通知被审批人
-
     def arrange_work(self):
         """安排工作班次"""
         pass

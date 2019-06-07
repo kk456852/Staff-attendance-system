@@ -38,20 +38,38 @@ class Leave(db.Model):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.submitTime = datetime.now()
+        self.submitStamp = datetime.now()
 
     def __repr__(self):
         return '<Leave {}:{}>'.format(self.staffID, self.reason)
 
-    def review(self, info, reviewer):
-        """审核"""
-        self.reviewer = reviewer
+    def to_staff(self):
+        """
+        返回给员工的信息。
+        """
+        res = self.dict()
+        res["reviewerName"] = self.reviewer.name if self.reviewer else None
+        res.pop("reviewerID")
+        return res
+
+    def to_charge(self):
+        res = self.dict()
+        res["reviewerName"] = self.reviewer.name if self.reviewer else None
+        res["staffName"] = self.staff.name
+        return res
+
+    def review(self, charge, permit: bool):
+        self.status = 1 if permit else 2
+        self.reviewer = charge
         self.reviewStamp = datetime.now()
-        self.update(info)
+        self.update_db()
+        # TODO:此处应通知被审批人
 
     def report(self):
         """销假"""
-        pass
+        # TODO: 进行状态、时间、权限检查
+        self.status = 4
+        self.reportStamp = datetime.now()
 
     def inform_director(self):
         """请假申请通知主管"""
