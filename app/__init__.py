@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask.json import JSONEncoder
-from datetime import date
+import datetime
 
 from .dbBase import BaseModel
 import config
@@ -43,8 +43,12 @@ class CustomJSONEncoder(JSONEncoder):
 
     def default(self, obj):
         try:
-            if isinstance(obj, date):
+            if isinstance(obj, datetime.datetime):
+                return int(obj.timestamp())
+            elif isinstance(obj, datetime.date):
                 return obj.isoformat()
+            elif isinstance(obj, datetime.time):
+                return obj.isoformat()[:-3]  # 去掉秒
             iterable = iter(obj)
         except TypeError:
             pass

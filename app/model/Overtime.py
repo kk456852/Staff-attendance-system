@@ -24,7 +24,7 @@ class Overtime(db.Model):  # 加班
         'user.ID'))
 
     beginDateTime = db.Column(db.DateTime, nullable=False)
-    endTime = db.Column(db.Time, nullable=False)
+    endDateTime = db.Column(db.DateTime, nullable=False)
 
     status = db.Column(db.Integer, nullable=False)
     reason = db.Column(db.String(200))
@@ -37,12 +37,37 @@ class Overtime(db.Model):  # 加班
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.submitStamp = datetime.now()
 
     def __repr__(self):
         return '<Overtime {}:{}>'.format(self.staff.name, self.beginDateTime)
 
-    def inform_overtime(self):
-        pass
+    def to_staff(self):
+        """
+        返回给员工的信息。
+
+        ==> 想不到更好的实现方式了。
+        """
+        res = self.dict()
+        res["reviewerName"] = self.reviewer.name if self.reviewer else None
+        res.pop("reviewerID")
+        return res
+
+    def to_charge(self):
+        """
+        返回给主管的信息。包含申请人的姓名。
+        """
+        res = self.dict()
+
+        res["reviewerName"] = self.reviewer.name if self.reviewer else None
+        res["staffName"] = self.staff.name
+        return res
+
+    def review(self, charge, permit: bool):
+        self.status = 1 if permit else 2
+        self.reviewer = charge
+        self.reviewStamp = datetime.now()
+        self.update_db()
 
     def overtime_application_to_director(self):
         pass

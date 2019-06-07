@@ -102,13 +102,15 @@ class User(db.Model):
 
         :param info {}
             beginDateTime 
-            endTime
+            endDateTime
             reason
         """
+        # TODO: 此处应该查询加班时间段是否在正常范围内，否则抛出异常
         o = Overtime(**info)
         o.staff = self
         o.status = 0
         o.update_db()
+        # TODO:此处应通知主管
 
     def new_leave(self, info: dict):
         """新请假
@@ -118,20 +120,19 @@ class User(db.Model):
             endDateTime
             reason
         """
+        # TODO: 此处应该查询请假时间段是否在正常范围内，否则抛出异常
         l = Leave(**info)
         l.staff = self
         l.status = 0
         l.update_db()
+        # TODO: 此处应通知主管
 
     # 主管方法
 
     def review_leave(self):
         """请假审批"""
         pass
-
-    def review_overtime(self):
-        """加班审批"""
-        pass
+        # TODO:此处应通知被审批人
 
     def arrange_work(self):
         """安排工作班次"""

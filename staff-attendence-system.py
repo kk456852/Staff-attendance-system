@@ -72,7 +72,7 @@ def create_test_data():
     def overtime(b, e, r):
         return {
             "beginDateTime": b,
-            "endTime": e,
+            "endDateTime": e,
             "reason": r
         }
 
@@ -85,7 +85,7 @@ def create_test_data():
         }
 
     users[3].new_overtime(
-        overtime(datetime(2019, 6, 14, 22, 0, 0), time(23, 0, 0), "没弄完"))
+        overtime(datetime(2019, 6, 14, 22, 0, 0), datetime(2019, 6, 15, 1, 0, 0), "没弄完"))
 
     users[3].new_leave(
         leave(datetime(2019, 6, 10), datetime(2019, 6, 11), "回家种地"))

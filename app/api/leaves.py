@@ -6,6 +6,7 @@ from .util import failed, login_required, success, Role, url, current_user
 bp = Blueprint('leaves', __name__, url_prefix='/leaves')
 
 
+
 @bp.route('/', methods=['GET'])
 @url
 def get_leaves():
