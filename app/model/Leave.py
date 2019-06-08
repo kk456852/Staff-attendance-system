@@ -1,14 +1,8 @@
 from datetime import datetime
 
 from .. import db
-
-from .User import User
+from ..util.mail import send_mail
 from .Department import Department
-from ..exceptions import DepartmentError
-from .sendEmail1 import SendEmail
-
-
-
 
 
 class Leave(db.Model):
@@ -49,7 +43,7 @@ class Leave(db.Model):
         self.submitStamp = datetime.now()
 
     def __repr__(self):
-        return '<Leave {}:{}>'.format(self.staffID, self.reason)
+        return '<Leave {}:{}>'.format(self.staff.name, self.reason)
 
     def to_staff(self):
         """
@@ -66,12 +60,22 @@ class Leave(db.Model):
         res["staffName"] = self.staff.name
         return res
 
+    @staticmethod
+    def new(staff, info: dict):
+        # TODO: 此处应该查询请假时间段是否在正常范围内，否则抛出异常
+        l = Leave(**info)
+        l.staff = staff
+        l.status = 0
+        l.update_db()
+        # l.inform_charge()
+
     def review(self, charge, permit: bool):
+        """主管审核"""
         self.status = 1 if permit else 2
         self.reviewer = charge
         self.reviewStamp = datetime.now()
         self.update_db()
-        # TODO:此处应通知被审批人
+        self.inform_staff()
 
     def report(self):
         """销假"""
@@ -79,52 +83,17 @@ class Leave(db.Model):
         self.status = 4
         self.reportStamp = datetime.now()
 
+    def inform_charge(self):
+        """请假申请通知主管"""
+        # TODO: 应转化成异步任务
+        charge = self.staff.department.charge()
+        if charge.email:
+            send_mail(to=charge.email, subject='新请假', template='leave_new.html',
+                      charge=charge, leave=self)
 
-
-    def leave_application_to_director(self):
-        """leave_application_to_director请假申请通知主管"""
-        """返回该员工的主管的邮箱"""
-
-        u = User.ByID(self.staffID)
-        d = Department.ByID(u.departmentID)
-        self.isLeavePermitted = 0    # 请假未审核
-
-        for i in range(len(d.users)):
-            if(d.users[i].identity == 2):
-                director = d.users[i]
-                break
-                
-        if(d.users[i].identity != 2 ):
-            return DepartmentError
-        
-        else:
-            dictLeave = {'email':director.email, 'leaveInfo':self.json(), 'result':"请假审批中"}
-            #SendEmail()
-            subject = '有人请假啦'
-            str = dictLeave['leaveInfo']+dictLeave['result']
-            SendEmail(dictLeave['email'], subject, str)
-            return dictLeave
-
-        
-    def leave_result_to_employee(self):
-        """leave_result_to_employee请假结果通知员工"""
-        staff = User.ByID(self.staffID)
-        if(self.isLeavePermitted == 1):   #主管批准
-            dictLeave = {'email':staff.email, 'leaveInfo':Leave, 'result':'你的请假获得批准'}
-            subject = '请假成功！'
-            str = dictLeave['leaveInfo']+dictLeave['result']
-            SendEmail(dictLeave['email'], subject, str)
-            return dictLeave
-
-        if(self.isLeavePermitted == 2):   #主管未批准
-            dictLeave = {'email':staff.email, 'leaveInfo':Leave, 'result':'你的请假未获批准'}
-            subject = '请假失败。。。！'
-            str = dictLeave['leaveInfo']+dictLeave['result']
-            SendEmail(dictLeave['email'], subject, str)
-            return dictLeave
-
-
-
-
-
-
+    def inform_staff(self):
+        """请假结果通知员工"""
+        # TODO: 应转化成异步任务
+        if self.staff.email:
+            send_mail(to=self.staff.email, subject='请假审批结果', template='leave_review.html',
+                      leave=self)

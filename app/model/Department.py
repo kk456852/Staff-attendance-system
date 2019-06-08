@@ -1,4 +1,5 @@
 from .. import db
+from .Role import Role
 
 
 class Department(db.Model):  # 部门
@@ -12,6 +13,9 @@ class Department(db.Model):  # 部门
 
     def __repr__(self):
         return '<Department %i %r>' % (self.ID, self.name)
+
+    def charge(self):
+        return [u for u in self.users if u.role == Role.CHARGE][0]
 
     @staticmethod
     def ByName(name):

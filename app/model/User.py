@@ -1,6 +1,5 @@
 import os
 from datetime import date, datetime
-from enum import IntEnum
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -9,18 +8,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from .. import db
 from ..exceptions import PasswordNotCorrectError
 from .Department import Department
-from .Overtime import Overtime
 from .Leave import Leave
-
-
-class Role(IntEnum):
-    """职务
-
-    使用数值枚举类，该类是int的子类
-    """
-    STAFF = 1
-    CHARGE = 2
-    MANAGER = 3
+from .Overtime import Overtime
+from .Role import Role
 
 
 class User(db.Model):
@@ -120,12 +110,7 @@ class User(db.Model):
             endDateTime
             reason
         """
-        # TODO: 此处应该查询请假时间段是否在正常范围内，否则抛出异常
-        l = Leave(**info)
-        l.staff = self
-        l.status = 0
-        l.update_db()
-        # TODO: 此处应通知主管
+        Leave.new(self, info)
 
     # 主管方法
 

@@ -1,0 +1,11 @@
+<h1> 新请假提醒</h1>
+
+<p> 尊敬的 {{leave.staff.name}} ：</p>
+<p> 您的请假请求已被 {{ '通过' if leave.status == 1 else '拒绝' }}
+    <br>
+    <b>请假信息：</b> <br>
+    请假开始时间：{{leave.beginDateTime}} <br>
+    请假结束时间：{{leave.endDateTime}} <br>
+</p>
+
+<b><small>SAS - 员工管理系统</small></b>

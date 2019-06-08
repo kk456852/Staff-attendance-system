@@ -1,12 +1,8 @@
 import os
 
-from flask_migrate import Migrate
-
 from app import create_app, db
 
 app = create_app()
-
-migrate = Migrate(app, db)
 
 
 @app.cli.command()
@@ -53,12 +49,12 @@ def create_test_data():
                    Department(ID=3, name="技术")]
     users = [User(ID=1, password="123456", name="老王",
                   role=Role.MANAGER, gender=False),
-             User(ID=2, password="123456", name="李主任",
-                  role=Role.CHARGE, gender=True, birthday=datetime(1978, 2, 15), department=departments[0]),
-             User(ID=3, password="123456", name="刘主任",
-                  role=Role.CHARGE, email="wang@zhu.ren", birthday=datetime(1981, 11, 30), gender=False, department=departments[1]),
-             User(ID=4, password="123456", name="小明",
-                  role=Role.STAFF, gender=False, department=departments[0]),
+             User(ID=2, password="123456", name="马大叔",
+                  role=Role.CHARGE, gender=True, birthday=datetime(1978, 2, 15), department=departments[0], email="mahaoqu@gmail.com"),
+             User(ID=3, password="123456", name="木木",
+                  role=Role.CHARGE, birthday=datetime(1981, 11, 30), gender=False, department=departments[1], email="390400239@qq.com"),
+             User(ID=4, password="123456", name="小马",
+                  role=Role.STAFF, gender=False, department=departments[0], email="mahaoqu@qq.com"),
              User(ID=5, password="123456", name="小刚",
                   role=Role.STAFF, gender=False, department=departments[0]),
              User(ID=6, password="123456", name="小静",
@@ -76,16 +72,8 @@ def create_test_data():
             "reason": r
         }
 
-    def leave(b, e, r):
-        return {
-            "beginDateTime": b,
-            "endDateTime": e,
-            "reason": r,
-            "type": 0
-        }
-
     users[3].new_overtime(
         overtime(datetime(2019, 6, 14, 22, 0, 0), datetime(2019, 6, 15, 1, 0, 0), "没弄完"))
 
-    users[3].new_leave(
-        leave(datetime(2019, 6, 10), datetime(2019, 6, 11), "回家种地"))
+    Leave(staff=users[3], status=0, type=0, reason="回家种地", beginDateTime=datetime(
+        2019, 6, 10), endDateTime=datetime(2019, 6, 11)).update_db()

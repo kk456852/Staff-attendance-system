@@ -1,13 +1,16 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask.json import JSONEncoder
 import datetime
 
-from .dbBase import BaseModel
+from flask import Flask
+from flask.json import JSONEncoder
+from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+
 import config
 
+from .dbBase import BaseModel
+
 db = SQLAlchemy(model_class=BaseModel)
-# db = SQLAlchemy()
+mail = Mail()
 
 
 def create_app():
@@ -21,6 +24,7 @@ def create_app():
     app.json_encoder = CustomJSONEncoder
 
     db.init_app(app)
+    mail.init_app(app)
 
     # 此处必须函数内部导入路由，在之前导入可能因为没有构建好所有的组件而出现错误。
     from .api import auth, staff, leaves, sign, tempovertime, workstatus, department, arranges, overtimes
