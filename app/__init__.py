@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 import config
 
 from .dbBase import BaseModel
+from .util import executor
 
 db = SQLAlchemy(model_class=BaseModel)
 mail = Mail()
@@ -37,7 +38,31 @@ def create_app():
     app.register_blueprint(department.bp)
     app.register_blueprint(arranges.bp)
     app.register_blueprint(overtimes.bp)
+
+    # 在此处加入所有后台程序。
+    # from .util.background import print_number
+    # add_background(app, print_number)
+
     return app
+
+
+def add_background(app, func):
+    """
+    加入后台任务。
+
+    将一个后台任务加入后台执行。这个任务将在第一次请求被调用之前加入线程池。
+    """
+    def new_dg():
+        def add_dg():
+            with app.app_context():
+                try:
+                    func()
+                except Exception as e:
+                    app.logger.exception(e)
+
+        executor.submit(add_dg)
+
+    app.before_first_request(new_dg)
 
 
 class CustomJSONEncoder(JSONEncoder):
