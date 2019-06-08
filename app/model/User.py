@@ -60,7 +60,7 @@ class User(db.Model):
 
     def __repr__(self):
         """打印对象的信息"""
-        return '<User {}, ID={}, Role={}>'.format(self.name, self.ID, Role(self.identity).name)
+        return '<User {}, ID={}, Role={},Email={}>'.format(self.name, self.ID, Role(self.identity).name, self.email)
 
     @property
     def password(self):

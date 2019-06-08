@@ -2,6 +2,14 @@ from datetime import datetime
 
 from .. import db
 
+from .User import User
+from .Department import Department
+from ..exceptions import DepartmentError
+from .sendEmail1 import SendEmail
+
+
+
+
 
 class Leave(db.Model):
     """
@@ -71,10 +79,52 @@ class Leave(db.Model):
         self.status = 4
         self.reportStamp = datetime.now()
 
-    def inform_director(self):
-        """请假申请通知主管"""
-        pass
 
-    def inform_employee(self):
-        """请假结果通知员工"""
-        pass
+
+    def leave_application_to_director(self):
+        """leave_application_to_director请假申请通知主管"""
+        """返回该员工的主管的邮箱"""
+
+        u = User.ByID(self.staffID)
+        d = Department.ByID(u.departmentID)
+        self.isLeavePermitted = 0    # 请假未审核
+
+        for i in range(len(d.users)):
+            if(d.users[i].identity == 2):
+                director = d.users[i]
+                break
+                
+        if(d.users[i].identity != 2 ):
+            return DepartmentError
+        
+        else:
+            dictLeave = {'email':director.email, 'leaveInfo':self.json(), 'result':"请假审批中"}
+            #SendEmail()
+            subject = '有人请假啦'
+            str = dictLeave['leaveInfo']+dictLeave['result']
+            SendEmail(dictLeave['email'], subject, str)
+            return dictLeave
+
+        
+    def leave_result_to_employee(self):
+        """leave_result_to_employee请假结果通知员工"""
+        staff = User.ByID(self.staffID)
+        if(self.isLeavePermitted == 1):   #主管批准
+            dictLeave = {'email':staff.email, 'leaveInfo':Leave, 'result':'你的请假获得批准'}
+            subject = '请假成功！'
+            str = dictLeave['leaveInfo']+dictLeave['result']
+            SendEmail(dictLeave['email'], subject, str)
+            return dictLeave
+
+        if(self.isLeavePermitted == 2):   #主管未批准
+            dictLeave = {'email':staff.email, 'leaveInfo':Leave, 'result':'你的请假未获批准'}
+            subject = '请假失败。。。！'
+            str = dictLeave['leaveInfo']+dictLeave['result']
+            SendEmail(dictLeave['email'], subject, str)
+            return dictLeave
+
+
+
+
+
+
