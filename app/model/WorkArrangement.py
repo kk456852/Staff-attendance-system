@@ -26,7 +26,7 @@ class WorkArrangement(db.Model):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return self.dict()
+        return str(self.dict())
 
     @staticmethod
     def ByStaffIDandDate(staffID, date):

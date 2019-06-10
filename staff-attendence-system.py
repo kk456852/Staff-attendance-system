@@ -19,7 +19,7 @@ def ipy():
     ctx = app.app_context()
     ctx.push()
     from app.model import (Department, Leave, Role,
-                           Overtime, TemporaryOvertime,
+                           Overtime, TemporaryOvertime, WorkArrangement,
                            SignSheet, User)
     __import__('IPython').embed()
     ctx.pop()

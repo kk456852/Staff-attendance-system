@@ -11,7 +11,7 @@ class Overtime(db.Model):  # 加班
     如果结束时间小于起始时间，说明加班跨越零点，在第二天结束。
 
     :param staffID 申请人ID
-    :param status 表示该申请的状态。0:未审核 1:通过 2:不通过 3:已取消 4:已过期
+    :param status 表示该申请的状态。0:未审核 1:通过 2:不通过 3:已取消 4:已过期 5
     :param reason 加班申请原因
 
     :param submitStamp 提交申请时间戳
