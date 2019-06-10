@@ -14,7 +14,7 @@ class SignSheet(db.Model):
     staffID = db.Column(db.Integer, db.ForeignKey(
         'user.ID'), nullable=False)  # 员工标号
     commitStamp = db.Column(db.DateTime, nullable=False)
-    status = 
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

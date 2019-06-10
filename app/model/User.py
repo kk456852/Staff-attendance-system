@@ -119,21 +119,3 @@ class User(db.Model):
 
         return False
 
-    #
-    # 主管方法
-
-    def arrange_work(self):
-        """安排工作班次"""
-        pass
-
-    def update_work_arrangement(self):
-        """修改本部门员工工作安排"""
-        pass
-
-    #
-    # 经理方法
-    #
-
-    def release_temporary_overtime(self):
-        """发布全单位加班"""
-        pass
