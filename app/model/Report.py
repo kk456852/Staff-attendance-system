@@ -30,7 +30,7 @@ class Report(db.Model):  # 销假
 
     def report_to_director(self,datetime):
         """销假通知主管"""
-        leave = Leave.getInfoByID(self.leaveID)
+        leave = Leave.ByID(self.leaveID)
         u = User.ByID(leave.staffID)
         d = Department.ByID(u.departmentID)
         for i in range(len(d.users)):

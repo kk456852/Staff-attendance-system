@@ -52,7 +52,44 @@ class Leave(db.Model):  # 请假
     def getInfoByPermitted(permitted):
         return Leave.query.filter_by(isLeavePermitted=permitted).all()
     
- 
+    @staticmethod
+    def All():
+        """返回数据库中所有的User对象
+
+        :returns List[User]
+        """
+        return Leave.query.all()
+
+    @staticmethod
+    def ByID(ID):
+        """根据ID构造对象
+        数据库中没有此ID时抛出异常
+
+        :returns User
+        :raise UserNotFoundException
+        """
+        u = Leave.query.get(ID)
+        
+        return u
+
+    def update_db(self):
+        """将修改后的对象，或者新增的对象添加/修改到数据库中。
+        失败时抛出异常。
+
+        :raise InvalidRequestError
+        """
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_db(self):
+        """删除数据库中该对象对应的用户。
+        失败时抛出异常。
+
+        :raise InvalidRequestError
+        """
+        db.session.delete(self)
+        db.session.commit()
+
 
 
     def leave_application_to_director(self):

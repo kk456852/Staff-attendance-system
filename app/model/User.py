@@ -11,6 +11,7 @@ from .. import db
 from .Department import Department
 from ..exceptions import UserNotFoundException
 
+from .Leave import *
 
 class Role(IntEnum):
     """职务
@@ -181,13 +182,20 @@ class User(db.Model):
         """修改本部门员工工作安排"""
         pass
 
-    def approve_leave(self):
+    def approve_leave(self, LeaveID, isLeavePermitted):
         """请假审批"""
-        pass
+        l = Leave.ByID(LeaveID)
+        l.isLeavePermitted = isLeavePermitted
+        l.update_db()
+        l.leave_result_to_employee()
 
-    def approve_report(self):
+    def approve_report(self, LeaveID):
         """销假处理"""
-        pass
+        l = Leave.ByID(LeaveID)
+        u = User.ByID(l.staffID)
+        u.workStatus = 1
+        u.update_db()
+
 
     def approve_overtime(self):
         """加班审批"""
@@ -199,21 +207,20 @@ class User(db.Model):
 
     def retrieve_employee(self, employeeID):
         """查看员工信息"""
-        return
+        u = User.ByID(employeeID)
+        return u.__repr__
 
-    def delete_employee(self, employee):
+
+    def delete_employee(self, employeeID):
         """人员删除"""
-        pass
+        u = User.ByID(employeeID)
+        u.delete_db()
 
     def update_position(self,ID,identity):
         """身份修改"""
         u = User.ByID(ID)
         u.identity = identity
         u.update()
-
-    def create_employee(self):
-        """人员添加"""
-        pass
 
     def release_temporary_overtime(self):
         """发布全单位加班"""
