@@ -1,6 +1,8 @@
 from .. import db
-
-
+from .sendEmail1 import SendEmail
+from .Leave import *
+from .User import *
+from .Department import *
 class Report(db.Model):  # 销假
 
     reportID = db.Column(db.Integer, primary_key=True)
@@ -26,6 +28,19 @@ class Report(db.Model):  # 销假
     def getInfoByleaveId(leaveId):
         return Report.query.filter_by(leaveId=leaveId).all()
 
-    def report_to_director(self):
+    def report_to_director(self,datetime):
         """销假通知主管"""
-        pass
+        leave = Leave.getInfoByID(self.leaveID)
+        u = User.ByID(leave.staffID)
+        d = Department.ByID(u.departmentID)
+        for i in range(len(d.users)):
+            if(d.users[i].identity == 2):
+                director = d.users[i]
+                break
+                
+        if(d.users[i].identity != 2 ):
+            return DepartmentError
+        subject = '销假'
+        datetime = datetime.toString()
+        SendEmail(director.email, subject, datetime)
+            
