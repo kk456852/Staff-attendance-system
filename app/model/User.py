@@ -205,9 +205,11 @@ class User(db.Model):
         """人员删除"""
         pass
 
-    def update_position(self):
+    def update_position(self,ID,identity):
         """身份修改"""
-        pass
+        u = User.ByID(ID)
+        u.identity = identity
+        u.update()
 
     def create_employee(self):
         """人员添加"""
