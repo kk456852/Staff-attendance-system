@@ -77,24 +77,30 @@ class Overtime(db.Model):  # 加班
         pass
 
 
-class TemporaryOvertime(db.Model):
-    """
-    临时加班表
+#
+# 全单位临时性加班活动类
+#
+class TemporaryOvertime:
 
-    表示由经理创建的一项临时加班类。
-
-    :param submitStamp 提交时间戳
-    """
-    ID = db.Column(db.Integer, primary_key=True)
-    beginDateTime = db.Column(db.DateTime, nullable=False)
-    endTime = db.Column(db.Time, nullable=False)
-
-    reason = db.Column(db.String(200))
-    submitStamp = db.Column(db.DateTime)
+    startTime = db.Column(db.DateTime)
+    endTime = db.Column(db.DateTime)
+    name = db.Column(db.String(20))
+    userID = db.Column(db.Integer, db.ForeignKey('User.ID'))
+    isPermitted = db.Column(db.Integer)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.submitStamp = datetime.now()
 
-    def inform_all(self):
+    def inform_temporary_overtime(self, startTime, endTime):
+        """inform_temporary_overtime全员加班通知员工(非请假状态)"""
+        self.startTime = startTime
+        self.endTime = endTime
+        listUser = User.All()
+        for user in listUser:
+            if not user.in_leave(startTime) and not user.in_leave(endTime):
+                str1 = startTime.strftime('%Y-%m-%d-%h-%m')
+                str2 = startTime.strftime('%Y-%m-%d-%h-%m')
+                SendEmail(user.email, "临时加班", str1+str2)
+
+    def start(self):
         pass

@@ -20,22 +20,18 @@ class WorkArrangement(db.Model):
     content = db.Column(db.String(50))  # 工作安排
 
     now_time = datetime.datetime.now().strftime('%Y-%m-%d')
-    now_time = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+    now_time = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 
-    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def __repr__(self):
         return self.dict()
 
+    @staticmethod
+    def ByStaffID(staffID):
+        return WorkArrangement.query.filter_by(staffID=staffID).all()
 
     @staticmethod
-    def show_work_arrangement(staffID):
-        """展示工作安排"""
-        staffArrengement = WorkArrangement.ByID(staffID);
-        return staffArrengement.dict()
-        
-   
-    
-  
+    def ByDepartmentID(departmentID):
+        return WorkArrangement.query.filter_by(departmentID=departmentID).all()

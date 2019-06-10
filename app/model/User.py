@@ -112,6 +112,14 @@ class User(db.Model):
         """
         Leave.new(self, info)
 
+    def in_leave(self, time):
+        for l in self.leaves:
+            if l.leaveBeginTime < time and l.leaveEndTime > time and l.isLeavePermitted:
+                return True
+
+        return False
+
+    #
     # 主管方法
 
     def arrange_work(self):
