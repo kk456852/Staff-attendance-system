@@ -19,13 +19,13 @@ class WorkArrangement(db.Model):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def __repr__(self):
+    def __repr__(self):###########################
         return '<WorkArrangement %i %i>' % (self.staffID, self.departmentID)
 
     @staticmethod
     def show_work_arrangement(staffID):
         """展示工作安排"""
-        staffArrengement = BaseModel.ByID(staffID);
+        staffArrengement = WorkArrangement.ByID(staffID);
         return staffArrengement.dict()
         
    
