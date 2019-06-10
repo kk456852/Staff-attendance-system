@@ -29,8 +29,8 @@ class WorkArrangement(db.Model):
         return self.dict()
 
     @staticmethod
-    def ByStaffID(staffID):
-        return WorkArrangement.query.filter_by(staffID=staffID).all()
+    def ByStaffIDandDate(staffID, date):
+        return WorkArrangement.query.filter_by(staffID=staffID, date=date).all()
 
     @staticmethod
     def ByDepartmentID(departmentID):

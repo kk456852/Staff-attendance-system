@@ -11,7 +11,8 @@ bp = Blueprint('arranges', __name__, url_prefix='/arranges')
 def arranges():
     if request.method == 'GET':#根据ID查看
         staffID = request.args.get('staffID')
-        staffArrengement = WorkArrangement.ByID(staffID)
+        date = request.args.get('date')
+        staffArrengement = WorkArrangement.ByStaffIDandDate(staffID, date)
         return success(staffArrengement.dict())
     elif request.method == 'POST':#主管更改某员工的工作安排
         info = request.get_json()
@@ -24,7 +25,8 @@ def arranges():
 def arrangesStaff():
     if request.method == 'GET':#根据ID查看
         staffID = request.args.get('staffID')
-        staffArrengement = WorkArrangement.ByID(staffID)
+        date = request.args.get('date')
+        staffArrengement = WorkArrangement.ByStaffIDandDate(staffID, date)
         return success(staffArrengement.dict())
 
 
@@ -32,7 +34,8 @@ def arrangesStaff():
 def arrangesManger():
     if request.method == 'GET':#根据ID查看
         staffID = request.args.get('staffID')
-        staffArrengement = WorkArrangement.ByID(staffID)
+        date = request.args.get('date')
+        staffArrengement = WorkArrangement.ByStaffIDandDate(staffID, date)
         return success(staffArrengement.dict())
 
     elif request.method == 'POST':#经理更改某员工的工作安排
