@@ -30,6 +30,12 @@ class WorkArrangement(db.Model):
         return self.dict()
 
 
-    def show_work_arrangement(self):
+    @staticmethod
+    def show_work_arrangement(staffID):
         """展示工作安排"""
-        pass
+        staffArrengement = WorkArrangement.ByID(staffID);
+        return staffArrengement.dict()
+        
+   
+    
+  

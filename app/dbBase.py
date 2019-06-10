@@ -76,7 +76,9 @@ class BaseModel(Model):
         for k, v in strs.items():
             if k in type_mapping.keys() and v is not None:
                 if type_mapping[k] is datetime.date:
-                    strs[k] = datetime.date.fromisoformat(v)
+                    # strs[k] = datetime.date.fromisoformat(v)
+                    strs[k] = datetime.date(*[int(i) for i in v.split('-')])
+                    # strs[k] = date
                 elif type_mapping[k] is datetime.time:
                     strs[k] = datetime.time.fromisoformat(v)
                 elif type_mapping[k] is datetime.datetime:
