@@ -31,7 +31,7 @@ def get_overtime():
 @bp.route('/', methods=['POST'])
 @url
 def new_overtime():
-    info = Overtime.format_str(request.get_json())
+    info = request.get_json()
     current_user().new_overtime(info=info)
 
 

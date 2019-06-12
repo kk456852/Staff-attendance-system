@@ -17,14 +17,14 @@ def get_tempovertimes():
 @bp.route('/', methods=['POST'])
 @url
 def new_tempovertimes():
-    info = TemporaryOvertime.format_str(request.get_json())
+    info = request.get_json()
     TemporaryOvertime.new(info)
 
 
 @bp.route('/<int:ID>', methods=['PUT'])
 @url
 def change_tempovertimes(ID):
-    info = TemporaryOvertime.format_str(request.get_json())
+    info = request.get_json()
     TemporaryOvertime.ByID(ID).update(info)
 
 

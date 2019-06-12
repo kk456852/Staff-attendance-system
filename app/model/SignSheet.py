@@ -31,3 +31,7 @@ class SignSheet(db.Model):
         如果检查失败，抛出异常。
         """
         SignSheet(staffID=ID).update_db()
+
+    @staticmethod
+    def ByDate(date):
+        pass

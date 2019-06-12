@@ -60,32 +60,6 @@ class BaseModel(Model):
         self.query.session.delete(self)
         self.query.session.commit()
 
-    @classmethod
-    def format_str(cls, strs: dict):
-        """
-        将该对象对应字典中的字符串参数解析为正确的值。
-
-        >>> User.format_str({"birthday" : "2018-08-08"})
-        {"birthday" : datetime(2018, 8, 8)}
-
-        返回解析后的表。
-        """
-        type_mapping = {
-            c.name: c.type.python_type for c in cls.__table__.columns}
-
-        for k, v in strs.items():
-            if k in type_mapping.keys() and v is not None:
-                if type_mapping[k] is datetime.date:
-                    # strs[k] = datetime.date.fromisoformat(v)
-                    strs[k] = datetime.date(*[int(i) for i in v.split('-')])
-                    # strs[k] = date
-                elif type_mapping[k] is datetime.time:
-                    strs[k] = datetime.time.fromisoformat(v)
-                elif type_mapping[k] is datetime.datetime:
-                    strs[k] = datetime.datetime.fromtimestamp(v)
-
-        return strs
-
     def dict(self):
         """返回一个数据库模型所有的属性组成的字典
 

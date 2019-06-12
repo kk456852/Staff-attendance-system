@@ -27,7 +27,7 @@ def get_leaves():
 @bp.route('/', methods=['POST'])
 @url
 def new_leave():
-    info = Leave.format_str(request.get_json())
+    info = request.get_json()
     current_user().new_leave(info=info)
 
 

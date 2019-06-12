@@ -6,24 +6,28 @@ from .. import BaseModel
 from ..model import User, WorkArrangement
 from .util import Role, failed, success, url
 
-bp = Blueprint('arranges', __name__, url_prefix='/arranges')
+bp = Blueprint('arranges', __name__, url_prefix='/arrangements')
+
+
+def format_date(date_str):
+    return date(*[int(i) for i in date_str.split('-')])
 
 
 @bp.route('/', methods=['GET'])
 @url
-def get_arranges():
+def get_arranges_by_staff_date():
     staff_id = request.args.get('staffID')
-    work_date = date(*[int(i) for i in request.args.get('date').split('-')])
-    # login_required()
-    return User.ByID(staff_id).arrangement_by_date(work_date).dict()
+    str_date = request.args.get('date')
+    str_from = request.args.get('fromDateTime')
 
-@bp.route('/staff', methods=['GET', 'POST', 'PUT'])
-@url
-def arrangesStaff():
-    if request.method == 'GET':#根据ID查看
-        staffID = request.args.get('staffID')
-        staffArrengement = WorkArrangement.ByID(staffID)
-        return success(staffArrengement.dict())
+
+    if str_date:
+        work_date = format_date(str_date)
+        # login_required()
+        return [a.dict() for a in User.ByID(staff_id).arrangement_by_date(work_date)]
+    else :
+        pass
+
 
 @bp.route('/', methods=['POST'])
 @url
@@ -31,12 +35,6 @@ def new_arranges():
     info = request.get_json()
     w = WorkArrangement.new(info)
 
-@bp.route('/manager', methods=['GET', 'POST', 'PUT'])
-def arrangesManger():
-    if request.method == 'GET':#根据ID查看
-        staffID = request.args.get('staffID')
-        staffArrengement = WorkArrangement.ByID(staffID)
-        return success(staffArrengement.dict())
 
 @bp.route('/<int:ID>', methods=['PUT'])
 @url

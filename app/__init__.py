@@ -1,7 +1,7 @@
-import datetime
+from datetime import date, time, datetime
 
 from flask import Flask
-from flask.json import JSONEncoder
+from flask.json import JSONEncoder, JSONDecoder
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 
@@ -23,6 +23,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(config)
     app.json_encoder = CustomJSONEncoder
+    app.json_decoder = CustomJSONDecoder
 
     db.init_app(app)
     mail.init_app(app)
@@ -72,11 +73,11 @@ class CustomJSONEncoder(JSONEncoder):
 
     def default(self, obj):
         try:
-            if isinstance(obj, datetime.datetime):
+            if isinstance(obj, datetime):
                 return int(obj.timestamp())
-            elif isinstance(obj, datetime.date):
+            elif isinstance(obj, date):
                 return obj.isoformat()
-            elif isinstance(obj, datetime.time):
+            elif isinstance(obj, time):
                 return obj.isoformat()[:-3]  # 去掉秒
             iterable = iter(obj)
         except TypeError:
@@ -84,3 +85,23 @@ class CustomJSONEncoder(JSONEncoder):
         else:
             return list(iterable)
         return JSONEncoder.default(self, obj)
+
+
+class CustomJSONDecoder(JSONDecoder):
+    def __init__(self, *args, **kwargs):
+        self.orig_obj_hook = kwargs.pop("object_hook", None)
+        super(CustomJSONDecoder, self).__init__(*args,
+                                                object_hook=self.custom_obj_hook, **kwargs)
+
+    def custom_obj_hook(self, dct):
+        for k, v in dct.items():
+            if k.endswith('Date'):
+                dct[k] = date(*[int(i) for i in v.split('-')])
+            elif k.endswith('DateTime') or k.endswith('Stamp') or k == 'birthday':
+                dct[k] = datetime.fromtimestamp(v)
+            elif k.endswith('Time'):
+                dct[k] = time.fromisoformat(v)
+
+        if (self.orig_obj_hook):
+            return self.orig_obj_hook(dct)
+        return dct

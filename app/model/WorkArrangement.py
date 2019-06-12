@@ -24,4 +24,4 @@ class WorkArrangement(db.Model):
 
     @staticmethod
     def ByStaffIDandDate(staffID, date):
-        return WorkArrangement.query.filter_by(staffID=staffID, date=date).one()
+        return WorkArrangement.query.filter_by(staffID=staffID, date=date).all()
