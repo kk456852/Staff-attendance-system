@@ -122,7 +122,7 @@ class User(db.Model):
         查询该员工在对应的时间中是否为假期。
         """
         for l in self.leaves:
-            if l.leaveBeginTime < datetime and l.leaveEndTime > datetime and l.status == 1:
+            if l.beginDateTime < datetime and l.endDateTime > datetime and l.status == 1:
                 return True
 
         return False

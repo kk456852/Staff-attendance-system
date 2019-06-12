@@ -11,7 +11,7 @@ bp = Blueprint('tempovertimes', __name__, url_prefix='/tempovertimes')
 @bp.route('/', methods=['GET'])
 @url
 def get_tempovertimes():
-    return [x.dict() for x in TemporaryOvertime.All() if x.endTime > datetime.now()]
+    return [x.dict() for x in TemporaryOvertime.All() if x.endDateTime > datetime.now()]
 
 
 @bp.route('/', methods=['POST'])

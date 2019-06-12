@@ -16,29 +16,20 @@ def workstatus():
 
     请求：员工ID、日期
 
-    {
-        "works" : [
-            {
-                "type" : "normal",
-
-            },
-            {
-                "type" : "overwork"
-            },
-            {
-                "type" : "leave"
-            }
-        ]
-    }
+    [
+        {
+            "type" : "normal",
+        },
+        {
+            "type" : "overwork"
+        },
+        {
+            "type" : "leave"
+        }
+    ]
     """
     staff_id = request.args.get('staffID')
     work_date = date(*[int(i) for i in request.args.get('date').split('-')])
     # login_required()
 
     return User.ByID(staff_id).arrangement_by_date(work_date)
-
-"""
-关于工作状态：
-
-
-"""

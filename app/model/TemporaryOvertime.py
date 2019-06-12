@@ -12,8 +12,8 @@ class TemporaryOvertime(db.Model):
     员工可以看到当前所有没有开始的临时加班。并且可以在加班结束前将其加入到自己的加班申请中。
     """
     ID = db.Column(db.Integer, primary_key=True)
-    beginTime = db.Column(db.DateTime, nullable=False)
-    endTime = db.Column(db.DateTime, nullable=False)
+    beginDateTime = db.Column(db.DateTime, nullable=False)
+    endDateTime = db.Column(db.DateTime, nullable=False)
     content = db.Column(db.String(200))
 
     submitStamp = db.Column(db.DateTime)
@@ -29,7 +29,7 @@ class TemporaryOvertime(db.Model):
         为每个员工发送邮件。
         """
         for u in User.All():
-            if not u.in_leave(self.startTime) and not u.in_leave(endTime) and u.role != Role.MANAGER:
+            if not u.in_leave(self.beginDateTime) and not u.in_leave(self.endDateTime) and u.role != Role.MANAGER:
                 self.inform_staff(u)
 
     def inform_staff(self, user):
