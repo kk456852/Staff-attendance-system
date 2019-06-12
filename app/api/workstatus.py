@@ -7,7 +7,6 @@ from .util import Role, failed, login_required, success, url
 
 bp = Blueprint('workstatus', __name__, url_prefix='/workstatus')
 
-
 @bp.route('/', methods=['GET'])
 @url
 def workstatus():

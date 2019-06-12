@@ -15,12 +15,17 @@ class SignSheet(db.Model):
         'user.ID'), nullable=False)  # 员工标号
     commitStamp = db.Column(db.DateTime, nullable=False)
 
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.commitStamp = datetime.now()
 
     def __repr__(self):
         return '<SignSheet {}:{}>'.format(self.user.name, self.commitStamp)
+
+    @staticmethod
+    def ByStaffIDandDate(staffID, date):
+        return SignSheet.query.filter_by(staffID=staffID, date=date).all()
 
     @staticmethod
     def sign(ID):
