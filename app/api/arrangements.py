@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, time
 
 from flask import Blueprint, current_app, json, jsonify, request
 
@@ -18,15 +18,27 @@ def format_date(date_str):
 def get_arranges_by_staff_date():
     staff_id = request.args.get('staffID')
     str_date = request.args.get('date')
-    str_from = request.args.get('fromDateTime')
-
+    str_from = request.args.get('fromDate')
+    str_to = request.args.get('toDate')
 
     if str_date:
         work_date = format_date(str_date)
         # login_required()
         return [a.dict() for a in User.ByID(staff_id).arrangement_by_date(work_date)]
-    else :
-        pass
+    elif str_from and str_to:
+        from_ = format_date(str_from)
+        to_ = format_date(str_to)
+
+        arranges = User.ByID(staff_id).arrangement_by_range(from_, to_)
+
+        res = {}
+        for i in arranges:
+            date_str = i.date.isoformat()
+            if not res.get(date_str):
+                res[date_str] = []
+            res[date_str].append(i.dict())
+
+        return res
 
 
 @bp.route('/', methods=['POST'])

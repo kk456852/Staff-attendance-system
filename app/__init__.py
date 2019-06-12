@@ -29,7 +29,7 @@ def create_app():
     mail.init_app(app)
 
     # 此处必须函数内部导入路由，在之前导入可能因为没有构建好所有的组件而出现错误。
-    from .api import auth, staff, leaves, sign, tempovertime, workstatus, department, arranges, overtimes
+    from .api import auth, staff, leaves, sign, tempovertime, workstatus, department, arrangements, overtimes
     app.register_blueprint(auth.bp)
     app.register_blueprint(staff.bp)
     app.register_blueprint(workstatus.bp)
@@ -37,7 +37,7 @@ def create_app():
     app.register_blueprint(sign.bp)
     app.register_blueprint(leaves.bp)
     app.register_blueprint(department.bp)
-    app.register_blueprint(arranges.bp)
+    app.register_blueprint(arrangements.bp)
     app.register_blueprint(overtimes.bp)
 
     # 在此处加入所有后台程序。
@@ -95,11 +95,11 @@ class CustomJSONDecoder(JSONDecoder):
 
     def custom_obj_hook(self, dct):
         for k, v in dct.items():
-            if k.endswith('Date'):
+            if k.lower().endswith('date'):
                 dct[k] = date(*[int(i) for i in v.split('-')])
-            elif k.endswith('DateTime') or k.endswith('Stamp') or k == 'birthday':
+            elif k.lower().endswith('datetime') or k.lower().endswith('stamp') or k == 'birthday':
                 dct[k] = datetime.fromtimestamp(v)
-            elif k.endswith('Time'):
+            elif k.lower().endswith('time'):
                 dct[k] = time.fromisoformat(v)
 
         if (self.orig_obj_hook):

@@ -111,11 +111,20 @@ class User(db.Model):
         """
         根据日期返回对应日期该员工的工作安排。
 
-        暂时每天只能有一次工作。
+        返回的是一个列表，其中每个对象都是一次工作安排。
+
         :param date 工作日期
-        :return WorkArrangement对象
+        :return List[WorkArrangement]
         """
         return WorkArrangement.ByStaffIDandDate(self.ID, date)
+
+    def arrangement_by_range(self, from_, to_):
+        """
+        根据日期范围返回范围内的工作安排。
+
+        返回一个字典。键是Date对象，值是List[WorkArrangement]
+        """
+        return WorkArrangement.ByStaffIDandRange(self.ID, from_, to_)
 
     def in_leave(self, datetime) -> bool:
         """
