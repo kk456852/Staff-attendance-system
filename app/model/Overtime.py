@@ -11,7 +11,7 @@ class Overtime(db.Model):  # 加班
     如果结束时间小于起始时间，说明加班跨越零点，在第二天结束。
 
     :param staffID 申请人ID
-    :param status 表示该申请的状态。0:未审核 1:通过 2:不通过 3:已取消 4:已过期
+    :param status 表示该申请的状态。0:未审核 1:通过 2:不通过 3:已取消 4:已过期 5:全员性加班
     :param reason 加班申请原因
 
     :param submitStamp 提交申请时间戳
@@ -63,44 +63,18 @@ class Overtime(db.Model):  # 加班
         res["staffName"] = self.staff.name
         return res
 
+    @staticmethod
+    def new(staff, info: dict):
+        # TODO: 此处应该查询请假时间段是否在正常范围内，否则抛出异常
+        o = Overtime(**info)
+        o.staff = staff
+        o.status = 0
+        o.update_db()
+        # o.inform_charge()
+
     def review(self, charge, permit: bool):
         self.status = 1 if permit else 2
         self.reviewer = charge
         self.reviewStamp = datetime.now()
         self.update_db()
         # TODO:此处应通知被审批人
-
-    def overtime_application_to_director(self):
-        pass
-
-    def overtime_result_to_employee(self):
-        pass
-
-
-#
-# 全单位临时性加班活动类
-#
-class TemporaryOvertime:
-
-    startTime = db.Column(db.DateTime)
-    endTime = db.Column(db.DateTime)
-    name = db.Column(db.String(20))
-    userID = db.Column(db.Integer, db.ForeignKey('User.ID'))
-    isPermitted = db.Column(db.Integer)
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def inform_temporary_overtime(self, startTime, endTime):
-        """inform_temporary_overtime全员加班通知员工(非请假状态)"""
-        self.startTime = startTime
-        self.endTime = endTime
-        listUser = User.All()
-        for user in listUser:
-            if not user.in_leave(startTime) and not user.in_leave(endTime):
-                str1 = startTime.strftime('%Y-%m-%d-%h-%m')
-                str2 = startTime.strftime('%Y-%m-%d-%h-%m')
-                SendEmail(user.email, "临时加班", str1+str2)
-
-    def start(self):
-        pass

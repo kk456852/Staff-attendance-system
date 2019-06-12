@@ -1,23 +1,21 @@
-from flask import Blueprint, json, jsonify, request, current_app
+from datetime import date
+
+from flask import Blueprint, current_app, json, jsonify, request
+
 from .. import BaseModel
-from ..model import WorkArrangement
-from .util import failed, url, success, Role
+from ..model import User, WorkArrangement
+from .util import Role, failed, success, url
 
 bp = Blueprint('arranges', __name__, url_prefix='/arranges')
 
 
-@bp.route('/director', methods=['GET', 'POST', 'PUT'])
+@bp.route('/', methods=['GET'])
 @url
-def arranges():
-    if request.method == 'GET':#根据ID查看
-        staffID = request.args.get('staffID')
-        staffArrengement = WorkArrangement.ByID(staffID)
-        return success(staffArrengement.dict())
-    elif request.method == 'POST':#主管更改某员工的工作安排
-        info = request.get_json()
-        w = WorkArrangement.ByID(info['staffId'])
-        w.update(info)
-        return success("主管更改某员工的工作安排")
+def get_arranges():
+    staff_id = request.args.get('staffID')
+    work_date = date(*[int(i) for i in request.args.get('date').split('-')])
+    # login_required()
+    return User.ByID(staff_id).arrangement_by_date(work_date).dict()
 
 @bp.route('/staff', methods=['GET', 'POST', 'PUT'])
 @url
@@ -27,6 +25,11 @@ def arrangesStaff():
         staffArrengement = WorkArrangement.ByID(staffID)
         return success(staffArrengement.dict())
 
+@bp.route('/', methods=['POST'])
+@url
+def new_arranges():
+    info = request.get_json()
+    w = WorkArrangement.new(info)
 
 @bp.route('/manager', methods=['GET', 'POST', 'PUT'])
 def arrangesManger():
@@ -35,8 +38,14 @@ def arrangesManger():
         staffArrengement = WorkArrangement.ByID(staffID)
         return success(staffArrengement.dict())
 
-    elif request.method == 'POST':#经理更改某员工的工作安排
-        info = request.get_json()
-        w = WorkArrangement.ByID(info['staffId'])
-        w.update(info)
-        return success("主管更改某员工的工作安排")
+@bp.route('/<int:ID>', methods=['PUT'])
+@url
+def change_arranges(ID):
+    info = request.get_json()
+    w = WorkArrangement.ByID(ID).update(info)
+
+
+@bp.route('/<int:ID>', methods=['DELETE'])
+@url
+def cancel_arranges(ID):
+    WorkArrangement.ByID(ID).delete()

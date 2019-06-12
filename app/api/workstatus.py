@@ -1,21 +1,44 @@
-from flask import Blueprint, json, jsonify, request, current_app
+from datetime import date
 
-from ..model import User
-from .util import failed, login_required, success, Role, url
+from flask import Blueprint, current_app, json, jsonify, request
+
+from ..model import SignSheet, User
+from .util import Role, failed, login_required, success, url
 
 bp = Blueprint('workstatus', __name__, url_prefix='/workstatus')
 
 
 @bp.route('/', methods=['GET'])
 @url
-def all_staffs_worktatus():
-    # login_required(Role.Manager)
-    from_ = request.args.get('from')
-    to_ = request.args.get('to')
-    return success(request.method)
+def workstatus():
+    """
+    工作状态：
 
-@bp.route('/<int:ID>', methods=['GET'])
-@url
-def staff_info_(ID):
-    return success(request.method)
-    
+    请求：员工ID、日期
+
+    {
+        "works" : [
+            {
+                "type" : "normal",
+
+            },
+            {
+                "type" : "overwork"
+            },
+            {
+                "type" : "leave"
+            }
+        ]
+    }
+    """
+    staff_id = request.args.get('staffID')
+    work_date = date(*[int(i) for i in request.args.get('date').split('-')])
+    # login_required()
+
+    return User.ByID(staff_id).arrangement_by_date(work_date)
+
+"""
+关于工作状态：
+
+
+"""

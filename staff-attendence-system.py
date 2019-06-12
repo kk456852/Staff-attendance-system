@@ -77,3 +77,6 @@ def create_test_data():
 
     Leave(staff=users[3], status=0, type=0, reason="回家种地", beginDateTime=datetime(
         2019, 6, 10), endDateTime=datetime(2019, 6, 11)).update_db()
+
+    WorkArrangement(staff=users[3], date=date(2019, 6, 12), beginTime=time(
+        8, 0), endTime=time(18, 0)).update_db()

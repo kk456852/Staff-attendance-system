@@ -11,6 +11,7 @@ from .Department import Department
 from .Leave import Leave
 from .Overtime import Overtime
 from .Role import Role
+from .WorkArrangement import WorkArrangement
 
 
 class User(db.Model):
@@ -37,7 +38,6 @@ class User(db.Model):
     email = db.Column(db.String(30))
     phoneNumber = db.Column(db.String(20))
 
-    # 伪属性，被下面的 @property department 代理
     departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
 
     # 反向引用，包含所有引用User.ID的项
@@ -95,12 +95,7 @@ class User(db.Model):
             endDateTime
             reason
         """
-        # TODO: 此处应该查询加班时间段是否在正常范围内，否则抛出异常
-        o = Overtime(**info)
-        o.staff = self
-        o.status = 0
-        o.update_db()
-        # TODO:此处应通知主管
+        Overtime.new(self, info)
 
     def new_leave(self, info: dict):
         """新请假
@@ -112,28 +107,22 @@ class User(db.Model):
         """
         Leave.new(self, info)
 
-    def in_leave(self, time):
+    def arrangement_by_date(self, date):
+        """
+        根据日期返回对应日期该员工的工作安排。
+
+        暂时每天只能有一次工作。
+        :param date 工作日期
+        :return WorkArrangement对象
+        """
+        return WorkArrangement.ByStaffIDandDate(self.ID, date)
+
+    def in_leave(self, datetime) -> bool:
+        """
+        查询该员工在对应的时间中是否为假期。
+        """
         for l in self.leaves:
-            if l.leaveBeginTime < time and l.leaveEndTime > time and l.isLeavePermitted:
+            if l.leaveBeginTime < datetime and l.leaveEndTime > datetime and l.status == 1:
                 return True
 
         return False
-
-    #
-    # 主管方法
-
-    def arrange_work(self):
-        """安排工作班次"""
-        pass
-
-    def update_work_arrangement(self):
-        """修改本部门员工工作安排"""
-        pass
-
-    #
-    # 经理方法
-    #
-
-    def release_temporary_overtime(self):
-        """发布全单位加班"""
-        pass

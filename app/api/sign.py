@@ -1,5 +1,6 @@
 import base64
 from io import BytesIO
+from datetime import datetime
 
 from flask import Blueprint, current_app, json, jsonify, request
 
@@ -34,5 +35,8 @@ def sign():
 @bp.route('/<int:ID>', methods=['POST'])
 @url
 def sign_test(ID):
-    """测试用的签到操作，可以为某个用户ID的人签到"""
-    SignSheet.sign(ID)
+    """测试用的签到操作，可以为某个用户ID的人在某特定时间点签到"""
+    data = request.get_json()
+    s = SignSheet(staffID=ID)
+    s.commitStamp = datetime.fromtimestamp(data['DateTime'])
+    s.update_db()
