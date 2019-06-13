@@ -1,6 +1,7 @@
 from .. import db
 
 from datetime import date, time, datetime
+from ..util.mail import send_mail
 
 
 class Overtime(db.Model):  # 加班
@@ -64,13 +65,21 @@ class Overtime(db.Model):  # 加班
         return res
 
     @staticmethod
-    def new(staff, info: dict):
+    def new(self, staff, info: dict):
         # TODO: 此处应该查询请假时间段是否在正常范围内，否则抛出异常
         o = Overtime(**info)
         o.staff = staff
         o.status = 0
         o.update_db()
         # o.inform_charge()
+        # 通知template: overtime_new.html
+        self.inform_charge()
+
+    def inform_charge(self):
+        """
+        发送邮件通知主管。
+        """
+        send_mail(to = self.reviewer.email, subject = "员工加班请求", template = "overtime_new.html", overtime = self, staff = self.staff, charge=self.reviewer)
 
     def review(self, charge, permit: bool):
         self.status = 1 if permit else 2
@@ -78,3 +87,12 @@ class Overtime(db.Model):  # 加班
         self.reviewStamp = datetime.now()
         self.update_db()
         # TODO:此处应通知被审批人
+        # 通知template: overtime_review.html
+        self.inform_staff()
+
+    def inform_staff(self):
+        """
+        发送邮件通知员工审批结果。
+        """
+        send_mail(to = self.staff, subject = "加班审批结果通知", template = "overtime_review.html", overtime = self, staff = self.staff)
+
