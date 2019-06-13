@@ -100,7 +100,7 @@ class CustomJSONDecoder(JSONDecoder):
             elif k.lower().endswith('datetime') or k.lower().endswith('stamp') or k == 'birthday':
                 dct[k] = datetime.fromtimestamp(v)
             elif k.lower().endswith('time'):
-                dct[k] = time.fromisoformat(v)
+                dct[k] = time(*[int(i) for i in v.split(':')])
 
         if (self.orig_obj_hook):
             return self.orig_obj_hook(dct)
