@@ -45,7 +45,5 @@ class WorkArrangement(db.Model):
 
         返回期间内所有工作安排的列表。
         """
-        assert from_ < to_
-
         return WorkArrangement.query.filter_by(staffID=staffID).filter(
             WorkArrangement.date.between(from_, to_)).all()

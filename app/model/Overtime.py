@@ -76,7 +76,7 @@ class Overtime(db.Model):  # 加班
         return res
 
     @staticmethod
-    def new(self, staff, info: dict):
+    def new(staff, info: dict):
         # TODO: 此处应该查询请假时间段是否在正常范围内，否则抛出异常
         o = Overtime(**info)
         o.staff = staff
@@ -84,7 +84,7 @@ class Overtime(db.Model):  # 加班
         o.update_db()
         # o.inform_charge()
         # 通知template: overtime_new.html
-        self.inform_charge()
+        staff.inform_charge()
 
     def inform_charge(self):
         """
@@ -111,7 +111,6 @@ class Overtime(db.Model):  # 加班
 
         返回期间内所有工作安排的列表。
         """
-        assert from_ < to_
         f = date_to_datetime(from_)
         t = date_to_datetime(to_ + timedelta(days=1))
 

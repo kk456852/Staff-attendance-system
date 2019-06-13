@@ -74,11 +74,11 @@ def create_test_data():
             "reason": r
         }
 
-    users[3].new_overtime(
-        overtime(datetime(2019, 6, 14, 22, 0, 0), datetime(2019, 6, 15, 1, 0, 0), "没弄完"))
+    Overtime(staff=users[3], status=1, reviewer=users[1], reason="晚上加班睡的香", beginDateTime=datetime(
+        2019, 6, 12, 18, 0), endDateTime=datetime(2019, 6, 13, 1, 0)).update_db()
 
     Leave(staff=users[3], status=0, type=0, reason="回家种地", beginDateTime=datetime(
-        2019, 6, 13), endDateTime=datetime(2019, 6, 22)).update_db()
+        2019, 6, 14), endDateTime=datetime(2019, 6, 22)).update_db()
 
     w = WorkArrangement(staff=users[3], date=date(2019, 6, 12), beginTime=time(
         8, 0), endTime=time(18, 0))

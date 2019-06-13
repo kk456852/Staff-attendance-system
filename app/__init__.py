@@ -78,7 +78,7 @@ class CustomJSONEncoder(JSONEncoder):
             elif isinstance(obj, date):
                 return obj.isoformat()
             elif isinstance(obj, time):
-                return obj.isoformat()[:-3]  # 去掉秒
+                return obj.isoformat()[:5]  # 去掉秒
             iterable = iter(obj)
         except TypeError:
             pass

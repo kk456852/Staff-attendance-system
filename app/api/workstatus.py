@@ -54,12 +54,11 @@ def workstatus():
         u = User.ByID(staff_id)
 
         arranges = u.arrangement_by_date(dt)
-        # leaves = u.leaves_by_date(dt)
-        # overtimes = u.overtimes_by_date(dt)
-        # signs = u.signs_by_date(dt)
-        # s = SignSheet.ByID(i.ID)
+        leaves = u.leaves_by_date(dt)
+        overtimes = u.overtimes_by_date(dt)
 
-    #
+        return format_status(arranges, leaves, overtimes).get(dt.isoformat())
+
     elif from_ and to_:
         fm = date(*[int(i) for i in from_.split('-')])
         to = date(*[int(i) for i in to_.split('-')])
@@ -69,35 +68,38 @@ def workstatus():
         leaves = u.leaves_by_range(fm, to)
         overtimes = u.overtimes_by_range(fm, to)
 
-        res = defaultdict(list)
+        return format_status(arranges, leaves, overtimes)
 
-        for a in arranges:
-            res[a.date.isoformat()].append(arrange_format(a))
 
-        for o in overtimes:
-            beginDate = o.beginDateTime.date()
-            endDate = o.endDateTime.date()
-            res[beginDate.isoformat()] = overtime_format(o)
+def format_status(arranges, leaves, overtimes):
+    res = defaultdict(list)
 
-            if beginDate != endDate:
-                res[endDate.isoformat()] = overtime_format(o, nextday=True)
+    for a in arranges:
+        res[a.date.isoformat()].append(arrange_format(a))
 
-        for l in leaves:
-            pass
+    for o in overtimes:
+        beginDate = o.beginDateTime.date()
+        endDate = o.endDateTime.date()
+        res[beginDate.isoformat()].append(overtime_format(o))
 
-        d = dict(res)
-        print(d)
-        return d
+    if beginDate != endDate:
+        res[endDate.isoformat()].append(
+            overtime_format(o, nextday=True))
+
+    for l in leaves:
+        pass
+
+    return dict(res)
 
 
 def overtime_format(o, nextday=False):
-    cross_day = o.beginDateTime < o.endDateTime
+    no_cross_day = o.beginDateTime.time() < o.endDateTime.time()  # 跨越一整天
     res = {
         "type": "overtime",
         "beginTime": o.beginDateTime.time(),
-        "endTime": o.endDateTime.time() if cross_day else None,
+        "endTime": o.endDateTime.time() if no_cross_day else time.max,
         "pbeginDateTime": o.beginSign.commitStamp if o.beginSign else None,
-        "pendDateTime": o.endSign.commitStamp if cross_day and o.endSign else None
+        "pendDateTime": o.endSign.commitStamp if no_cross_day and o.endSign else None
     }
     if nextday:
         res['beginTime'] = time.min

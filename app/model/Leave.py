@@ -112,7 +112,6 @@ class Leave(db.Model):
 
         返回期间内所有工作安排的列表。
         """
-        assert from_ < to_
         f = date_to_datetime(from_)
         t = date_to_datetime(to_ + timedelta(days=1))
 
