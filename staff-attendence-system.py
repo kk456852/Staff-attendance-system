@@ -52,7 +52,7 @@ def create_test_data():
     users = [User(ID=1, password="123456", name="老王",
                   role=Role.MANAGER, gender=False),
              User(ID=2, password="123456", name="马大叔",
-                  role=Role.CHARGE, gender=True, birthday=datetime(1978, 2, 15), department=departments[0], email="mahaoqu@gmail.com",image_url="img/ma.jpg"),
+                  role=Role.CHARGE, gender=True, birthday=datetime(1978, 2, 15), department=departments[0], email="mahaoqu@gmail.com", image_url="img/ma.jpg"),
              User(ID=3, password="123456", name="木木",
                   role=Role.CHARGE, birthday=datetime(1981, 11, 30), gender=False, department=departments[1], email="390400239@qq.com"),
              User(ID=4, password="123456", name="小马",
@@ -60,9 +60,9 @@ def create_test_data():
              User(ID=5, password="123456", name="小刚",
                   role=Role.STAFF, gender=False, department=departments[0]),
              User(ID=6, password="123456", name="徐徐",
-                  role=Role.STAFF, gender=True, department=departments[1],image_url="img/xuxuxu.jpg"),
-             User(ID=7, password="123456", name="=赵赵",
-                  role=Role.STAFF, gender=True, department=departments[1],image_url="img/zhao.jpg")]
+                  role=Role.STAFF, gender=True, department=departments[1]),
+             User(ID=7, password="123456", name="赵赵",
+                  role=Role.STAFF, gender=True, department=departments[1], image_url="img/zhao.jpg")]
 
     for d in chain(departments, users):
         d.update_db()

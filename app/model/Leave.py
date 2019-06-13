@@ -70,7 +70,7 @@ class Leave(db.Model):
         l.staff = staff
         l.status = 0
         l.update_db()
-        # l.inform_charge()
+        l.inform_charge()
 
     def review(self, charge, permit: bool):
         """主管审核"""

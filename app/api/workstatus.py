@@ -82,9 +82,9 @@ def format_status(arranges, leaves, overtimes):
         endDate = o.endDateTime.date()
         res[beginDate.isoformat()].append(overtime_format(o))
 
-    if beginDate != endDate:
-        res[endDate.isoformat()].append(
-            overtime_format(o, nextday=True))
+        if beginDate != endDate:
+            res[endDate.isoformat()].append(
+                overtime_format(o, nextday=True))
 
     for l in leaves:
         pass
@@ -114,6 +114,6 @@ def arrange_format(a):
         "type": "arrangement",
         "beginTime": a.beginTime,
         "endTime": a.endTime,
-        "pbeginDateTime": a.beginSign.commitStamp,
-        "pendDateTime": a.endSign.commitStamp
+        "pbeginDateTime": a.beginSign.commitStamp if a.beginSign else None,
+        "pendDateTime": a.endSign.commitStamp if a.endSign else None
     }

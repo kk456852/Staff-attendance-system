@@ -38,7 +38,6 @@ class SignSheet(db.Model):
         如果检查失败，抛出异常。
         """
         u = SignSheet(staffID=ID)
-        u.count = u.count + 1
         u.update_db()
 
     @staticmethod
