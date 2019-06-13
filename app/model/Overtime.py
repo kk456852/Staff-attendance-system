@@ -1,6 +1,10 @@
-from .. import db
+from datetime import date, datetime, time, timedelta
 
-from datetime import date, time, datetime
+from sqlalchemy import or_
+
+from .. import db
+from ..util.dateutil import date_to_datetime
+from ..util.mail import send_mail
 
 
 class Overtime(db.Model):  # 加班
@@ -32,8 +36,16 @@ class Overtime(db.Model):  # 加班
     submitStamp = db.Column(db.DateTime)
     reviewStamp = db.Column(db.DateTime)
 
+    beginSignID = db.Column(db.Integer, db.ForeignKey(
+        'sign_sheet.ID'))
+    endSignID = db.Column(db.Integer, db.ForeignKey(
+        'sign_sheet.ID'))
+
     staff = db.relationship("User", foreign_keys="Overtime.staffID")
     reviewer = db.relationship("User", foreign_keys="Overtime.reviewerID")
+    beginSign = db.relationship(
+        "SignSheet", foreign_keys="Overtime.beginSignID")
+    endSign = db.relationship("SignSheet", foreign_keys="Overtime.endSignID")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -64,17 +76,50 @@ class Overtime(db.Model):  # 加班
         return res
 
     @staticmethod
-    def new(staff, info: dict):
+    def new(self, staff, info: dict):
         # TODO: 此处应该查询请假时间段是否在正常范围内，否则抛出异常
         o = Overtime(**info)
         o.staff = staff
         o.status = 0
         o.update_db()
         # o.inform_charge()
+        # 通知template: overtime_new.html
+        self.inform_charge()
+
+    def inform_charge(self):
+        """
+        发送邮件通知主管。
+        """
+        send_mail(to=self.reviewer.email, subject="员工加班请求", template="overtime_new.html",
+                  overtime=self, staff=self.staff, charge=self.reviewer)
 
     def review(self, charge, permit: bool):
         self.status = 1 if permit else 2
         self.reviewer = charge
         self.reviewStamp = datetime.now()
         self.update_db()
-        # TODO:此处应通知被审批人
+        self.inform_staff()
+
+    @classmethod
+    def ByStaffIDandDate(cls, staffID, date):
+        return cls.ByStaffIDandRange(staffID, date, date)
+
+    @classmethod
+    def ByStaffIDandRange(cls, staffID, from_: date, to_: date):
+        """
+        通过员工ID和时间范围获取该期间所有的工作安排。
+
+        返回期间内所有工作安排的列表。
+        """
+        assert from_ < to_
+        f = date_to_datetime(from_)
+        t = date_to_datetime(to_ + timedelta(days=1))
+
+        return cls.query.filter_by(staffID=staffID).filter(or_(Overtime.endDateTime > f,  Overtime.beginDateTime < t)).all()
+
+    def inform_staff(self):
+        """
+        发送邮件通知员工审批结果。
+        """
+        send_mail(to=self.staff, subject="加班审批结果通知",
+                  template="overtime_review.html", overtime=self, staff=self.staff)

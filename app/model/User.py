@@ -12,6 +12,7 @@ from .Leave import Leave
 from .Overtime import Overtime
 from .Role import Role
 from .WorkArrangement import WorkArrangement
+from .SignSheet import SignSheet
 
 
 class User(db.Model):
@@ -119,6 +120,15 @@ class User(db.Model):
         """
         return WorkArrangement.ByStaffIDandDate(self.ID, date)
 
+    def leaves_by_date(self, date):
+        return Leave.ByStaffIDandDate(self.ID, date)
+
+    def overtimes_by_date(self, date):
+        return Overtime.ByStaffIDandDate(self.ID, date)
+
+    def signs_by_date(self, date):
+        return SignSheet.ByStaffIDandDate(self.ID, date)
+
     def arrangement_by_range(self, from_, to_):
         """
         根据日期范围返回范围内的工作安排。
@@ -126,6 +136,15 @@ class User(db.Model):
         返回一个字典。键是Date对象，值是List[WorkArrangement]
         """
         return WorkArrangement.ByStaffIDandRange(self.ID, from_, to_)
+
+    def leaves_by_range(self, from_, to_):
+        return Leave.ByStaffIDandRange(self.ID, from_, to_)
+
+    def overtimes_by_range(self, from_, to_):
+        return Overtime.ByStaffIDandRange(self.ID, from_, to_)
+
+    def signs_by_range(self, from_, to_):
+        return SignSheet.ByStaffIDandRange(self.ID, from_, to_)
 
     def in_leave(self, datetime) -> bool:
         """

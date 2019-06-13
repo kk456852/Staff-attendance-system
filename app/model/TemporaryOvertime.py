@@ -3,6 +3,7 @@ from datetime import datetime
 from .. import db
 from .User import User
 from .Role import Role
+from ..util.mail import send_mail
 
 
 class TemporaryOvertime(db.Model):
@@ -33,7 +34,8 @@ class TemporaryOvertime(db.Model):
                 self.inform_staff(u)
 
     def inform_staff(self, user):
-        #TODO: 发送请假邮件(非请假状态)
+        #TODO: 发送临时加班邮件(非请假状态)
+        send_mail(to = user.email, subject = "新临时加班", template = "temporary_overtime_new.html", temporaryOvertime = self, user = user)
         pass
 
     @staticmethod
