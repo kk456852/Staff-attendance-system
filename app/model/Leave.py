@@ -1,6 +1,9 @@
-from datetime import datetime
+from datetime import date, datetime, time, timedelta
+
+from sqlalchemy import or_
 
 from .. import db
+from ..util.dateutil import date_to_datetime
 from ..util.mail import send_mail
 from .Department import Department
 
@@ -43,7 +46,7 @@ class Leave(db.Model):
         self.submitStamp = datetime.now()
 
     def __repr__(self):
-        return '<Leave {}:{}>'.format(self.staff.name, self.reason)
+        return '<Leave {}:{} {}-{}>'.format(self.staff.name, self.reason, self.beginDateTime, self.endDateTime)
 
     def to_staff(self):
         """
@@ -97,3 +100,20 @@ class Leave(db.Model):
         if self.staff.email:
             send_mail(to=self.staff.email, subject='请假审批结果', template='leave_review.html',
                       leave=self)
+
+    @classmethod
+    def ByStaffIDandDate(cls, staffID, date):
+        return cls.ByStaffIDandRange(staffID, date, date)
+
+    @classmethod
+    def ByStaffIDandRange(cls, staffID, from_: date, to_: date):
+        """
+        通过员工ID和时间范围获取该期间所有的工作安排。
+
+        返回期间内所有工作安排的列表。
+        """
+        assert from_ < to_
+        f = date_to_datetime(from_)
+        t = date_to_datetime(to_ + timedelta(days=1))
+
+        return cls.query.filter_by(staffID=staffID).filter(or_(Leave.endDateTime > f,  Leave.beginDateTime < t)).all()

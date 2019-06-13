@@ -1,6 +1,9 @@
-from .. import db
+from datetime import date, datetime, time, timedelta
 
-from datetime import date, time, datetime
+from sqlalchemy import or_
+
+from .. import db
+from ..util.dateutil import date_to_datetime
 
 
 class Overtime(db.Model):  # 加班
@@ -32,8 +35,16 @@ class Overtime(db.Model):  # 加班
     submitStamp = db.Column(db.DateTime)
     reviewStamp = db.Column(db.DateTime)
 
+    beginSignID = db.Column(db.Integer, db.ForeignKey(
+        'sign_sheet.ID'))
+    endSignID = db.Column(db.Integer, db.ForeignKey(
+        'sign_sheet.ID'))
+
     staff = db.relationship("User", foreign_keys="Overtime.staffID")
     reviewer = db.relationship("User", foreign_keys="Overtime.reviewerID")
+    beginSign = db.relationship(
+        "SignSheet", foreign_keys="Overtime.beginSignID")
+    endSign = db.relationship("SignSheet", foreign_keys="Overtime.endSignID")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -78,3 +89,20 @@ class Overtime(db.Model):  # 加班
         self.reviewStamp = datetime.now()
         self.update_db()
         # TODO:此处应通知被审批人
+
+    @classmethod
+    def ByStaffIDandDate(cls, staffID, date):
+        return cls.ByStaffIDandRange(staffID, date, date)
+
+    @classmethod
+    def ByStaffIDandRange(cls, staffID, from_: date, to_: date):
+        """
+        通过员工ID和时间范围获取该期间所有的工作安排。
+
+        返回期间内所有工作安排的列表。
+        """
+        assert from_ < to_
+        f = date_to_datetime(from_)
+        t = date_to_datetime(to_ + timedelta(days=1))
+
+        return cls.query.filter_by(staffID=staffID).filter(or_(Overtime.endDateTime > f,  Overtime.beginDateTime < t)).all()

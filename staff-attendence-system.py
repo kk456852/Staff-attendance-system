@@ -44,6 +44,8 @@ def create_test_data():
     from app.model import (Department, Leave, Role,
                            Overtime, TemporaryOvertime,
                            SignSheet, User, WorkArrangement)
+    signsheet = [SignSheet(ID=1, staffID=1,
+                           commitStamp=datetime(2000, 1, 1, 1, 1))]
     departments = [Department(ID=1, name="销售"),
                    Department(ID=2, name="财务"),
                    Department(ID=3, name="技术")]
@@ -76,7 +78,19 @@ def create_test_data():
         overtime(datetime(2019, 6, 14, 22, 0, 0), datetime(2019, 6, 15, 1, 0, 0), "没弄完"))
 
     Leave(staff=users[3], status=0, type=0, reason="回家种地", beginDateTime=datetime(
-        2019, 6, 10), endDateTime=datetime(2019, 6, 11)).update_db()
+        2019, 6, 13), endDateTime=datetime(2019, 6, 22)).update_db()
 
-    WorkArrangement(staff=users[3], date=date(2019, 6, 12), beginTime=time(
-        8, 0), endTime=time(18, 0)).update_db()
+    w = WorkArrangement(staff=users[3], date=date(2019, 6, 12), beginTime=time(
+        8, 0), endTime=time(18, 0))
+
+    s1 = SignSheet(user=users[4])
+    s1.commitStamp = datetime(2019, 6, 12, 8, 5)
+    s1.update_db()
+
+    s2 = SignSheet(user=users[4])
+    s2.commitStamp = datetime(2019, 6, 12, 17, 55)
+    s2.update_db()
+
+    w.beginSign = s1
+    w.endSign = s2
+    w.update_db()

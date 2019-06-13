@@ -16,7 +16,17 @@ class WorkArrangement(db.Model):
     endTime = db.Column(db.Time, nullable=False)  # 结束时间
     content = db.Column(db.String(200))  # 工作安排
 
+    beginSignID = db.Column(db.Integer, db.ForeignKey(
+        'sign_sheet.ID'))
+    endSignID = db.Column(db.Integer, db.ForeignKey(
+        'sign_sheet.ID'))
+
     staff = db.relationship("User", foreign_keys="WorkArrangement.staffID")
+
+    beginSign = db.relationship(
+        "SignSheet", foreign_keys="WorkArrangement.beginSignID")
+    endSign = db.relationship(
+        "SignSheet", foreign_keys="WorkArrangement.endSignID")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
