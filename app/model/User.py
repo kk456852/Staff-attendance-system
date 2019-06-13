@@ -40,6 +40,7 @@ class User(db.Model):
     phoneNumber = db.Column(db.String(20))
 
     departmentID = db.Column(db.Integer, db.ForeignKey('department.ID'))
+    image_url = db.Column(db.String(30))
 
     # 反向引用，包含所有引用User.ID的项
     leaves = db.relationship('Leave', foreign_keys='[Leave.staffID]')
