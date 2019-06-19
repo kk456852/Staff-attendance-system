@@ -4,6 +4,9 @@ from flask import Flask
 from flask.json import JSONEncoder, JSONDecoder
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_restless import APIManager
 
 import config
 
@@ -11,6 +14,7 @@ from .dbBase import BaseModel
 from .util import executor
 
 db = SQLAlchemy(model_class=BaseModel)
+manager = APIManager(flask_sqlalchemy_db=db)
 mail = Mail()
 
 
@@ -25,10 +29,25 @@ def create_app():
     app.json_encoder = CustomJSONEncoder
     app.json_decoder = CustomJSONDecoder
 
+    admin = Admin(app, name='SAS', template_mode='bootstrap3')
     db.init_app(app)
     mail.init_app(app)
 
+    from .model import (Department, Leave, Role,
+                        Overtime, TemporaryOvertime,
+                        SignSheet, User, WorkArrangement)
+    admin.add_view(ModelView(User, db.session))
+    admin.add_view(ModelView(Department, db.session))
+    admin.add_view(ModelView(Leave, db.session))
+    admin.add_view(ModelView(Overtime, db.session))
+    admin.add_view(ModelView(SignSheet, db.session))
+    admin.add_view(ModelView(TemporaryOvertime, db.session))
+    admin.add_view(ModelView(WorkArrangement, db.session))
+
+    manager.init_app(app)
+    manager.create_api(User, methods=['GET', 'POST', 'DELETE'], app=app)
     # 此处必须函数内部导入路由，在之前导入可能因为没有构建好所有的组件而出现错误。
+
     from .api import auth, staff, leaves, sign, tempovertime, workstatus, department, arrangements, overtimes
     app.register_blueprint(auth.bp)
     app.register_blueprint(staff.bp)
